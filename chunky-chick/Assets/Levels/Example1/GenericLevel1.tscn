@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://b38g1isc5lpdj"]
+
+[node name="GenericLevel1" type="Node2D" unique_id=1847989402]
+
+[node name="Label" type="Label" parent="." unique_id=203260165]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 221.0
+offset_top = 107.0
+offset_right = 885.0
+offset_bottom = 149.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 30
+text = "This is a generic level, the first one to be exact"
