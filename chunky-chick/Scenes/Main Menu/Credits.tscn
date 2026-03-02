@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://bqdk0fqhaj6ei"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rwifh"]
+
+[node name="Credits" type="Control" unique_id=727112080]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="." unique_id=626381161]
+layout_mode = 0
+offset_left = 241.0
+offset_top = 161.0
+offset_right = 974.0
+offset_bottom = 387.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_rwifh")
+
+[node name="Label" type="Label" parent="Panel" unique_id=1305580251]
+layout_mode = 0
+offset_left = 78.0
+offset_top = 50.0
+offset_right = 644.0
+offset_bottom = 146.0
+theme_override_font_sizes/font_size = 70
+text = "Credit goes to us"

@@ -18,6 +18,7 @@ config/icon="res://Assets-Extra/icon.svg"
 [autoload]
 
 GameData="*uid://cvld2h71gy3n2"
+Settings="*uid://cegt5u20gf4yc"
 
 [file_customization]
 

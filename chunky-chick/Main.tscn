@@ -2,9 +2,12 @@
 
 [ext_resource type="PackedScene" uid="uid://qvudehijyhjr" path="res://Managers/LevelLoader/LoadingScreen.tscn" id="1_glv2v"]
 [ext_resource type="Script" uid="uid://cn0erevntwy8b" path="res://main.gd" id="1_uu6xs"]
+[ext_resource type="PackedScene" uid="uid://c866howesb3g7" path="res://Scenes/Main Menu/MainMenu.tscn" id="3_r0du0"]
 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 script = ExtResource("1_uu6xs")
+
+[node name="MainMenu" parent="." unique_id=1716768850 instance=ExtResource("3_r0du0")]
 
 [node name="LoadingScreen" parent="." unique_id=1009692439 instance=ExtResource("1_glv2v")]
 visible = false

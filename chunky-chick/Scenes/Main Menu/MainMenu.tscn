@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://c866howesb3g7"]
+
+[ext_resource type="Script" uid="uid://b0tu0i2yxy1si" path="res://Scenes/Main Menu/main_menu.gd" id="1_853f1"]
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_8saeu"]
+[ext_resource type="PackedScene" uid="uid://bqdk0fqhaj6ei" path="res://Scenes/Main Menu/Credits.tscn" id="3_rgre6"]
+
+[node name="MainMenu" type="Control" unique_id=1716768850]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_853f1")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=414951036]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("2_8saeu")
+
+[node name="Start" type="Button" parent="." unique_id=1175555593]
+layout_mode = 0
+offset_left = 385.0
+offset_top = 80.0
+offset_right = 756.0
+offset_bottom = 171.0
+theme_override_font_sizes/font_size = 60
+text = "Start"
+
+[node name="Settings" type="Button" parent="." unique_id=559956064]
+layout_mode = 0
+offset_left = 385.0
+offset_top = 213.0
+offset_right = 756.0
+offset_bottom = 304.0
+theme_override_font_sizes/font_size = 60
+text = "Settings"
+
+[node name="Credits" type="Button" parent="." unique_id=1600177283]
+layout_mode = 0
+offset_left = 385.0
+offset_top = 346.0
+offset_right = 756.0
+offset_bottom = 437.0
+theme_override_font_sizes/font_size = 60
+text = "Credits"
+
+[node name="Quit" type="Button" parent="." unique_id=813780662]
+layout_mode = 0
+offset_left = 385.0
+offset_top = 475.0
+offset_right = 756.0
+offset_bottom = 566.0
+theme_override_font_sizes/font_size = 60
+text = "Quit"
+
+[node name="Credits_scene" parent="." unique_id=727112080 instance=ExtResource("3_rgre6")]
+visible = false
+layout_mode = 1
+
+[connection signal="pressed" from="Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Credits" to="." method="_on_credits_pressed"]
+[connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]
