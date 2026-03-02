@@ -1,0 +1,28 @@
+[gd_scene format=3 uid="uid://dlkge1c31esjr"]
+
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_ey1g7"]
+[ext_resource type="Script" uid="uid://c16utq2jgtad5" path="res://src/scripts/nest.gd" id="2_ueg0u"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nqm3o"]
+size = Vector2(87.703705, 51.851852)
+
+[node name="Nest" type="StaticBody2D" unique_id=1833191925]
+scale = Vector2(1.5, 1.5)
+collision_layer = 2
+script = ExtResource("2_ueg0u")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=157249103]
+position = Vector2(2.666668, -2.999998)
+scale = Vector2(0.5729167, 0.45312497)
+texture = ExtResource("1_ey1g7")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=597538793]
+offset_left = -22.0
+offset_top = -26.666668
+offset_right = 10.444443
+offset_bottom = 4.0
+
+[node name="Hitbox" type="CollisionShape2D" parent="." unique_id=12843870]
+position = Vector2(12.666672, 0.33333206)
+scale = Vector2(2.25, 2.25)
+shape = SubResource("RectangleShape2D_nqm3o")

@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://nbk6ckc1v8qp"]
+
+[ext_resource type="PackedScene" uid="uid://vsu34tty0off" path="res://src/tscn/temp_charapter.tscn" id="1_cdr8x"]
+[ext_resource type="PackedScene" uid="uid://dlkge1c31esjr" path="res://src/tscn/nest.tscn" id="2_qd23b"]
+[ext_resource type="PackedScene" uid="uid://e3t6v4jtmdh6" path="res://src/tscn/carboard_items.tscn" id="3_qd23b"]
+
+[node name="Node2D" type="Node2D" unique_id=581660910]
+
+[node name="Temp-charapter" parent="." unique_id=805773800 groups=["player"] instance=ExtResource("1_cdr8x")]
+position = Vector2(-197, 80)
+
+[node name="Nest" parent="." unique_id=1833191925 instance=ExtResource("2_qd23b")]
+position = Vector2(538, 113)
+collision_layer = 1
+
+[node name="Item" parent="." unique_id=1133717472 groups=["item"] instance=ExtResource("3_qd23b")]
+hold_distance = null

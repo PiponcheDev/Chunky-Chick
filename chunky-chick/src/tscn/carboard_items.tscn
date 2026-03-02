@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://e3t6v4jtmdh6"]
+
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_bke17"]
+[ext_resource type="Script" uid="uid://croigjaihdalg" path="res://src/scripts/carboard_items.gd" id="1_r72vo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r72vo"]
+
+[node name="Carboard-Items" type="Area2D" unique_id=1133717472]
+collision_layer = 2
+script = ExtResource("1_r72vo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1168292543]
+shape = SubResource("RectangleShape2D_r72vo")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1642150627]
+position = Vector2(0, -2)
+scale = Vector2(0.1875, 0.18750001)
+texture = ExtResource("1_bke17")
+
+[node name="Label" type="Label" parent="." unique_id=798681253]
+offset_left = -12.0
+offset_top = -14.0
+offset_right = 11.0
+offset_bottom = 9.0
+text = "ITEM"
