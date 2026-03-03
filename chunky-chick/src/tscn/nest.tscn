@@ -2,27 +2,72 @@
 
 [ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_ey1g7"]
 [ext_resource type="Script" uid="uid://c16utq2jgtad5" path="res://src/scripts/nest.gd" id="2_ueg0u"]
+[ext_resource type="Script" uid="uid://4kejxw7axybf" path="res://src/scripts/UI/ui_hitbox.gd" id="3_7arkk"]
+[ext_resource type="PackedScene" uid="uid://di8qyu0l1gw7l" path="res://src/tscn/UI/selection_menu.tscn" id="4_kuljn"]
+[ext_resource type="PackedScene" uid="uid://cbxj3b6gsa1ql" path="res://src/tscn/UI/upgrade_selec.tscn" id="5_kuljn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ueg0u"]
+size = Vector2(54.66667, 46.000004)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nqm3o"]
 size = Vector2(87.703705, 51.851852)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hwr44"]
+size = Vector2(218, 194.66667)
+
 [node name="Nest" type="StaticBody2D" unique_id=1833191925]
 scale = Vector2(1.5, 1.5)
-collision_layer = 2
+collision_layer = 5
 script = ExtResource("2_ueg0u")
 
+[node name="Placement-camera" type="Camera2D" parent="." unique_id=1633269937 groups=["placement_camera"]]
+zoom = Vector2(0.5, 0.5)
+
 [node name="Icon" type="Sprite2D" parent="." unique_id=157249103]
+z_index = 1
 position = Vector2(2.666668, -2.999998)
 scale = Vector2(0.5729167, 0.45312497)
 texture = ExtResource("1_ey1g7")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=597538793]
-offset_left = -22.0
-offset_top = -26.666668
-offset_right = 10.444443
-offset_bottom = 4.0
+offset_left = -86.0
+offset_top = -58.0
+offset_right = 110.0
+offset_bottom = 57.333336
+metadata/_edit_use_anchors_ = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2024273204]
+position = Vector2(1.3333335, -3.3333335)
+shape = SubResource("RectangleShape2D_ueg0u")
 
 [node name="Hitbox" type="CollisionShape2D" parent="." unique_id=12843870]
 position = Vector2(12.666672, 0.33333206)
 scale = Vector2(2.25, 2.25)
 shape = SubResource("RectangleShape2D_nqm3o")
+
+[node name="UI-hitbox" type="Area2D" parent="." unique_id=703305370]
+script = ExtResource("3_7arkk")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="UI-hitbox" unique_id=506137885]
+position = Vector2(9.666667, 18.000004)
+shape = SubResource("RectangleShape2D_hwr44")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=762236213]
+
+[node name="PopupUI" parent="CanvasLayer" unique_id=506710227 instance=ExtResource("4_kuljn")]
+offset_left = -28.0
+offset_top = 87.0
+offset_right = -28.0
+offset_bottom = 87.0
+
+[node name="Upgrade-Layer" type="CanvasLayer" parent="." unique_id=356874211]
+
+[node name="Upgrade-selec" parent="Upgrade-Layer" unique_id=1839561250 instance=ExtResource("5_kuljn")]
+
+[node name="Label" type="Label" parent="." unique_id=921305913]
+z_index = 2
+offset_left = -31.333334
+offset_top = -31.333334
+offset_right = 40.0
+offset_bottom = 23.000002
+text = "Nest"

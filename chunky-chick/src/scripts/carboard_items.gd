@@ -1,6 +1,7 @@
 extends Area2D
 
 @export var hold_distance : float = 160.0
+@export var weight : float = 100.0
 
 var carried := false
 var carrier : Node = null

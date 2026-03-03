@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://bvxcdq2bfy02s"]
+
+[ext_resource type="Script" uid="uid://c0wpn3yhkf435" path="res://src/scripts/Structures/turret_bullet.gd" id="1_mi2ei"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jsbyd"]
+size = Vector2(20, 21)
+
+[node name="Turret-Bullet" type="Area2D" unique_id=329481292]
+script = ExtResource("1_mi2ei")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=576540478]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_jsbyd")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=387351540]
+offset_left = -10.0
+offset_top = -10.0
+offset_right = 10.0
+offset_bottom = 11.0

@@ -1,0 +1,97 @@
+[gd_scene format=3 uid="uid://cbxj3b6gsa1ql"]
+
+[ext_resource type="Script" uid="uid://culqa87yvdp3j" path="res://src/scripts/UI/upgrade_selec.gd" id="1_jgruj"]
+
+[node name="Upgrade-selec" type="Control" unique_id=1839561250]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_jgruj")
+
+[node name="Turret" type="Label" parent="." unique_id=2010771536]
+layout_mode = 0
+offset_left = 34.0
+offset_top = 24.0
+offset_right = 200.0
+offset_bottom = 145.0
+text = "Turret"
+
+[node name="Turret-buy" type="Button" parent="Turret" unique_id=1847999379]
+layout_mode = 0
+offset_top = 32.0
+offset_right = 82.0
+offset_bottom = 75.0
+text = "Buy"
+
+[node name="Watch-tower" type="Label" parent="." unique_id=609020236]
+layout_mode = 0
+offset_left = 27.0
+offset_top = 148.0
+offset_right = 193.0
+offset_bottom = 269.0
+text = "Watch tower"
+
+[node name="Button" type="Button" parent="Watch-tower" unique_id=1795653727]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 29.0
+offset_right = 69.0
+offset_bottom = 64.0
+text = "Buy"
+
+[node name="Recycling-bot" type="Label" parent="." unique_id=146819102]
+layout_mode = 0
+offset_left = 26.0
+offset_top = 285.0
+offset_right = 192.0
+offset_bottom = 406.0
+text = "Recycling bot"
+
+[node name="Button" type="Button" parent="Recycling-bot" unique_id=1695919530]
+layout_mode = 0
+offset_left = -2.0
+offset_top = 24.0
+offset_right = 62.0
+offset_bottom = 75.0
+text = "Buy"
+
+[node name="Nuke" type="Label" parent="." unique_id=1903872491]
+layout_mode = 0
+offset_left = 18.0
+offset_top = 417.0
+offset_right = 184.0
+offset_bottom = 538.0
+text = "Giant bird shit"
+
+[node name="Button" type="Button" parent="Nuke" unique_id=429652654]
+layout_mode = 0
+offset_left = 5.0
+offset_top = 31.0
+offset_right = 81.0
+offset_bottom = 63.0
+text = "Buy"
+
+[node name="Items" type="Label" parent="." unique_id=2041547345]
+layout_mode = 0
+offset_left = 990.0
+offset_top = 24.0
+offset_right = 1131.0
+offset_bottom = 73.0
+text = "Items:
+Carboard-"
+
+[node name="Close" type="Button" parent="." unique_id=1805506427]
+layout_mode = 0
+offset_left = 60.0
+offset_top = 559.0
+offset_right = 1049.0
+offset_bottom = 577.0
+text = "Back
+"

@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://vsu34tty0off"]
+
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_2qaxr"]
+[ext_resource type="Script" uid="uid://b57cpu48lgrbk" path="res://src/scripts/temp_charapter.gd" id="1_fuuff"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fuuff"]
+size = Vector2(58, 63)
+
+[node name="Temp-charapter" type="CharacterBody2D" unique_id=805773800]
+top_level = true
+collision_mask = 0
+script = ExtResource("1_fuuff")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1139445401]
+position = Vector2(3, -0.5)
+shape = SubResource("RectangleShape2D_fuuff")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1786831611]
+position = Vector2(2.9999998, -0.5)
+scale = Vector2(0.48437503, 0.50781244)
+texture = ExtResource("1_2qaxr")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=2016860142 groups=["main_camera"]]
+
+[node name="Label" type="Label" parent="." unique_id=688153687]
+offset_left = -32.0
+offset_top = -27.0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Character"

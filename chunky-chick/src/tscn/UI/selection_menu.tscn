@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://di8qyu0l1gw7l"]
+
+[ext_resource type="Script" uid="uid://35e5wp84t1hc" path="res://src/scripts/UI/selection_menu.gd" id="1_fpfg0"]
+
+[node name="PopupUI" type="Control" unique_id=506710227]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fpfg0")
+
+[node name="Guide" type="Button" parent="." unique_id=1450388232]
+layout_mode = 0
+offset_left = 125.0
+offset_top = 479.0
+offset_right = 1042.0
+offset_bottom = 510.0
+text = "Place Item [E]"
+
+[node name="Continue" type="Button" parent="." unique_id=437593828]
+layout_mode = 0
+offset_left = 122.0
+offset_top = 520.0
+offset_right = 1045.0
+offset_bottom = 551.0
+text = "Exmp1"
+
+[node name="Label" type="Label" parent="." unique_id=1311238919]
+layout_mode = 0
+offset_left = 558.0
+offset_top = 377.0
+offset_right = 602.0
+offset_bottom = 400.0
+text = "EXMP"
