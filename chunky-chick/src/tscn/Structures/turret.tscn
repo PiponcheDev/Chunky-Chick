@@ -3,8 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_f3ex0"]
 [ext_resource type="Script" uid="uid://ch3hjmn8fc110" path="res://src/scripts/Structures/turret.gd" id="1_hvctn"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hvctn"]
-size = Vector2(128, 127)
+[sub_resource type="CircleShape2D" id="CircleShape2D_hvctn"]
+radius = 107.86
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_iga1b"]
 size = Vector2(132, 129)
@@ -31,12 +31,20 @@ texture = ExtResource("1_f3ex0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1244256373]
 position = Vector2(2, -6.5)
-scale = Vector2(7, 7)
-shape = SubResource("RectangleShape2D_hvctn")
+scale = Vector2(5, 5)
+shape = SubResource("CircleShape2D_hvctn")
 
 [node name="FireTimer" type="Timer" parent="." unique_id=224474389]
-wait_time = 0.154
+wait_time = 0.053
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1022374796]
 position = Vector2(2, -6.5)
 shape = SubResource("RectangleShape2D_iga1b")
+
+[node name="Label" type="Label" parent="." unique_id=202734915]
+offset_left = -49.0
+offset_top = -64.0
+offset_right = 49.0
+offset_bottom = 49.0
+text = "Turret
+"

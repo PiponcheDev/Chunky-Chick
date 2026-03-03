@@ -30,7 +30,7 @@ offset_right = 82.0
 offset_bottom = 75.0
 text = "Buy"
 
-[node name="Watch-tower" type="Label" parent="." unique_id=609020236]
+[node name="WatchTower" type="Label" parent="." unique_id=609020236]
 layout_mode = 0
 offset_left = 27.0
 offset_top = 148.0
@@ -38,7 +38,7 @@ offset_right = 193.0
 offset_bottom = 269.0
 text = "Watch tower"
 
-[node name="Button" type="Button" parent="Watch-tower" unique_id=1795653727]
+[node name="WatchTower-buy" type="Button" parent="WatchTower" unique_id=1795653727]
 layout_mode = 0
 offset_left = 2.0
 offset_top = 29.0

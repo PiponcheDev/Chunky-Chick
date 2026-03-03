@@ -32,6 +32,7 @@ structure=""
 enemy=""
 main_camera=""
 placement_camera=""
+turret=""
 
 [input]
 
