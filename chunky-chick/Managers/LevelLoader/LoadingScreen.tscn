@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://qvudehijyhjr"]
+
+[ext_resource type="Script" uid="uid://bg7pf4jr147yl" path="res://Managers/LevelLoader/LevelLoader.gd" id="1_twnqb"]
+[ext_resource type="Texture2D" uid="uid://kxdkyhvifuaw" path="res://Assets-Extra/Fatass_Bird.png" id="2_x1cqn"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jujni"]
+
+[node name="LoadingScreen" type="Control" unique_id=1009692439]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_twnqb")
+
+[node name="LoadingAnimation" type="AnimationPlayer" parent="." unique_id=1201035817]
+root_node = NodePath("../..")
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1822584630]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1158.0
+offset_bottom = 655.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+texture = ExtResource("2_x1cqn")
+
+[node name="Downtime_Timer" type="Timer" parent="." unique_id=2079337120]
+wait_time = 2.0
+one_shot = true
+
+[node name="Info-For-Dev" type="Label" parent="." unique_id=1492783314]
+layout_mode = 0
+offset_left = 164.0
+offset_top = 24.0
+offset_right = 990.0
+offset_bottom = 220.0
+theme_override_font_sizes/font_size = 40
+theme_override_styles/normal = SubResource("StyleBoxFlat_jujni")
+text = "This is the loading screen between levels, it does not do anything else
+(This message automatically hides)"
+autowrap_mode = 2
+clip_text = true
+
+[connection signal="timeout" from="Downtime_Timer" to="." method="_on_downtime_timer_timeout"]

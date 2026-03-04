@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://b38g1isc5lpdj"]
+
+[ext_resource type="PackedScene" uid="uid://drq4pyhltxh3y" path="res://Scenes/Human/GenericHuman.tscn" id="1_s4bqb"]
+
+[sub_resource type="Curve2D" id="Curve2D_nlcix"]
+_data = {
+"points": PackedVector2Array(-287, 222, 287, -222, 60, 51, -121, -56, 121, 56, -8, 7, 0, 0, 0, 0, 164, 52, -4, -71, 4, 71, 787, 276, 120, -8, -120, 8, 480, 386, 60, 31, -60, -31, 141, 367, 3, 72, -3, -72, -11, 127, 0, 0, 0, 0, 60, 49, 0, 0, 0, 0, 60, 51)
+}
+point_count = 9
+
+[node name="GenericLevel1" type="Node2D" unique_id=1847989402]
+
+[node name="Label" type="Label" parent="." unique_id=203260165]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 221.0
+offset_top = 107.0
+offset_right = 885.0
+offset_bottom = 149.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 30
+text = "This is a generic level, the first one to be exact"
+
+[node name="Path2D" type="Path2D" parent="." unique_id=1257815679]
+position = Vector2(169, 117)
+curve = SubResource("Curve2D_nlcix")
+
+[node name="Generic human" parent="Path2D" unique_id=1786981081 instance=ExtResource("1_s4bqb")]
+position = Vector2(60, 51)
+
+[node name="Generic human2" parent="Path2D" unique_id=33203976 instance=ExtResource("1_s4bqb")]
+position = Vector2(734.6048, 232.24425)
+rotation = 0.47048807
+progress = 1167.906
