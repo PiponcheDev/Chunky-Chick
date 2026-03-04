@@ -16,6 +16,8 @@ var allLevels : Array[Array] = [level0,level1]
 
 var nextlevel :String
 func _process(delta: float) -> void:
+	if Input.is_action_just_pressed("DebugButton"):
+		_loadNextLevel()
 	if loading:
 		var progress:Array = []
 		var status = ResourceLoader.load_threaded_get_status(nextlevel, progress)
@@ -27,6 +29,7 @@ func _process(delta: float) -> void:
 func _loadNextLevel() -> void:
 	self.show()
 	nextlevel = allLevels.get(GameData.currentlevel).pick_random() #Picks random of the preset levels
+	GameData.currentlevel += 1
 	if nextlevel:
 		if (ResourceLoader.has_cached(nextlevel)):
 			ResourceLoader.load_threaded_get(nextlevel)
@@ -45,3 +48,4 @@ func _on_downtime_timer_timeout() -> void:
 	print("Change")
 	var newLevelScene = ResourceLoader.load_threaded_get(nextlevel)
 	get_tree().change_scene_to_packed(newLevelScene)
+	print("Changed")

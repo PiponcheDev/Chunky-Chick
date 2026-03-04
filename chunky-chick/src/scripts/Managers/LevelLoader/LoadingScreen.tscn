@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://qvudehijyhjr"]
 
-[ext_resource type="Script" uid="uid://bg7pf4jr147yl" path="res://Managers/LevelLoader/LevelLoader.gd" id="1_twnqb"]
+[ext_resource type="Script" uid="uid://bg7pf4jr147yl" path="res://src/scripts/Managers/LevelLoader/LevelLoader.gd" id="1_twnqb"]
 [ext_resource type="Texture2D" uid="uid://kxdkyhvifuaw" path="res://Assets-Extra/Fatass_Bird.png" id="2_x1cqn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jujni"]

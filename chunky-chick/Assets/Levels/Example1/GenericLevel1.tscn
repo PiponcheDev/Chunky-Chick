@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b38g1isc5lpdj"]
 
-[ext_resource type="PackedScene" uid="uid://drq4pyhltxh3y" path="res://Scenes/Human/GenericHuman.tscn" id="1_s4bqb"]
+[ext_resource type="PackedScene" uid="uid://drq4pyhltxh3y" path="res://src/tscn/Human/GenericHuman.tscn" id="1_s4bqb"]
+[ext_resource type="PackedScene" uid="uid://qvudehijyhjr" path="res://src/scripts/Managers/LevelLoader/LoadingScreen.tscn" id="2_uikbx"]
 
 [sub_resource type="Curve2D" id="Curve2D_nlcix"]
 _data = {
@@ -35,3 +36,10 @@ position = Vector2(60, 51)
 position = Vector2(734.6048, 232.24425)
 rotation = 0.47048807
 progress = 1167.906
+
+[node name="LoadingScreen" parent="." unique_id=1009692439 instance=ExtResource("2_uikbx")]
+visible = false
+offset_left = 169.0
+offset_top = 117.0
+offset_right = 209.0
+offset_bottom = 157.0

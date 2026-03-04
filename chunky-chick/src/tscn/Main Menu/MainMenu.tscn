@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://c866howesb3g7"]
 
-[ext_resource type="Script" uid="uid://b0tu0i2yxy1si" path="res://Scenes/Main Menu/main_menu.gd" id="1_853f1"]
+[ext_resource type="Script" uid="uid://b0tu0i2yxy1si" path="res://src/tscn/Main Menu/main_menu.gd" id="1_853f1"]
 [ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_8saeu"]
-[ext_resource type="PackedScene" uid="uid://bqdk0fqhaj6ei" path="res://Scenes/Main Menu/Credits.tscn" id="3_rgre6"]
+[ext_resource type="PackedScene" uid="uid://bqdk0fqhaj6ei" path="res://src/tscn/Main Menu/Credits.tscn" id="3_rgre6"]
 
 [node name="MainMenu" type="Control" unique_id=1716768850]
 layout_mode = 3
