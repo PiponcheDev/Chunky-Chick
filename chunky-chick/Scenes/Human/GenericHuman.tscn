@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://drq4pyhltxh3y"]
+
+[ext_resource type="Script" uid="uid://cwne4pl5e3x36" path="res://Scenes/Human/generic_human.gd" id="1_486c6"]
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_k02vi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_486c6"]
+radius = 214.08409
+
+[node name="Generic human" type="PathFollow2D" unique_id=1786981081]
+rotates = false
+script = ExtResource("1_486c6")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1703300497]
+texture = ExtResource("1_k02vi")
+
+[node name="DirectionUpdater" type="Timer" parent="." unique_id=992071788]
+wait_time = 0.5
+autostart = true
+
+[node name="AbandonFeeding" type="Timer" parent="." unique_id=402036197]
+wait_time = 5.0
+one_shot = true
+
+[node name="Area2D" type="Area2D" parent="." unique_id=748332998]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1628670590]
+shape = SubResource("CircleShape2D_486c6")
+
+[connection signal="timeout" from="DirectionUpdater" to="." method="_on_direction_updater_timeout"]
+[connection signal="timeout" from="AbandonFeeding" to="." method="_on_abandon_feeding_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
