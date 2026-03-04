@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://nbk6ckc1v8qp"]
 
 [ext_resource type="PackedScene" uid="uid://knbi01afph2c" path="res://src/tscn/Player.tscn" id="1_uxkus"]
+[ext_resource type="PackedScene" uid="uid://vxnhxnc8fji4" path="res://src/tscn/Food.tscn" id="2_cdr8x"]
 
 [node name="Game" type="Node2D" unique_id=581660910]
 
@@ -10,3 +11,7 @@ position = Vector2(854, 954)
 [node name="Camera2D" type="Camera2D" parent="." unique_id=847134298]
 position = Vector2(1920, 1079)
 zoom = Vector2(0.3, 0.3)
+
+[node name="StaticBody2D" parent="." unique_id=1227251147 instance=ExtResource("2_cdr8x")]
+position = Vector2(2120, 840)
+scale = Vector2(1, 1)

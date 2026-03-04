@@ -16,6 +16,8 @@ var idle_time := 0.0
 var rng = RandomNumberGenerator.new()
 var idle_rng := 0.0
 
+var angle_degrees = 0.0
+var snapped_angle = 0
 
 func _ready():
 	#setting up for the idle_peck animation
@@ -45,15 +47,19 @@ func transition_to_idle_standing() -> void:
 	velocity = Vector2.ZERO
 
 func handle_moving_state(direction: Vector2, delta: float):
-	
 	if direction == Vector2.ZERO:
 		transition_to_idle_standing()
 
-		
 	else:
 		direction = direction.normalized()
 		velocity = direction * SPEED
 		sprite.play("walking")
+		angle_degrees = rad_to_deg(direction.angle())
+		snapped_angle = snapped(angle_degrees, 45)
+		snapped_angle -= 90
+		
+		sprite.rotation_degrees = snapped_angle
+		print(snapped_angle)
 
 func handle_idle_standing_state(direction: Vector2, delta: float):
 	if direction != Vector2.ZERO:
