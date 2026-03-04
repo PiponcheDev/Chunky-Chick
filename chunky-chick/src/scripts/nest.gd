@@ -13,6 +13,7 @@ var deposit_count := 0
 
 @onready var popup_ui = $CanvasLayer/PopupUI
 @onready var upgrade_ui = $"Upgrade-Layer/Upgrade-selec"
+@onready var pc = $"Placement-camera"
 @onready var turret_buy_button = upgrade_ui.get_node("Turret/Turret-buy")
 @onready var watchtower_buy_button = upgrade_ui.get_node("WatchTower/WatchTower-buy")
 
@@ -21,6 +22,7 @@ var placement_camera
 @onready var turret_container = get_tree().get_current_scene().get_node("TurretContainer") 
 
 func _ready():
+	pc.add_to_group("placement_camera")
 	add_to_group("nest")
 	print("Nest ready")
 	
@@ -29,8 +31,11 @@ func _ready():
 	turret_buy_button.pressed.connect(_on_buy_turret_pressed)
 	watchtower_buy_button.pressed.connect(_on_buy_watchtower_pressed)
 	
-	main_camera = get_tree().get_first_node_in_group("main_camera")
-	placement_camera = get_tree().get_first_node_in_group("placement_camera")
+	main_camera = get_tree().get_nodes_in_group("main_camera")[0]
+	placement_camera = get_tree().get_nodes_in_group("placement_camera")[0]
+	
+	if main_camera:
+		main_camera.make_current()
 
 func _on_buy_watchtower_pressed():
 	upgrade_ui.visible = false

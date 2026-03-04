@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://knbi01afph2c"]
 
 [ext_resource type="Texture2D" uid="uid://bxoxj1uop3wtl" path="res://Assets/Player/Mockup_Spritesheet.png" id="1_bjrec"]
-[ext_resource type="Script" uid="uid://d0b6i51kt1sb4" path="res://src/scripts/player_movement.gd" id="1_gce6r"]
+[ext_resource type="Script" uid="uid://d0b6i51kt1sb4" path="res://src/scripts/player.gd" id="1_gce6r"]
 [ext_resource type="Script" uid="uid://b60dajgge2v8w" path="res://src/scripts/fatness.gd" id="3_swfga"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gce6r"]
@@ -114,3 +114,6 @@ shape = SubResource("RectangleShape2D_bjrec")
 
 [node name="fatness_component" type="Node" parent="." unique_id=1704900345]
 script = ExtResource("3_swfga")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=377801089 groups=["main_camera"]]
+zoom = Vector2(0.6, 0.6)

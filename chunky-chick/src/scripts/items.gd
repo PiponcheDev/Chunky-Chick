@@ -1,11 +1,12 @@
 extends Area2D
 
-@export var hold_distance : float = 160.0
-@export var weight : float = 100.0
+# Exported properties
+@export var hold_distance: float = 160.0
 
-var carried := false
-var carrier : Node = null
-var in_range := false  
+# State
+var carried: bool = false
+var carrier: Node = null
+var in_range: bool = false
 
 func _ready():
 	add_to_group("item")
@@ -21,7 +22,7 @@ func _on_body_exited(body):
 	if body.is_in_group("player"):
 		in_range = false
 
-func pick_up(player):
+func pick_up(player: Node):
 	carried = true
 	carrier = player
 	set_deferred("collision_layer", 0)
@@ -35,11 +36,11 @@ func drop():
 
 func _process(delta):
 	if carried and carrier:
-		update_position()
+		_update_position()
 
-func update_position():
-	var dir = carrier.last_direction
-	if dir == Vector2.ZERO:
-		dir = Vector2.DOWN
-	dir = dir.normalized()
+func _update_position():
+	if not carrier:
+		return
+	var angle_rad = deg_to_rad(carrier.snapped_angle + 90)  # reverse Player rotation offset
+	var dir = Vector2(cos(angle_rad), sin(angle_rad))
 	global_position = carrier.global_position + dir * hold_distance
