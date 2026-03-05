@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://pn32tdtruix8"]
+
+[ext_resource type="Script" uid="uid://4cd26jvqi368" path="res://src/scripts/trash_can.gd" id="1_d3rj5"]
+[ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="2_d70uw"]
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_vtslx"]
+[ext_resource type="Resource" uid="uid://d272ynufwj2aj" path="res://talismans/half_soda_can.tres" id="3_xl22r"]
+[ext_resource type="PackedScene" uid="uid://dv8lrbt4ek741" path="res://src/tscn/talisman-pickup.tscn" id="4_edr8r"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r6qk4"]
+size = Vector2(95, 112)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d3rj5"]
+size = Vector2(341, 282)
+
+[node name="TrashCan" type="StaticBody2D" unique_id=541807723 groups=["talisman"]]
+collision_layer = 3
+script = ExtResource("1_d3rj5")
+possible_talismans = Array[ExtResource("2_d70uw")]([ExtResource("3_xl22r")])
+talisman_scene = ExtResource("4_edr8r")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=368189786]
+position = Vector2(-1.5, 0)
+shape = SubResource("RectangleShape2D_r6qk4")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1737153631]
+position = Vector2(2, 1)
+texture = ExtResource("2_vtslx")
+
+[node name="Label" type="Label" parent="." unique_id=7455199]
+offset_left = -30.0
+offset_top = -25.0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "TrashCan"
+
+[node name="InteractionArea" type="Area2D" parent="." unique_id=890555294]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=900891609]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_d3rj5")

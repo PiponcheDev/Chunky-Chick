@@ -5,10 +5,11 @@
 [ext_resource type="PackedScene" uid="uid://biaek1l53os4o" path="res://src/tscn/Temporary/temp_enemy.tscn" id="3_lgr22"]
 [ext_resource type="PackedScene" uid="uid://knbi01afph2c" path="res://src/tscn/Player.tscn" id="4_trn2v"]
 [ext_resource type="PackedScene" uid="uid://vxnhxnc8fji4" path="res://src/tscn/Food.tscn" id="5_03owx"]
+[ext_resource type="PackedScene" uid="uid://pn32tdtruix8" path="res://src/tscn/Structures/trash_can.tscn" id="6_3dxm6"]
 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 
-[node name="Nest" parent="." unique_id=1833191925 instance=ExtResource("1_fos0i")]
+[node name="Nest" parent="." unique_id=1833191925 groups=["nest"] instance=ExtResource("1_fos0i")]
 position = Vector2(617, 263)
 collision_layer = 1
 
@@ -28,3 +29,6 @@ scale = Vector2(0.4, 0.4)
 [node name="Food" parent="." unique_id=2090540503 groups=["food"] instance=ExtResource("5_03owx")]
 position = Vector2(-443, 316)
 scale = Vector2(1, 1)
+
+[node name="TrashCan" parent="." unique_id=541807723 instance=ExtResource("6_3dxm6")]
+position = Vector2(-915, 556)

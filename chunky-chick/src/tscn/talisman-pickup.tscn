@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://dv8lrbt4ek741"]
+
+[ext_resource type="Script" uid="uid://dx5mgs5cu5lpo" path="res://src/scripts/UI/talismans.gd" id="1_7mhq0"]
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_aa6mi"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_rf3hm"]
+radius = 25.0
+
+[node name="Talisman-pickup" type="Area2D" unique_id=1242393269]
+script = ExtResource("1_7mhq0")
+metadata/_edit_horizontal_guides_ = [-48.0]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=657183669]
+shape = SubResource("CircleShape2D_rf3hm")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1367202803]
+position = Vector2(0, -5)
+texture = ExtResource("1_aa6mi")
+
+[node name="Label" type="Label" parent="." unique_id=1581739614]
+offset_left = -34.0
+offset_top = -30.0
+offset_right = 40.0
+offset_bottom = 23.0
+text = "Item pick-up"

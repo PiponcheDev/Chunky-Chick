@@ -39,6 +39,7 @@ main_camera=""
 placement_camera=""
 turret=""
 food=""
+talisman=""
 
 [input]
 
