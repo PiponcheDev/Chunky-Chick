@@ -41,6 +41,6 @@ func _process(delta):
 func _update_position():
 	if not carrier:
 		return
-	var angle_rad = deg_to_rad(carrier.snapped_angle + 90)  # reverse Player rotation offset
+	var angle_rad = deg_to_rad(carrier.snapped_angle + 90)
 	var dir = Vector2(cos(angle_rad), sin(angle_rad))
 	global_position = carrier.global_position + dir * hold_distance

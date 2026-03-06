@@ -19,6 +19,7 @@ config/icon="res://Assets-Extra/icon.svg"
 
 GameData="*uid://cvld2h71gy3n2"
 Settings="*uid://cegt5u20gf4yc"
+GameLoad="*uid://cko840a3xfgua"
 
 [file_customization]
 
