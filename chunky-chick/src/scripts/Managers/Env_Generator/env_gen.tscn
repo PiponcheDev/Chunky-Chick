@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cebj4caoqts2w"]
+
+[ext_resource type="Script" uid="uid://be81ubpcutpjq" path="res://src/scripts/Managers/Env_Generator/Env-generator.gd" id="1_cae22"]
+
+[node name="Env-gen" type="Node2D" unique_id=1350189090]
+script = ExtResource("1_cae22")

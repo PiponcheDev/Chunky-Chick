@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://drq4pyhltxh3y" path="res://src/tscn/Human/GenericHuman.tscn" id="1_s4bqb"]
 [ext_resource type="PackedScene" uid="uid://qvudehijyhjr" path="res://src/scripts/Managers/LevelLoader/LoadingScreen.tscn" id="2_uikbx"]
+[ext_resource type="PackedScene" uid="uid://cebj4caoqts2w" path="res://src/scripts/Managers/Env_Generator/env_gen.tscn" id="3_kktmy"]
 
 [sub_resource type="Curve2D" id="Curve2D_nlcix"]
 _data = {
@@ -43,3 +44,5 @@ offset_left = 169.0
 offset_top = 117.0
 offset_right = 209.0
 offset_bottom = 157.0
+
+[node name="Env-gen" parent="." unique_id=1350189090 instance=ExtResource("3_kktmy")]
