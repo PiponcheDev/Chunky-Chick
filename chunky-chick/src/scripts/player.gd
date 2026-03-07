@@ -27,6 +27,8 @@ var rng = RandomNumberGenerator.new()
 # Shooting
 var last_dir: Vector2 = Vector2.DOWN
 var bomb_bullets_unlocked: bool = false
+var cooldown: float = 0
+var cooldown_multiplier: float = 1
 
 # Carried item
 var carried_item: Node = null
@@ -45,6 +47,7 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	direction = Input.get_vector("walk_left", "walk_right", "walk_up", "walk_down").normalized()
+	cooldown -= delta
 	
 	match current_state:
 		PlayerState.MOVING:
@@ -119,8 +122,10 @@ func _handle_pickup():
 					emit_signal("carried_item_changed", true)
 					break
 
+# --- Shooting system ---
 func _handle_shooting():
-	if Input.is_action_just_pressed("shoot"):
+	if Input.is_action_pressed("shoot") and cooldown <= 0:
+		cooldown = 0.6 * cooldown_multiplier
 		var bullet = BULLET_SCENE.instantiate()
 		get_tree().current_scene.add_child(bullet)
 		bullet.global_position = global_position
@@ -142,4 +147,5 @@ func _on_bullet_freed(pos: Vector2) ->void:
 func unlock_ability() -> void:
 	if Input.is_action_just_pressed("unlock_ability_temp"):
 		bomb_bullets_unlocked = true
+		cooldown_multiplier = 0.6
 		print("unlocked")
