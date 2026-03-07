@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 # Nodes
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var main_camera: Camera2D = $Camera2D
+@onready var main_camera: Camera2D = $Camera2D 
 
 # Signals
 signal carried_item_changed(is_carrying: bool)
@@ -11,6 +11,7 @@ signal carried_item_changed(is_carrying: bool)
 const SPEED := 450.0
 const IDLE_TIME_MIN := 1.0
 const IDLE_TIME_MAX := 5.0
+const BULLET_SCENE = preload("res://src/tscn/player_bullets.tscn")
 
 # Player states
 enum PlayerState { MOVING, IDLE_STANDING, IDLE_PECKING }
@@ -22,6 +23,10 @@ var last_direction: Vector2 = Vector2.DOWN
 var idle_time := 0.0
 var idle_rng := 0.0
 var rng = RandomNumberGenerator.new()
+
+# Shooting
+var last_dir: Vector2 = Vector2.DOWN
+var bomb_bullets_unlocked: bool = false
 
 # Carried item
 var carried_item: Node = null
@@ -40,7 +45,7 @@ func _ready():
 
 func _physics_process(delta: float) -> void:
 	direction = Input.get_vector("walk_left", "walk_right", "walk_up", "walk_down").normalized()
-
+	
 	match current_state:
 		PlayerState.MOVING:
 			_handle_moving(delta)
@@ -48,10 +53,11 @@ func _physics_process(delta: float) -> void:
 			_handle_idle_standing(delta)
 		PlayerState.IDLE_PECKING:
 			_handle_idle_pecking(delta)
-
+	
 	move_and_slide()
 	_handle_pickup()
-
+	_handle_shooting()
+	unlock_ability()
 # --- State handlers ---
 
 func _handle_moving(delta):
@@ -60,6 +66,7 @@ func _handle_moving(delta):
 	else:
 		velocity = direction * SPEED
 		sprite.play("walking")
+		last_dir = direction
 		_update_rotation(direction)
 
 func _handle_idle_standing(delta):
@@ -111,3 +118,28 @@ func _handle_pickup():
 					carried_item = item
 					emit_signal("carried_item_changed", true)
 					break
+
+func _handle_shooting():
+	if Input.is_action_just_pressed("shoot"):
+		var bullet = BULLET_SCENE.instantiate()
+		get_tree().current_scene.add_child(bullet)
+		bullet.global_position = global_position
+		bullet.start_pos = global_position
+		bullet.direction = last_dir
+		bullet.bullet_freed.connect(_on_bullet_freed)
+
+func _on_bullet_freed(pos: Vector2) ->void:
+	if bomb_bullets_unlocked:
+		for i in 8:
+			var Bomb_Bullet = BULLET_SCENE.instantiate()
+			get_tree().current_scene.add_child(Bomb_Bullet)
+			Bomb_Bullet.global_position = pos
+			Bomb_Bullet.start_pos = pos
+			Bomb_Bullet.max_range_multiplier = 0.5
+			Bomb_Bullet.scale = Vector2(6.0, 6.0)
+			Bomb_Bullet.direction = Vector2.RIGHT.rotated(deg_to_rad(i * 45))
+
+func unlock_ability() -> void:
+	if Input.is_action_just_pressed("unlock_ability_temp"):
+		bomb_bullets_unlocked = true
+		print("unlocked")
