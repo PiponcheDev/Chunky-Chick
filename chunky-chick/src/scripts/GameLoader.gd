@@ -5,11 +5,12 @@ const RUN_SAVE_PATH = "res://runs/prev_run.tres"
 
 var current_run : RunData
 
+func _ready():
+	load_run()
 
 func start_new_run():
 	current_run = RunData.new()
 	save_run()
-
 
 func load_run():
 	if ResourceLoader.exists(RUN_SAVE_PATH):
@@ -17,18 +18,12 @@ func load_run():
 	else:
 		start_new_run()
 
-
 func save_run():
 	ResourceSaver.save(current_run, RUN_SAVE_PATH)
-
 
 func apply_run_to_player(player):
 	if current_run == null:
 		return
-
-	# Apply fatness
 	player.fatness = current_run.fatness
-
-	# Apply talismans
 	for talisman in current_run.talismans:
-		player.collect_talisman(talisman)
+		player.collect_talisman(talisman, true)

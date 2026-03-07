@@ -1,8 +1,10 @@
-[gd_resource type="Resource" script_class="RunData" format=3 uid="uid://cbavkcbi5mb26"]
+[gd_resource type="Resource" script_class="RunData" format=3]
 
-[ext_resource type="Script" uid="uid://cvld2h71gy3n2" path="res://GameData.gd" id="1_nl8ht"]
-[ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="2_lexoi"]
+[ext_resource type="Script" path="res://GameData.gd" id="1_nl8ht"]
+[ext_resource type="Script" path="res://src/scripts/talisman_data.gd" id="2_lexoi"]
+[ext_resource type="Resource" path="res://talismans/half_soda_can.tres" id="3_lexoi"]
 
 [resource]
 script = ExtResource("1_nl8ht")
+talismans = Array[ExtResource("2_lexoi")]([ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi")])
 metadata/_custom_type_script = "uid://cvld2h71gy3n2"

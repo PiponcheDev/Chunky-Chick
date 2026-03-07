@@ -2,9 +2,71 @@
 
 [ext_resource type="Script" uid="uid://4cd26jvqi368" path="res://src/scripts/trash_can.gd" id="1_d3rj5"]
 [ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="2_d70uw"]
-[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_vtslx"]
 [ext_resource type="Resource" uid="uid://d272ynufwj2aj" path="res://talismans/half_soda_can.tres" id="3_xl22r"]
 [ext_resource type="PackedScene" uid="uid://dv8lrbt4ek741" path="res://src/tscn/talisman-pickup.tscn" id="4_edr8r"]
+[ext_resource type="Texture2D" uid="uid://b6sosfs1xctvy" path="res://Assets/Levels/Items.png" id="5_d70uw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d70uw"]
+atlas = ExtResource("5_d70uw")
+region = Rect2(300, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6aykf"]
+atlas = ExtResource("5_d70uw")
+region = Rect2(200, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iedfx"]
+atlas = ExtResource("5_d70uw")
+region = Rect2(100, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7fo27"]
+atlas = ExtResource("5_d70uw")
+region = Rect2(0, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xl22r"]
+atlas = ExtResource("5_d70uw")
+region = Rect2(600, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_edr8r"]
+atlas = ExtResource("5_d70uw")
+region = Rect2(500, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rqu2i"]
+atlas = ExtResource("5_d70uw")
+region = Rect2(400, 100, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6aykf"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d70uw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6aykf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iedfx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7fo27")
+}],
+"loop": false,
+"name": &"dumpster",
+"speed": 13.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xl22r")
+}, {
+"duration": 1.3,
+"texture": SubResource("AtlasTexture_edr8r")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rqu2i")
+}],
+"loop": false,
+"name": &"trash_can",
+"speed": 13.0
+}]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r6qk4"]
 size = Vector2(95, 112)
@@ -18,13 +80,14 @@ script = ExtResource("1_d3rj5")
 possible_talismans = Array[ExtResource("2_d70uw")]([ExtResource("3_xl22r")])
 talisman_scene = ExtResource("4_edr8r")
 
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=847328750]
+scale = Vector2(1.5, 1.5)
+sprite_frames = SubResource("SpriteFrames_6aykf")
+animation = &"trash_can"
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=368189786]
 position = Vector2(-1.5, 0)
 shape = SubResource("RectangleShape2D_r6qk4")
-
-[node name="Icon" type="Sprite2D" parent="." unique_id=1737153631]
-position = Vector2(2, 1)
-texture = ExtResource("2_vtslx")
 
 [node name="Label" type="Label" parent="." unique_id=7455199]
 offset_left = -30.0

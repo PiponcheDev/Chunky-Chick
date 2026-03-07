@@ -109,7 +109,7 @@ func _on_animation_finished():
 # TALISMAN COLLECTION SYSTEM
 # --------------------------------------------------
 
-func collect_talisman(data: TalismanData):
+func collect_talisman(data: TalismanData, from_load := false):
 	items.append(data)
 	speed_bonus += data.speed_bonus
 	damage_bonus += data.damage_bonus
@@ -117,8 +117,9 @@ func collect_talisman(data: TalismanData):
 	attack_range_bonus += data.attack_range_bonus
 	shot_speed_bonus += data.shot_speed_bonus
 	fatness_max_bonus += data.fatness_max_bonus
-	GameLoad.current_run.talismans.append(data)
-	GameLoad.save_run()
+	if !from_load:
+		GameLoad.current_run.talismans.append(data)
+		GameLoad.save_run()
 	print("Collected talisman:", data.talisman_name)
 
 # --------------------------------------------------

@@ -16,10 +16,3 @@ shape = SubResource("CircleShape2D_rf3hm")
 [node name="Icon" type="Sprite2D" parent="." unique_id=1367202803]
 position = Vector2(0, -5)
 texture = ExtResource("1_aa6mi")
-
-[node name="Label" type="Label" parent="." unique_id=1581739614]
-offset_left = -34.0
-offset_top = -30.0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "Item pick-up"
