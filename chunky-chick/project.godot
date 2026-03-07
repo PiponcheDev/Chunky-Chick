@@ -17,9 +17,9 @@ config/icon="res://Assets-Extra/icon.svg"
 
 [autoload]
 
-GameData="*uid://cvld2h71gy3n2"
 Settings="*uid://cegt5u20gf4yc"
 GameLoad="*uid://cko840a3xfgua"
+Resources="*uid://dl677slqw5jr4"
 
 [file_customization]
 
@@ -41,6 +41,8 @@ placement_camera=""
 turret=""
 food=""
 talisman=""
+material=""
+fat_bar=""
 
 [input]
 

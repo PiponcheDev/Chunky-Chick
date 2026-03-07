@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://vxnhxnc8fji4"]
 
 [ext_resource type="Script" uid="uid://b4j0vgsucdyyk" path="res://src/scripts/food.gd" id="1_5ljg7"]
+[ext_resource type="Texture2D" uid="uid://b6sosfs1xctvy" path="res://Assets/Levels/Items.png" id="2_h44if"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_bf5dt"]
 radius = 1.0
-
-[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_5ljg7"]
 
 [node name="Area2D" type="Area2D" unique_id=2090540503]
 scale = Vector2(50, 50)
@@ -15,6 +14,8 @@ script = ExtResource("1_5ljg7")
 scale = Vector2(50, 50)
 shape = SubResource("CircleShape2D_bf5dt")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1712421296]
-scale = Vector2(50, 50)
-texture = SubResource("PlaceholderTexture2D_5ljg7")
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=437862994]
+texture = ExtResource("2_h44if")
+hframes = 10
+vframes = 2
+frame = 8

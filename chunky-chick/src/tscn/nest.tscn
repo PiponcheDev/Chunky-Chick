@@ -71,3 +71,5 @@ offset_top = -31.333334
 offset_right = 40.0
 offset_bottom = 23.000002
 text = "Nest"
+
+[connection signal="body_exited" from="UI-hitbox" to="Upgrade-Layer/Upgrade-selec" method="_on_u_ihitbox_body_exited"]

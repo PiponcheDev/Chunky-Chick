@@ -2,6 +2,10 @@ extends StaticBody2D
 
 var placing_turret: bool = false
 var ghost_turret: Node2D = null
+
+var turret_cost := 1
+var watchtower_cost := 1
+
 var turret_scene := preload("res://src/tscn/Structures/turret.tscn")
 var placement_stage := 0
 
@@ -38,6 +42,10 @@ func _ready():
 		main_camera.make_current()
 
 func _on_buy_watchtower_pressed():
+	if not Resources.spend_cardboard(watchtower_cost):
+		print("Not enough cardboard")
+		return
+	
 	upgrade_ui.visible = false
 	placement_camera.make_current()
 	placing_watchtower = true
@@ -63,8 +71,11 @@ func try_deposit(item):
 			deposit_item(item)
 
 func deposit_item(item):
+	if item.is_in_group("material"):
+		if item.material_type == "cardboard":
+			Resources.add_cardboard(item.material_amount)
 	deposit_count += 1
-	print("Items Deposited: ", deposit_count)
+	print("Items Deposited:", deposit_count)
 	item.queue_free()
 
 func _process(delta):
@@ -80,6 +91,10 @@ func _process(delta):
 		ghost_turret.global_position = mouse_pos
 
 func _on_buy_turret_pressed():
+	if not Resources.spend_cardboard(turret_cost):
+		print("Not enough cardboard")
+		return
+	
 	upgrade_ui.visible = false
 	placement_camera.make_current()
 	placing_turret = true

@@ -89,13 +89,6 @@ animation = &"trash_can"
 position = Vector2(-1.5, 0)
 shape = SubResource("RectangleShape2D_r6qk4")
 
-[node name="Label" type="Label" parent="." unique_id=7455199]
-offset_left = -30.0
-offset_top = -25.0
-offset_right = 40.0
-offset_bottom = 23.0
-text = "TrashCan"
-
 [node name="InteractionArea" type="Area2D" parent="." unique_id=890555294]
 collision_layer = 2
 

@@ -1,7 +1,9 @@
 extends Area2D
 
 # Exported properties
-@export var hold_distance: float = 160.0
+@export var hold_distance: float = 70.0
+@export var material_type := "cardboard"
+@export var material_amount := 1
 
 # State
 var carried: bool = false
@@ -10,6 +12,7 @@ var in_range: bool = false
 
 func _ready():
 	add_to_group("item")
+	add_to_group("material")
 	monitoring = true
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
@@ -44,3 +47,5 @@ func _update_position():
 	var angle_rad = deg_to_rad(carrier.snapped_angle + 90)
 	var dir = Vector2(cos(angle_rad), sin(angle_rad))
 	global_position = carrier.global_position + dir * hold_distance
+	# Rotate item with player
+	rotation_degrees = carrier.snapped_angle

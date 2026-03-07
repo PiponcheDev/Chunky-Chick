@@ -21,6 +21,11 @@ var attack_range_bonus := 0.0
 var shot_speed_bonus := 0.0
 var fatness_max_bonus := 0.0
 
+# --- Fatness System ---
+var fatness: float = 0
+var fatness_max: float = 100
+const FAT_SPEED_PENALTY := 0.4
+
 # --- Inventory ---
 var items: Array[TalismanData] = []
 
@@ -61,10 +66,8 @@ func _physics_process(delta: float) -> void:
 	direction = Input.get_vector("walk_left","walk_right","walk_up","walk_down").normalized()
 	if direction != Vector2.ZERO:
 		last_direction = direction
-
 	# Shooting cooldown
 	cooldown -= delta
-
 	# State handling
 	match current_state:
 		PlayerState.MOVING:
@@ -73,9 +76,7 @@ func _physics_process(delta: float) -> void:
 			_handle_idle_standing(delta)
 		PlayerState.IDLE_PECKING:
 			_handle_idle_pecking()
-
 	move_and_slide()
-
 	# Interactions
 	_handle_pickup()
 	_handle_shooting()
@@ -88,10 +89,17 @@ func _handle_moving():
 	if direction == Vector2.ZERO:
 		_transition_to_idle()
 		return
-	velocity = direction * (BASE_SPEED + speed_bonus)
+	var fat_ratio = fatness / (fatness_max + fatness_max_bonus)
+	var speed_multiplier = 1.0 - (fat_ratio * FAT_SPEED_PENALTY)
+	velocity = direction * (BASE_SPEED + speed_bonus) * speed_multiplier
 	sprite.play("walking")
 	last_dir = direction
 	_update_rotation(direction)
+
+func eat_food(amount := 5):
+	fatness += amount
+	fatness = clamp(fatness, 0, fatness_max + fatness_max_bonus)
+	print("Fatness:", fatness)
 
 func _handle_idle_standing(delta):
 	if direction != Vector2.ZERO:
@@ -171,7 +179,7 @@ func _handle_shooting():
 		get_tree().current_scene.add_child(bullet)
 		bullet.global_position = global_position
 		bullet.start_pos = global_position
-		bullet.direction = last_dir
+		bullet.direction = -last_dir
 		bullet.bullet_freed.connect(_on_bullet_freed)
 
 func _on_bullet_freed(pos: Vector2) -> void:

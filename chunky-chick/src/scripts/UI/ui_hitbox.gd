@@ -1,6 +1,7 @@
 extends Area2D
 
 var popup
+var upgrade
 
 func _ready():
 	popup = get_tree().current_scene.get_node("Nest/CanvasLayer/PopupUI")
