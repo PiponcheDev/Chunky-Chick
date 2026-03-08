@@ -19,6 +19,14 @@ offset_right = 1042.0
 offset_bottom = 510.0
 text = "Place Item [E]"
 
+[node name="Sleep" type="Button" parent="." unique_id=2079106935 groups=["ui"]]
+layout_mode = 0
+offset_left = 126.0
+offset_top = 435.0
+offset_right = 1043.0
+offset_bottom = 466.0
+text = "Sleep"
+
 [node name="Continue" type="Button" parent="." unique_id=437593828]
 layout_mode = 0
 offset_left = 122.0

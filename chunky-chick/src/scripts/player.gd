@@ -3,6 +3,7 @@ extends CharacterBody2D
 # --- Nodes ---
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var main_camera: Camera2D = $Camera2D 
+@onready var dash_cooldown: Timer = $"dash-cooldown"
 
 # --- Signals ---
 signal carried_item_changed(is_carrying: bool)
@@ -53,7 +54,29 @@ var carried_item: Node = null
 var angle_degrees := 0.0
 var snapped_angle := 0
 
+# --- Dash ---
+var dash_speed := BASE_SPEED + 1400.0
+var dash_distance := 250.0
+
+var is_dashing := false
+var dash_direction := Vector2.ZERO
+var dash_traveled := 0.0
+
+# --- Dash Visuals ---
+var dash_stretch := 1.05
+var dash_squash := 0.85
+var dash_anim_speed := 2.5
+
+var normal_anim_speed := 1.0
+
+# --- Afterimage Trail ---
+var ghost_interval := 0.03
+var ghost_timer := 0.0
+var ghost_lifetime := 0.35
+var ghost_color := Color(0.8, 0.9, 1.0, 0.6)
+
 func _ready():
+	
 	main_camera.add_to_group("main_camera")
 	add_to_group("player")
 	rng.randomize()
@@ -62,22 +85,18 @@ func _ready():
 	sprite.animation_finished.connect(_on_animation_finished)
 
 func _physics_process(delta: float) -> void:
-	# Movement input
+	
+	if Input.is_action_just_pressed("dash"):
+		_start_dash()
 	direction = Input.get_vector("walk_left","walk_right","walk_up","walk_down").normalized()
 	if direction != Vector2.ZERO:
 		last_direction = direction
-	# Shooting cooldown
 	cooldown -= delta
-	# State handling
-	match current_state:
-		PlayerState.MOVING:
-			_handle_moving()
-		PlayerState.IDLE_STANDING:
-			_handle_idle_standing(delta)
-		PlayerState.IDLE_PECKING:
-			_handle_idle_pecking()
+	if is_dashing:
+		_handle_dash(delta)
+	else:
+		_handle_normal_state(delta)
 	move_and_slide()
-	# Interactions
 	_handle_pickup()
 	_handle_shooting()
 	unlock_ability()
@@ -85,6 +104,16 @@ func _physics_process(delta: float) -> void:
 # --------------------------------------------------
 # STATE HANDLING
 # --------------------------------------------------
+
+func _handle_normal_state(delta):
+	match current_state:
+		PlayerState.MOVING:
+			_handle_moving()
+		PlayerState.IDLE_STANDING:
+			_handle_idle_standing(delta)
+		PlayerState.IDLE_PECKING:
+			_handle_idle_pecking()
+
 func _handle_moving():
 	if direction == Vector2.ZERO:
 		_transition_to_idle()
@@ -130,6 +159,67 @@ func _update_rotation(dir: Vector2):
 func _on_animation_finished():
 	if current_state == PlayerState.IDLE_PECKING:
 		_transition_to_idle()
+
+func _start_dash():
+	if is_dashing or !dash_cooldown.is_stopped():
+		return
+	is_dashing = true
+	dash_traveled = 0
+	ghost_timer = 0
+	dash_cooldown.start()
+	dash_direction = direction if direction != Vector2.ZERO else last_direction
+	sprite.play("walking")
+	sprite.speed_scale = dash_anim_speed
+	_apply_dash_stretch()
+
+func _apply_dash_stretch():
+	var dir = dash_direction.normalized()
+	var stretch_x = lerp(dash_squash, dash_stretch, abs(dir.x))
+	var stretch_y = lerp(dash_squash, dash_stretch, abs(dir.y))
+	sprite.scale = Vector2(stretch_y, stretch_x)
+
+func _handle_dash(delta):
+	var move_amount = dash_speed * delta
+	dash_traveled += move_amount
+	velocity = dash_direction * dash_speed
+	ghost_timer -= delta
+	if ghost_timer <= 0:
+		_spawn_ghost()
+		ghost_timer = ghost_interval
+	if dash_traveled >= dash_distance:
+		_end_dash()
+
+func _end_dash():
+	is_dashing = false
+	sprite.scale = Vector2.ONE
+	sprite.speed_scale = normal_anim_speed
+
+func _spawn_ghost():
+	var ghost := Sprite2D.new()
+	var frame_texture = sprite.sprite_frames.get_frame_texture(
+		sprite.animation,
+		sprite.frame
+	)
+	ghost.texture = frame_texture
+	ghost.global_position = sprite.global_position
+	ghost.rotation = sprite.rotation
+	ghost.scale = sprite.scale / 2
+	ghost.modulate = ghost_color
+	get_tree().current_scene.add_child(ghost)
+	var tween = create_tween()
+	tween.tween_property(
+		ghost,
+		"modulate:a",
+		0.0,
+		ghost_lifetime
+	)
+	tween.parallel().tween_property(
+		ghost,
+		"scale",
+		ghost.scale * 0.9,
+		ghost_lifetime
+	)
+	tween.tween_callback(ghost.queue_free)
 
 # --------------------------------------------------
 # TALISMAN COLLECTION SYSTEM
@@ -198,3 +288,10 @@ func unlock_ability() -> void:
 		bomb_bullets_unlocked = true
 		cooldown_multiplier = 0.6
 		print("Ability unlocked")
+		
+		
+# Returns the dash cooldown progress as a ratio (0.0 to 1.0)
+func get_dash_cooldown_ratio() -> float:
+	if dash_cooldown.wait_time == 0:
+		return 0.0
+	return clamp(dash_cooldown.time_left / dash_cooldown.wait_time, 0.0, 1.0)

@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://knbi01afph2c" path="res://src/tscn/Player.tscn" id="4_trn2v"]
 [ext_resource type="PackedScene" uid="uid://vxnhxnc8fji4" path="res://src/tscn/Food.tscn" id="5_03owx"]
 [ext_resource type="PackedScene" uid="uid://pn32tdtruix8" path="res://src/tscn/Structures/trash_can.tscn" id="6_3dxm6"]
+[ext_resource type="PackedScene" uid="uid://djbhuhkk5k3hi" path="res://src/tscn/UI/player-ui.tscn" id="7_lgr22"]
 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 
@@ -13,7 +14,7 @@
 position = Vector2(617, 263)
 collision_layer = 1
 
-[node name="Item" parent="." unique_id=1133717472 groups=["item"] instance=ExtResource("2_3dxm6")]
+[node name="Item" parent="." unique_id=1133717472 instance=ExtResource("2_3dxm6")]
 position = Vector2(-59, 67)
 
 [node name="Temp-enemy" parent="." unique_id=1595050569 groups=["enemy"] instance=ExtResource("3_lgr22")]
@@ -22,13 +23,25 @@ position = Vector2(624, 922)
 [node name="TurretContainer" type="Node2D" parent="." unique_id=1063803777]
 position = Vector2(0, 3)
 
-[node name="Player" parent="." unique_id=1575125507 instance=ExtResource("4_trn2v")]
-position = Vector2(-157, 319)
-scale = Vector2(0.4, 0.4)
-
 [node name="Food" parent="." unique_id=2090540503 groups=["food"] instance=ExtResource("5_03owx")]
 position = Vector2(-443, 316)
 scale = Vector2(1, 1)
 
 [node name="TrashCan" parent="." unique_id=541807723 instance=ExtResource("6_3dxm6")]
 position = Vector2(-915, 556)
+
+[node name="Player" parent="." unique_id=1575125507 instance=ExtResource("4_trn2v")]
+visibility_layer = 524289
+position = Vector2(-167.37, 319)
+scale = Vector2(0.4, 0.4)
+
+[node name="Player-UI" parent="Player" unique_id=1917703129 instance=ExtResource("7_lgr22")]
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -2379.0747
+offset_top = -1337.4999
+offset_right = 2395.9243
+offset_bottom = 1359.9996
+grow_horizontal = 1
+grow_vertical = 1

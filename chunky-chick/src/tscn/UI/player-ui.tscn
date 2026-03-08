@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://djbhuhkk5k3hi"]
+
+[ext_resource type="Script" uid="uid://dsa8n1vqxns8e" path="res://src/scripts/UI/player_ui.gd" id="1_bepjn"]
+
+[node name="Player-UI" type="Control" unique_id=1917703129]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -776.0
+offset_top = -392.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_bepjn")
+
+[node name="Fatness-bar" type="ProgressBar" parent="." unique_id=818161336]
+layout_mode = 0
+offset_right = 1056.0
+offset_bottom = 160.0
+
+[node name="Dash-cooldown" type="ProgressBar" parent="." unique_id=1245878445]
+layout_mode = 0
+offset_top = 208.0
+offset_right = 880.0
+offset_bottom = 360.0
