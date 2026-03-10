@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://8ew2am00i0o6"]
+
+[ext_resource type="Script" uid="uid://bogrxbgmyrxfb" path="res://src/scripts/enemy/Bosses/Weasel/rock_weasel.gd" id="1_ebcss"]
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_72bl6"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xxcv7"]
+radius = 76.0
+height = 192.0
+
+[node name="Rock-weasel" type="CharacterBody2D" unique_id=377892286]
+scale = Vector2(0.6, 0.6)
+script = ExtResource("1_ebcss")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=334800505]
+shape = SubResource("CapsuleShape2D_xxcv7")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=130495722]
+position = Vector2(7, -5)
+texture = ExtResource("2_72bl6")

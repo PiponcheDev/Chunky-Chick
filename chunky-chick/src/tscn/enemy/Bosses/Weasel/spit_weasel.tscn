@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://286rkm6va786"]
+
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_o3okn"]
+[ext_resource type="Script" uid="uid://78vcjpi1mv0f" path="res://src/scripts/enemy/Bosses/Weasel/spit_weasel.gd" id="1_swem7"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_swem7"]
+radius = 75.0
+height = 192.0
+
+[node name="Spit-weasel" type="CharacterBody2D" unique_id=1720051241]
+scale = Vector2(0.6, 0.6)
+script = ExtResource("1_swem7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=940264078]
+shape = SubResource("CapsuleShape2D_swem7")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=419006173]
+position = Vector2(-1, -6)
+texture = ExtResource("1_o3okn")

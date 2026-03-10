@@ -2,23 +2,19 @@
 
 [ext_resource type="PackedScene" uid="uid://dlkge1c31esjr" path="res://src/tscn/nest.tscn" id="1_fos0i"]
 [ext_resource type="PackedScene" uid="uid://e3t6v4jtmdh6" path="res://src/tscn/items.tscn" id="2_3dxm6"]
-[ext_resource type="PackedScene" uid="uid://biaek1l53os4o" path="res://src/tscn/Temporary/temp_enemy.tscn" id="3_lgr22"]
 [ext_resource type="PackedScene" uid="uid://knbi01afph2c" path="res://src/tscn/Player.tscn" id="4_trn2v"]
 [ext_resource type="PackedScene" uid="uid://vxnhxnc8fji4" path="res://src/tscn/Food.tscn" id="5_03owx"]
 [ext_resource type="PackedScene" uid="uid://pn32tdtruix8" path="res://src/tscn/Structures/trash_can.tscn" id="6_3dxm6"]
 [ext_resource type="PackedScene" uid="uid://djbhuhkk5k3hi" path="res://src/tscn/UI/player-ui.tscn" id="7_lgr22"]
+[ext_resource type="PackedScene" uid="uid://dtp8jwfiygm1c" path="res://src/tscn/enemy/Bosses/Weasel/weasel_boss.tscn" id="7_trn2v"]
 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 
 [node name="Nest" parent="." unique_id=1833191925 groups=["nest"] instance=ExtResource("1_fos0i")]
 position = Vector2(617, 263)
-collision_layer = 1
 
 [node name="Item" parent="." unique_id=1133717472 instance=ExtResource("2_3dxm6")]
 position = Vector2(-59, 67)
-
-[node name="Temp-enemy" parent="." unique_id=1595050569 groups=["enemy"] instance=ExtResource("3_lgr22")]
-position = Vector2(624, 922)
 
 [node name="TurretContainer" type="Node2D" parent="." unique_id=1063803777]
 position = Vector2(0, 3)
@@ -45,3 +41,6 @@ offset_right = 2395.9243
 offset_bottom = 1359.9996
 grow_horizontal = 1
 grow_vertical = 1
+
+[node name="Weasel-boss" parent="." unique_id=1766625651 instance=ExtResource("7_trn2v")]
+position = Vector2(-338, -272)

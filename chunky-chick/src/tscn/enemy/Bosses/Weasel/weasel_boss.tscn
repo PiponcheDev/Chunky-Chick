@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dtp8jwfiygm1c"]
+
+[ext_resource type="Script" uid="uid://c4ki1unneo7d4" path="res://src/tscn/Temporary/weasel_boss.gd" id="1_2p87b"]
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_lbvnu"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_v5ddb"]
+radius = 93.065834
+
+[node name="Weasel-boss" type="CharacterBody2D" unique_id=983820579 groups=["enemy"]]
+script = ExtResource("1_2p87b")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=673628272]
+position = Vector2(-1, 1.5)
+shape = SubResource("CircleShape2D_v5ddb")
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=1487425113]
+position = Vector2(-3, 1)
+texture = ExtResource("2_lbvnu")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=880177973]
