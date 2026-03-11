@@ -12,24 +12,31 @@ enum BossState {
 }
 
 var state: BossState = BossState.ORBIT
+
 @onready var sprite: Node2D = $Icon
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 
 var hp: int = 220
-@export var move_speed: float = 220.0
+
+@export var move_speed: float = 400.0
 @export var orbit_radius_inner: float = 350.0
 @export var orbit_radius_outer: float = 600.0
+
 var orbit_radius: float = orbit_radius_outer
 var orbit_angle: float = 0.0
 var orbit_dir: int = 1
 var orbit_arc_remaining: float = 0.0
 var inward_timer: float = 0.0
+
 @export var orbit_noise_amplitude: float = 0.18
 @export var orbit_noise_speed: float = 1.3
+
 var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
 var _orbit_noise_time: float = 0.0
 
-@export var dash_speed: float = 900.0
+@export var dash_speed_first: float = 1200.0
+@export var dash_speed_second: float = 600.0
+
 var dash_vector: Vector2 = Vector2.ZERO
 var dash_count: int = 0
 var dash_cooldown: float = 0.0
@@ -41,7 +48,7 @@ const DASH_COIL_DUR: float = 0.25
 const DASH_MIN_EXEC: float = 0.4
 const DASH_MAX_EXEC: float = 0.5
 const DASH_POST_MICRO: float = 0.3
-const DASH_COOLDOWN: float = 1.0
+const DASH_COOLDOWN: float = 0.4
 
 const DASH_TRIGGER_RANGE: float = 200.0
 const DASH_CHAIN_DISTANCE: float = 100.0
@@ -53,17 +60,28 @@ var _coil_elapsed: float = 0.0
 
 @export var spit_scene_path: String = "res://src/tscn/enemy/Bosses/Weasel/spit_weasel.tscn"
 @export var rock_scene_path: String = "res://src/tscn/enemy/Bosses/Weasel/rock_weasel.tscn"
+
 var _spit_scene: PackedScene = null
 var _rock_scene: PackedScene = null
 
 var spit_cooldown: float = 0.0
+
 const SPIT_COOLDOWN: float = 6.0
 const SPIT_WINDUP: float = 0.4
 const SPIT_RECOVER: float = 0.6
 
-const PEBBLE_SPEED: float = 350.0
-const PEBBLE_LIFETIME: float = 3.0
-const PEBBLE_RADIUS: float = 8.0
+const DEFAULT_PEBBLE_SPEED: float = 350.0
+const DEFAULT_PEBBLE_LIFETIME: float = 3.0
+const DEFAULT_PEBBLE_RADIUS: float = 8.0
+const DEFAULT_PEBBLE_DAMAGE: int = 15
+
+@export var PEBBLE_FAN_COUNT: int = 8
+@export var PEBBLE_FAN_ANGLE: float = deg_to_rad(90.0)
+@export var PEBBLE_VOLLEY_SPEED: float = 260.0
+@export var PEBBLE_VOLLEY_LIFETIME: float = 1.2
+@export var PEBBLE_VOLLEY_RADIUS: float = 6.0
+@export var PEBBLE_VOLLEY_DAMAGE: int = 6
+
 var _pebbles: Array = []
 
 const SLIP_RADIUS: float = 50.0
@@ -76,6 +94,7 @@ var desired_velocity: Vector2 = Vector2.ZERO
 var _player_last_pos: Vector2 = Vector2.ZERO
 var _player_velocity: Vector2 = Vector2.ZERO
 var _player_speed: float = 0.0
+
 const PLAYER_STATIONARY_THRESHOLD: float = 20.0
 
 var _allow_orbit_change: bool = true
@@ -83,6 +102,16 @@ var _allow_orbit_change: bool = true
 @export var steer_smooth: float = 6.0
 
 var _prev_global_pos: Vector2 = Vector2.ZERO
+
+@export var ghost_interval: float = 0.04
+@export var ghost_lifetime: float = 0.35
+@export var ghost_start_alpha: float = 0.65
+@export var ghost_scale_mult: float = 0.95
+@export var ghost_color_base: Color = Color(0.8, 0.9, 1.0)
+
+var _ghost_timer: float = 0.0
+var _ghost_active: bool = false
+
 
 func _ready() -> void:
 	_rng.randomize()
@@ -93,62 +122,86 @@ func _ready() -> void:
 	_allow_orbit_change = false
 	_prev_global_pos = global_position
 
+
 func _load_projectile_scenes() -> void:
 	if spit_scene_path != "":
 		var r = load(spit_scene_path)
 		if r and r is PackedScene:
 			_spit_scene = r
+
 	if rock_scene_path != "":
 		var r = load(rock_scene_path)
 		if r and r is PackedScene:
 			_rock_scene = r
 
+
 func _physics_process(delta: float) -> void:
+
 	if state == BossState.DEAD:
 		return
+
 	state_timer = max(state_timer - delta, 0.0)
 	inward_timer = max(inward_timer - delta, 0.0)
 	dash_cooldown = max(dash_cooldown - delta, 0.0)
 	spit_cooldown = max(spit_cooldown - delta, 0.0)
+
 	_orbit_noise_time += delta
+
 	_update_pebbles(delta)
 	_update_player_speed(delta)
+
 	var current_pos: Vector2 = global_position
+
 	match state:
+
 		BossState.ORBIT:
 			_orbit_logic(delta)
 			_attack_decision()
+
 		BossState.DASH_LOCK:
 			if state_timer <= 0.0:
 				enter_dash_coil()
+
 		BossState.DASH_COIL:
 			_process_coil(delta)
 			if state_timer <= 0.0:
 				enter_dash_exec()
+
 		BossState.DASH_EXEC:
 			_check_dash_hit_segment(delta, current_pos)
 			if state_timer <= 0.0:
 				_enter_post_dash()
+
 		BossState.STUNNED:
 			desired_velocity = Vector2.ZERO
 			if state_timer <= 0.0:
 				enter_orbit()
+
 		BossState.SPIT_WINDUP:
 			desired_velocity = Vector2.ZERO
 			if state_timer <= 0.0:
 				_fire_ranged()
+
 		BossState.SPIT_RECOVER:
 			desired_velocity = Vector2.ZERO
 			if state_timer <= 0.0:
 				enter_orbit()
+
 		BossState.DEAD:
 			desired_velocity = Vector2.ZERO
+
 	if state == BossState.DASH_EXEC:
-		velocity = dash_vector * dash_speed
+		var dspeed = dash_speed_first if dash_stage == 0 else dash_speed_second
+		velocity = dash_vector * dspeed
 	else:
 		velocity = velocity.lerp(desired_velocity, clamp(steer_smooth * delta, 0.0, 1.0))
+
 	move_and_slide()
+
+	_update_dash_ghosts(delta)
+
 	_prev_global_pos = current_pos
+
 	if sprite and player:
 		sprite.rotation = (player.global_position - global_position).angle()
 
@@ -217,7 +270,7 @@ func enter_dash_lock(force: bool = false) -> void:
 	desired_velocity = Vector2.ZERO
 	if player:
 		var dist: float = global_position.distance_to(player.global_position)
-		var lead_time: float = clamp(dist / max(dash_speed, 1.0), 0.08, 0.6)
+		var lead_time: float = clamp(dist / max(dash_speed_first, 1.0), 0.08, 0.6)
 		var predicted: Vector2 = player.global_position + _player_velocity * lead_time
 		var raw: Vector2 = predicted - global_position
 		if raw.length() < 0.0001:
@@ -261,6 +314,8 @@ func enter_dash_exec() -> void:
 		state_timer = 0.45
 	if sprite:
 		sprite.scale = Vector2.ONE
+	_ghost_active = true
+	_ghost_timer = 0.0
 
 func start_double_dash() -> void:
 	dash_stage = 0
@@ -280,7 +335,7 @@ func _check_dash_hit_segment(delta: float, current_pos: Vector2) -> void:
 		return
 	if _did_hit_player:
 		return
-	var next_pos: Vector2 = current_pos + dash_vector * dash_speed * delta
+	var next_pos: Vector2 = current_pos + dash_vector * ((dash_speed_first if dash_stage == 0 else dash_speed_second)) * delta
 	var dist_to_segment: float = _segment_point_distance(current_pos, next_pos, player.global_position)
 	if dist_to_segment <= DASH_HIT_RADIUS:
 		_did_hit_player = true
@@ -289,6 +344,8 @@ func _check_dash_hit_segment(delta: float, current_pos: Vector2) -> void:
 		state_timer = 0.0
 
 func _enter_post_dash() -> void:
+	_ghost_active = false
+
 	if dash_stage == 0 and (_did_hit_player or (player and global_position.distance_to(player.global_position) <= DASH_CHAIN_DISTANCE)):
 		dash_stage = 1
 		enter_dash_lock(true)
@@ -317,12 +374,12 @@ func enter_spit() -> void:
 	desired_velocity = Vector2.ZERO
 
 func _fire_ranged() -> void:
-	if _spit_scene != null:
+	if _spit_scene != null and player and global_position.distance_to(player.global_position) > 420.0:
 		_fire_spit_scene()
 	elif _rock_scene != null:
-		_fire_rock_scene()
+		_fire_rock_volley()
 	else:
-		_spawn_pebble("spit")
+		_fire_pebble_volley()
 	spit_cooldown = SPIT_COOLDOWN
 	state = BossState.SPIT_RECOVER
 	state_timer = SPIT_RECOVER
@@ -339,30 +396,53 @@ func _fire_spit_scene() -> void:
 	var inst = _spit_scene.instantiate()
 	get_tree().get_current_scene().add_child(inst)
 	inst.global_position = global_position
-	var forward: Vector2 = _predict_player_pos_for_projectile(PEBBLE_SPEED) - global_position
+	var forward: Vector2 = _predict_player_pos_for_projectile(DEFAULT_PEBBLE_SPEED) - global_position
 	forward = forward.normalized().rotated(_rng.randf_range(-0.18, 0.18))
 	if inst.has_method("launch"):
 		inst.launch(forward)
 	elif inst.has_variable("velocity"):
-		inst.velocity = forward * PEBBLE_SPEED
+		inst.velocity = forward * DEFAULT_PEBBLE_SPEED
 
-func _fire_rock_scene() -> void:
-	var inst = _rock_scene.instantiate()
-	get_tree().get_current_scene().add_child(inst)
-	inst.global_position = global_position
-	var forward: Vector2 = _predict_player_pos_for_projectile(PEBBLE_SPEED) - global_position
-	forward = forward.normalized().rotated(_rng.randf_range(-0.22, 0.22))
-	if inst.has_method("launch"):
-		inst.launch(forward)
-	elif inst.has_variable("velocity"):
-		inst.velocity = forward * PEBBLE_SPEED
+func _fire_rock_volley() -> void:
+	var boss_forward: Vector2 = Vector2.RIGHT
+	if sprite:
+		boss_forward = Vector2(cos(sprite.rotation), sin(sprite.rotation)).normalized()
+	elif player:
+		boss_forward = (player.global_position - global_position).normalized()
+	var half_span = PEBBLE_FAN_ANGLE * 0.5
+	for i in range(PEBBLE_FAN_COUNT):
+		var t = 0.0 if PEBBLE_FAN_COUNT == 1 else float(i) / float(PEBBLE_FAN_COUNT - 1)
+		var ang = lerp(-half_span, half_span, t)
+		var dir = boss_forward.rotated(ang).normalized()
+		var inst = _rock_scene.instantiate()
+		get_tree().get_current_scene().add_child(inst)
+		inst.global_position = global_position
+		var final_dir = dir.rotated(_rng.randf_range(-0.04, 0.04)).normalized()
+		if inst.has_method("launch"):
+			inst.launch(final_dir)
+		else:
+			if inst.has_meta("velocity") or inst.has_method("set"):
+				inst.set("velocity", final_dir * PEBBLE_VOLLEY_SPEED)
+				if inst.has_method("set"):
+					inst.set("life_timer", PEBBLE_VOLLEY_LIFETIME)
 
-func _spawn_pebble(kind: String = "spit") -> void:
+func _fire_pebble_volley() -> void:
+	var forward_center: Vector2 = Vector2.RIGHT
+	if player:
+		forward_center = (player.global_position - global_position).normalized()
+	var half_span = PEBBLE_FAN_ANGLE * 0.5
+	for i in range(PEBBLE_FAN_COUNT):
+		var t = 0.0 if PEBBLE_FAN_COUNT == 1 else float(i) / float(PEBBLE_FAN_COUNT - 1)
+		var ang = lerp(-half_span, half_span, t)
+		var dir = forward_center.rotated(ang).normalized()
+		var vel = dir * PEBBLE_VOLLEY_SPEED + Vector2(0, -30.0) # slight upward arc
+		_spawn_pebble_with_params(global_position, vel, PEBBLE_VOLLEY_LIFETIME, PEBBLE_VOLLEY_DAMAGE, PEBBLE_VOLLEY_RADIUS, "rock")
+
+func _spawn_pebble_with_params(start_pos: Vector2, initial_vel: Vector2, life_time: float, damage: int, radius: float, kind: String = "spit") -> void:
 	var pebble_node: Node2D = Node2D.new()
 	pebble_node.name = "pebble"
 	var poly: Polygon2D = Polygon2D.new()
 	var pts: PackedVector2Array = PackedVector2Array()
-	var radius: float = 8.0
 	var segments: int = 12
 	for i in range(segments):
 		var ang: float = (2.0 * PI * i) / segments
@@ -370,18 +450,23 @@ func _spawn_pebble(kind: String = "spit") -> void:
 	poly.polygon = pts
 	poly.modulate = (Color(0.9, 0.8, 0.6) if kind == "rock" else Color(0.5, 0.9, 1.0))
 	pebble_node.add_child(poly)
-	var forward: Vector2 = _predict_player_pos_for_projectile(PEBBLE_SPEED) - global_position
-	forward = forward.normalized().rotated(_rng.randf_range(-0.18, 0.18))
-	var vel: Vector2 = forward * PEBBLE_SPEED + Vector2(0, -60.0)
 	var peb: Dictionary = {
 		"node": pebble_node,
-		"pos": global_position,
-		"vel": vel,
-		"life": PEBBLE_LIFETIME,
-		"kind": kind
+		"pos": start_pos,
+		"vel": initial_vel,
+		"life": life_time,
+		"kind": kind,
+		"damage": damage,
+		"radius": radius
 	}
 	_pebbles.append(peb)
 	get_tree().get_current_scene().add_child(pebble_node)
+
+func _spawn_pebble(kind: String = "spit") -> void:
+	var forward: Vector2 = _predict_player_pos_for_projectile(DEFAULT_PEBBLE_SPEED) - global_position
+	forward = forward.normalized().rotated(_rng.randf_range(-0.18, 0.18))
+	var vel: Vector2 = forward * DEFAULT_PEBBLE_SPEED + Vector2(0, -60.0)
+	_spawn_pebble_with_params(global_position, vel, DEFAULT_PEBBLE_LIFETIME, DEFAULT_PEBBLE_DAMAGE, DEFAULT_PEBBLE_RADIUS, kind)
 
 func _update_pebbles(delta: float) -> void:
 	for i in range(_pebbles.size() - 1, -1, -1):
@@ -396,9 +481,11 @@ func _update_pebbles(delta: float) -> void:
 		if is_instance_valid(peb["node"]):
 			peb["node"].global_position = pos
 		var removed: bool = false
-		if player and pos.distance_to(player.global_position) < (PEBBLE_RADIUS + 12.0):
+		var pradius: float = peb.get("radius", DEFAULT_PEBBLE_RADIUS)
+		var pdmg: int = peb.get("damage", DEFAULT_PEBBLE_DAMAGE)
+		if player and pos.distance_to(player.global_position) < (pradius + 12.0):
 			if player.has_method("apply_damage"):
-				player.apply_damage(15)
+				player.apply_damage(pdmg)
 			if player.has_method("apply_debuff"):
 				player.apply_debuff("blur", 0.8)
 			_spawn_slippery_patch(pos, "player_hit")
@@ -406,7 +493,7 @@ func _update_pebbles(delta: float) -> void:
 		if not removed:
 			var projectiles := get_tree().get_nodes_in_group("player_projectile")
 			for prj in projectiles:
-				if prj.global_position.distance_to(pos) < (PEBBLE_RADIUS + 8):
+				if prj.global_position.distance_to(pos) < (pradius + 8):
 					if prj.has_method("destroy"):
 						prj.destroy()
 					elif prj.queue_free:
@@ -468,3 +555,57 @@ func apply_damage(dmg: float) -> void:
 func _draw() -> void:
 	if Engine.is_editor_hint() and player:
 		draw_circle(to_local(player.global_position), orbit_radius, Color(1, 0, 0, 0.12))
+
+func _update_dash_ghosts(delta: float) -> void:
+	if not _ghost_active:
+		return
+	_ghost_timer -= delta
+	if _ghost_timer <= 0.0:
+		_spawn_dash_ghost()
+		_ghost_timer = ghost_interval
+
+func _spawn_dash_ghost() -> void:
+	var tex: Texture2D = null
+	var anim_sprite := sprite if sprite is AnimatedSprite2D else sprite.get_node_or_null("AnimatedSprite2D")
+	if anim_sprite and anim_sprite is AnimatedSprite2D:
+		tex = anim_sprite.sprite_frames.get_frame_texture(anim_sprite.animation, anim_sprite.frame)
+	else:
+		var s2 := sprite if sprite is Sprite2D else sprite.get_node_or_null("Sprite2D")
+		if s2 and s2 is Sprite2D:
+			tex = s2.texture
+
+	if tex:
+		var ghost := Sprite2D.new()
+		ghost.texture = tex
+		ghost.global_position = sprite.global_position if sprite else global_position
+		ghost.global_rotation = sprite.global_rotation if sprite else global_rotation
+		ghost.scale = sprite.scale if sprite else Vector2.ONE
+		ghost.modulate = Color(ghost_color_base.r, ghost_color_base.g, ghost_color_base.b, ghost_start_alpha)
+		get_tree().current_scene.add_child(ghost)
+		var tw = create_tween()
+		tw.tween_property(ghost, "modulate:a", 0.0, ghost_lifetime)
+		tw.parallel().tween_property(ghost, "scale", ghost.scale * ghost_scale_mult, ghost_lifetime)
+		tw.tween_callback(Callable(ghost, "queue_free"))
+		return
+
+	var dup := sprite.duplicate() if sprite else null
+	if dup:
+		dup.global_position = sprite.global_position if sprite else global_position
+		dup.global_rotation = sprite.global_rotation if sprite else global_rotation
+		dup.set_process(false)
+		dup.set_physics_process(false)
+		if dup is CanvasItem:
+			dup.modulate = Color(ghost_color_base.r, ghost_color_base.g, ghost_color_base.b, ghost_start_alpha)
+		get_tree().current_scene.add_child(dup)
+		var tw2 = create_tween()
+		if dup is CanvasItem:
+			tw2.tween_property(dup, "modulate:a", 0.0, ghost_lifetime)
+			tw2.parallel().tween_property(dup, "scale", dup.scale * ghost_scale_mult, ghost_lifetime)
+			tw2.tween_callback(Callable(dup, "queue_free"))
+		else:
+			var timer = Timer.new()
+			timer.one_shot = true
+			timer.wait_time = ghost_lifetime
+			dup.add_child(timer)
+			timer.timeout.connect(Callable(dup, "queue_free"))
+			timer.start()

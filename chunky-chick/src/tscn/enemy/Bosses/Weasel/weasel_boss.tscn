@@ -8,6 +8,8 @@ radius = 93.065834
 
 [node name="Weasel-boss" type="CharacterBody2D" unique_id=983820579 groups=["enemy"]]
 script = ExtResource("1_2p87b")
+move_speed = 516.045
+PEBBLE_FAN_COUNT = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=673628272]
 position = Vector2(-1, 1.5)
