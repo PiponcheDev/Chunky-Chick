@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TalismanData" format=3 uid="uid://j2rmocb5hme7"]
+
+[ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="1_51o06"]
+
+[resource]
+script = ExtResource("1_51o06")
+talisman_name = "Pocket Bread Crumbs"
+description = "More food later"
+fatness_from_food_bonus = 1.815
+metadata/_custom_type_script = "uid://dpeqe6622sp7j"

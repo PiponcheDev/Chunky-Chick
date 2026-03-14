@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="TalismanData" format=3 uid="uid://bbbytp5q1m7io"]
+
+[ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="1_xuv00"]
+
+[resource]
+script = ExtResource("1_xuv00")
+talisman_name = "Bent Fork Charm"
+description = "Pointy good"
+damage_bonus = 20.0
+metadata/_custom_type_script = "uid://dpeqe6622sp7j"

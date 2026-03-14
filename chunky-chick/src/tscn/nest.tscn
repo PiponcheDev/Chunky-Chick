@@ -6,12 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://di8qyu0l1gw7l" path="res://src/tscn/UI/selection_menu.tscn" id="4_kuljn"]
 [ext_resource type="PackedScene" uid="uid://cbxj3b6gsa1ql" path="res://src/tscn/UI/upgrade_selec.tscn" id="5_kuljn"]
 [ext_resource type="Script" uid="uid://clhwy44dkbsgw" path="res://src/scripts/UI/egg.gd" id="6_hwr44"]
+[ext_resource type="Texture2D" uid="uid://ctpqfhtmy2adw" path="res://Assets/Boxes.png" id="7_gmuhx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kuljn"]
 size = Vector2(101.03703, 48.888885)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwr44"]
-size = Vector2(448, 67.33334)
+size = Vector2(259.33334, 119)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kuljn"]
 radius = 87.30063
@@ -20,16 +21,16 @@ radius = 87.30063
 radius = 62.943924
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gmuhx"]
-size = Vector2(8.666672, 299.33334)
+size = Vector2(18.666683, 435.33334)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eerui"]
-size = Vector2(538.6667, 2.6666641)
+size = Vector2(538.6667, 5.999981)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_okcfb"]
-size = Vector2(12.666687, 90)
+size = Vector2(16, 179.33333)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o68ys"]
-size = Vector2(7.3333435, 109.33334)
+size = Vector2(14.666672, 231.33334)
 
 [node name="Nest" type="Node2D" unique_id=1109014379]
 scale = Vector2(1.5, 1.5)
@@ -38,34 +39,19 @@ script = ExtResource("2_ueg0u")
 [node name="Placement-camera" type="Camera2D" parent="." unique_id=1633269937 groups=["placement_camera"]]
 zoom = Vector2(0.5, 0.5)
 
-[node name="Icon" type="Sprite2D" parent="." unique_id=157249103]
-z_index = 1
-position = Vector2(2.6666667, -3.333334)
-scale = Vector2(0.5729167, 0.45312497)
-texture = ExtResource("1_ey1g7")
-
-[node name="ColorRect" type="ColorRect" parent="." unique_id=597538793]
-offset_left = -277.33334
-offset_top = -152.0
-offset_right = -81.33334
-offset_bottom = -36.666656
-scale = Vector2(2.7600002, 2.6000001)
-color = Color(0.8393267, 0.7105833, 0.31441426, 1)
-metadata/_edit_use_anchors_ = true
-
 [node name="Hitbox" type="Area2D" parent="." unique_id=875762905]
 position = Vector2(162.66669, 86.66667)
 scale = Vector2(2.25, 2.25)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=508363082]
-position = Vector2(-6.0740814, 2.814808)
+position = Vector2(-125.62964, -37.037037)
 shape = SubResource("RectangleShape2D_kuljn")
 
 [node name="UI-hitbox" type="Area2D" parent="." unique_id=703305370]
 script = ExtResource("3_7arkk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="UI-hitbox" unique_id=506137885]
-position = Vector2(8.666662, -119)
+position = Vector2(4.666667, -216.00002)
 shape = SubResource("RectangleShape2D_hwr44")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=762236213]
@@ -93,7 +79,7 @@ offset_bottom = 23.000002
 text = "Nest"
 
 [node name="Egg" type="StaticBody2D" parent="." unique_id=279210769]
-position = Vector2(2.666668, -2.999998)
+position = Vector2(90.66667, 2.3841858e-07)
 scale = Vector2(0.5729167, 0.45312497)
 collision_layer = 3
 
@@ -106,20 +92,26 @@ shape = SubResource("CircleShape2D_kuljn")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Egg" unique_id=500119499]
 shape = SubResource("CircleShape2D_hwr44")
 
+[node name="Icon" type="Sprite2D" parent="Egg" unique_id=157249103]
+z_index = 1
+position = Vector2(-2.3841858e-06, -0.73563766)
+scale = Vector2(1.0000001, 1.0000001)
+texture = ExtResource("1_ey1g7")
+
 [node name="Walls" type="Node2D" parent="." unique_id=994603355]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Walls" unique_id=1741419210]
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D" unique_id=1409091068]
-position = Vector2(259, -1.6666769)
+position = Vector2(255.33334, -109.66667)
 shape = SubResource("RectangleShape2D_gmuhx")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="Walls" unique_id=611378486]
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D2" unique_id=719270316]
-position = Vector2(-6, -150.66669)
+position = Vector2(-12, -326.66666)
 shape = SubResource("RectangleShape2D_eerui")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Walls" unique_id=774422928]
@@ -134,7 +126,7 @@ position = Vector2(0.6666667, 1.3333334)
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D4" unique_id=1962321447]
-position = Vector2(-270.33334, -107.66667)
+position = Vector2(-272, -242.33333)
 shape = SubResource("RectangleShape2D_okcfb")
 
 [node name="StaticBody2D5" type="StaticBody2D" parent="Walls" unique_id=2001177524]
@@ -142,7 +134,15 @@ position = Vector2(-98.66667, -18.666666)
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D5" unique_id=1045792457]
-position = Vector2(-174.33333, 110)
+position = Vector2(-178.00002, 49)
 shape = SubResource("RectangleShape2D_o68ys")
+
+[node name="Boxes" type="Sprite2D" parent="." unique_id=734814560]
+show_behind_parent = true
+position = Vector2(-120, -100.666664)
+scale = Vector2(4.152, 3.6133335)
+texture = ExtResource("7_gmuhx")
+hframes = 2
+frame = 1
 
 [connection signal="body_exited" from="UI-hitbox" to="Upgrade-Layer/Upgrade-selec" method="_on_u_ihitbox_body_exited"]

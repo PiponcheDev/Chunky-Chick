@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="TalismanData" format=3 uid="uid://758o0weu2lxi"]
+
+[ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="1_x25xm"]
+
+[resource]
+script = ExtResource("1_x25xm")
+talisman_name = "Sticky Street Gum"
+description = "Feet stuck..."
+speed_bonus = -45.0
+shot_speed_bonus = 20.0
+metadata/_custom_type_script = "uid://dpeqe6622sp7j"

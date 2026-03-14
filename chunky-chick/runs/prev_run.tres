@@ -2,9 +2,9 @@
 
 [ext_resource type="Script" path="res://GameData.gd" id="1_nl8ht"]
 [ext_resource type="Script" path="res://src/scripts/talisman_data.gd" id="2_lexoi"]
-[ext_resource type="Resource" path="res://talismans/half_soda_can.tres" id="3_lexoi"]
+[ext_resource type="Resource" path="res://talismans/passive/pocket_bread_crumbs.tres" id="3_lexoi"]
+[ext_resource type="Resource" path="res://talismans/passive/bent_fork_charm.tres" id="4_67pq6"]
 
 [resource]
 script = ExtResource("1_nl8ht")
-talismans = Array[ExtResource("2_lexoi")]([ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi"), ExtResource("3_lexoi")])
-metadata/_custom_type_script = "uid://cvld2h71gy3n2"
+talismans = Array[ExtResource("2_lexoi")]([ExtResource("3_lexoi"), ExtResource("4_67pq6")])
