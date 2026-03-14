@@ -39,10 +39,10 @@ func _apply_repulsion(delta):
 	for other in talismans:
 		if other == self:
 			continue
-		var dist = global_position.distance_to(other.global_position)
+		var dist: float = global_position.distance_to(other.global_position)
 		if dist < repel_radius and dist > 0:
-			var dir = (global_position - other.global_position).normalized()
-			var force = (repel_radius - dist) / repel_radius
+			var dir: Vector2 = (global_position - other.global_position).normalized()
+			var force: float = (repel_radius - dist) / repel_radius
 			global_position += dir * force * repel_strength * delta
 
 

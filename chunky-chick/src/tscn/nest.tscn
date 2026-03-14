@@ -27,10 +27,10 @@ size = Vector2(18.666683, 435.33334)
 size = Vector2(538.6667, 5.999981)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_okcfb"]
-size = Vector2(16, 179.33333)
+size = Vector2(14, 132)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o68ys"]
-size = Vector2(14.666672, 231.33334)
+size = Vector2(15.999992, 172)
 
 [node name="Nest" type="Node2D" unique_id=1109014379]
 scale = Vector2(1.5, 1.5)
@@ -126,7 +126,7 @@ position = Vector2(0.6666667, 1.3333334)
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D4" unique_id=1962321447]
-position = Vector2(-272, -242.33333)
+position = Vector2(-273, -266.00006)
 shape = SubResource("RectangleShape2D_okcfb")
 
 [node name="StaticBody2D5" type="StaticBody2D" parent="Walls" unique_id=2001177524]
@@ -134,7 +134,7 @@ position = Vector2(-98.66667, -18.666666)
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D5" unique_id=1045792457]
-position = Vector2(-178.00002, 49)
+position = Vector2(-178.6667, 78.66667)
 shape = SubResource("RectangleShape2D_o68ys")
 
 [node name="Boxes" type="Sprite2D" parent="." unique_id=734814560]
