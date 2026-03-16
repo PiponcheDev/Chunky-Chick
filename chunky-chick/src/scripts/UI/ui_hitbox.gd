@@ -13,7 +13,6 @@ func _on_body_entered(body):
 	print("test")
 	if body.is_in_group("player"):
 		print("player test")
-		popup.show_message("You entered the area!")
 
 func _on_body_exited(body):
 	if body.is_in_group("player"):

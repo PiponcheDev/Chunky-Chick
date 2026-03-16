@@ -11,14 +11,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_fpfg0")
 
-[node name="Guide" type="Button" parent="." unique_id=1450388232]
-layout_mode = 0
-offset_left = 125.0
-offset_top = 479.0
-offset_right = 1042.0
-offset_bottom = 510.0
-text = "Place Item [E]"
-
 [node name="Sleep" type="Button" parent="." unique_id=2079106935 groups=["ui"]]
 layout_mode = 0
 offset_left = 126.0
@@ -29,16 +21,16 @@ text = "Sleep"
 
 [node name="Continue" type="Button" parent="." unique_id=437593828]
 layout_mode = 0
-offset_left = 122.0
-offset_top = 520.0
-offset_right = 1045.0
-offset_bottom = 551.0
-text = "Exmp1"
+offset_left = 128.0
+offset_top = 480.0
+offset_right = 1051.0
+offset_bottom = 511.0
+text = "Buy"
 
-[node name="Label" type="Label" parent="." unique_id=1311238919]
+[node name="Feed" type="Button" parent="." unique_id=595554164]
 layout_mode = 0
-offset_left = 558.0
-offset_top = 377.0
-offset_right = 602.0
-offset_bottom = 400.0
-text = "EXMP"
+offset_left = 120.0
+offset_top = 480.0
+offset_right = 1048.0
+offset_bottom = 512.0
+text = "Feed"

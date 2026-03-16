@@ -347,3 +347,20 @@ func _update_cooldown_multiplier():
 	if old_multiplier > 0.0:
 		cooldown = cooldown * (new_multiplier / old_multiplier)
 	cooldown_multiplier = new_multiplier
+
+func get_dash_cooldown_ratio() -> float:
+	if dash_cooldown.wait_time <= 0:
+		return 1.0
+	
+	if dash_cooldown.is_stopped():
+		return 1.0
+	
+	return 1.0 - (dash_cooldown.time_left / dash_cooldown.wait_time)
+
+func eat_food(amount: float) -> void:
+	var bonus := 1.0 + fatness_from_food_bonus
+	fatness += amount * bonus
+	
+	var max_fat := fatness_max + fatness_max_bonus
+	if fatness > max_fat:
+		fatness = max_fat

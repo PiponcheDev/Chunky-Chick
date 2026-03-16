@@ -2,54 +2,78 @@ extends Control
 
 signal continue_pressed
 signal sleep_pressed
+signal feed_pressed
 
-@onready var label = $Label
-@onready var continue_button = $Continue
-@onready var sleep_button = $Sleep
-@onready var guide = $Guide
+@onready var sleep_button: Button = $Sleep
+@onready var buy_button: Button = $Continue
+@onready var feed_button: Button = $Feed
 @onready var player = get_tree().get_first_node_in_group("player")
 
 func _ready():
-	
+
 	add_to_group("ui")
-	
+
 	visible = false
 	sleep_button.visible = false
-	
-	continue_button.pressed.connect(_on_continue_pressed)
-	sleep_button.pressed.connect(_on_sleep_pressed)
-	if player:
-		guide.visible = player.carried_item != null
-		player.carried_item_changed.connect(_on_carried_item_changed)
-	else:
-		guide.visible = false
+	buy_button.visible = false
+	feed_button.visible = false
+
+	if buy_button:
+		buy_button.pressed.connect(_on_continue_pressed)
+
+	if sleep_button:
+		sleep_button.pressed.connect(_on_sleep_pressed)
+
+	if feed_button:
+		feed_button.pressed.connect(_on_feed_pressed)
 
 
-func show_sleep():
-	sleep_button.visible = true
+# --- UI Modes ---
 
-
-func hide_sleep():
+func show_buy_only() -> void:
+	visible = true
+	buy_button.visible = true
 	sleep_button.visible = false
+	feed_button.visible = false
 
 
-func show_message(text: String):
-	label.text = text
+func show_interaction(player_node: Node = null) -> void:
+
 	visible = true
 
+	buy_button.visible = false
+	sleep_button.visible = true
 
-func hide_popup():
+	var p = player_node if player_node != null else player
+
+	if p != null and p.get("fatness") != null:
+		feed_button.visible = p.fatness > 0
+	else:
+		feed_button.visible = false
+
+
+func hide_popup() -> void:
+
 	visible = false
+	sleep_button.visible = false
+	buy_button.visible = false
+	feed_button.visible = false
 
 
-func _on_continue_pressed():
+# --- Button Handlers ---
+
+func _on_continue_pressed() -> void:
+
 	hide_popup()
 	emit_signal("continue_pressed")
 
 
-func _on_sleep_pressed():
+func _on_sleep_pressed() -> void:
+
+	hide_popup()
 	emit_signal("sleep_pressed")
 
 
-func _on_carried_item_changed(is_carrying: bool):
-	guide.visible = is_carrying
+func _on_feed_pressed() -> void:
+
+	emit_signal("feed_pressed")
