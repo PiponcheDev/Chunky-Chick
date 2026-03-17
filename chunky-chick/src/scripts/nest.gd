@@ -1,5 +1,10 @@
 extends Node2D
 
+# --- Timer & Day ---
+
+var day_timer: Timer
+var DAY_DURATION := 900.0  # 15 minutes
+
 # --- Placement & Turret ---
 var placing_turret: bool = false
 var ghost_turret: Node2D = null
@@ -46,7 +51,7 @@ func _ready():
 	# popup / upgrade UI wiring
 	if popup_ui:
 		popup_ui.continue_pressed.connect(_on_popup_continue)
-		popup_ui.sleep_pressed.connect(_on_sleep_pressed)   # NEW CONNECTION
+		popup_ui.sleep_pressed.connect(_on_sleep_pressed)
 
 	if upgrade_ui:
 		upgrade_ui.close_pressed.connect(_on_upgrade_closed)
@@ -78,6 +83,9 @@ func _ready():
 		interaction_area.body_exited.connect(_on_interaction_area_body_exited)
 
 	_create_fade_layer()
+	
+	#Timers
+	_start_day_timer()
 
 
 # ---------------------------
@@ -133,6 +141,12 @@ func _on_sleep_pressed():
 		popup_ui.hide_popup()
 
 	_sleep_transition()
+
+	var egg = get_tree().get_first_node_in_group("egg")
+	if egg:
+		egg.next_day()
+
+	_start_day_timer()
 
 
 # --- Turret Placement ---
@@ -279,3 +293,31 @@ func try_deposit(item: Node) -> bool:
 		return true
 
 	return false
+
+func _start_day_timer():
+	day_timer = Timer.new()
+	day_timer.wait_time = DAY_DURATION
+	day_timer.one_shot = true
+	day_timer.timeout.connect(_on_day_timeout)
+	add_child(day_timer)
+	day_timer.start()
+
+	print("Day started: 15 min timer")
+
+
+func _on_day_timeout():
+	print("Day time over → forcing sleep")
+	_force_sleep()
+
+func _force_sleep():
+	if popup_ui:
+		popup_ui.hide_popup()
+
+	_sleep_transition()
+
+	# advance day
+	var egg = get_tree().get_first_node_in_group("egg")
+	if egg:
+		egg.next_day()
+
+	_start_day_timer()

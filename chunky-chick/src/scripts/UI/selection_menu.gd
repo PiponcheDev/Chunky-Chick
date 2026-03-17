@@ -7,11 +7,16 @@ signal feed_pressed
 @onready var sleep_button: Button = $Sleep
 @onready var buy_button: Button = $Continue
 @onready var feed_button: Button = $Feed
-@onready var player = get_tree().get_first_node_in_group("player")
+
+var current_player: Node = null
+var egg: Node = null
+
 
 func _ready():
 
 	add_to_group("ui")
+
+	egg = get_tree().get_first_node_in_group("egg")
 
 	visible = false
 	sleep_button.visible = false
@@ -28,7 +33,9 @@ func _ready():
 		feed_button.pressed.connect(_on_feed_pressed)
 
 
-# --- UI Modes ---
+# -------------------
+# UI Modes
+# -------------------
 
 func show_buy_only() -> void:
 	visible = true
@@ -37,17 +44,17 @@ func show_buy_only() -> void:
 	feed_button.visible = false
 
 
-func show_interaction(player_node: Node = null) -> void:
+func show_interaction(player_node: Node = null, can_sleep: bool = false) -> void:
 
 	visible = true
 
 	buy_button.visible = false
-	sleep_button.visible = true
+	sleep_button.visible = can_sleep
 
-	var p = player_node if player_node != null else player
+	current_player = player_node
 
-	if p != null and p.get("fatness") != null:
-		feed_button.visible = p.fatness > 0
+	if current_player != null:
+		feed_button.visible = current_player.fatness > 0
 	else:
 		feed_button.visible = false
 
@@ -60,7 +67,9 @@ func hide_popup() -> void:
 	feed_button.visible = false
 
 
-# --- Button Handlers ---
+# -------------------
+# Button Handlers
+# -------------------
 
 func _on_continue_pressed() -> void:
 
@@ -76,4 +85,27 @@ func _on_sleep_pressed() -> void:
 
 func _on_feed_pressed() -> void:
 
-	emit_signal("feed_pressed")
+	if not current_player:
+		print("No player reference!")
+		return
+
+	if not egg:
+		egg = get_tree().get_first_node_in_group("egg")
+		if not egg:
+			print("No egg found!")
+			return
+
+	var feed_amount = min(10.0, current_player.fatness)
+
+	if feed_amount <= 0:
+		print("No fatness to feed")
+		return
+
+	# ✅ apply feeding
+	current_player.fatness -= feed_amount
+	egg.add_food(feed_amount)
+
+	print("Fed:", feed_amount)
+
+	# ✅ refresh UI state after feeding
+	show_interaction(current_player, egg.is_demand_met())

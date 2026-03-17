@@ -83,7 +83,7 @@ position = Vector2(90.66667, 2.3841858e-07)
 scale = Vector2(0.5729167, 0.45312497)
 collision_layer = 3
 
-[node name="InteractionArea" type="Area2D" parent="Egg" unique_id=747188124]
+[node name="InteractionArea" type="Area2D" parent="Egg" unique_id=747188124 groups=["egg"]]
 script = ExtResource("6_hwr44")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Egg/InteractionArea" unique_id=109553047]
