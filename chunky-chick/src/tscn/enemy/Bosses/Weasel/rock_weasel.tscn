@@ -1,11 +1,15 @@
 [gd_scene format=3 uid="uid://8ew2am00i0o6"]
 
 [ext_resource type="Script" uid="uid://bogrxbgmyrxfb" path="res://src/scripts/enemy/Bosses/Weasel/rock_weasel.gd" id="1_ebcss"]
-[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_72bl6"]
+[ext_resource type="Texture2D" uid="uid://dwxe1mnkr15lt" path="res://Assets-Extra/Asset-extra-1.png" id="2_ebcss"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_xxcv7"]
-radius = 76.0
-height = 192.0
+radius = 68.33333
+height = 210.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_72bl6"]
+atlas = ExtResource("2_ebcss")
+region = Rect2(586.30194, 2837.9966, 1077.7307, 522.15625)
 
 [node name="Rock-weasel" type="CharacterBody2D" unique_id=377892286]
 scale = Vector2(0.6, 0.6)
@@ -17,5 +21,8 @@ script = ExtResource("1_ebcss")
 shape = SubResource("CapsuleShape2D_xxcv7")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=130495722]
-position = Vector2(7, -5)
-texture = ExtResource("2_72bl6")
+position = Vector2(10.000002, 6.666666)
+scale = Vector2(0.4, 0.4)
+texture = SubResource("AtlasTexture_72bl6")
+hframes = 2
+frame = 1

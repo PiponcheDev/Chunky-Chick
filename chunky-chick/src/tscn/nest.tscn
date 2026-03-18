@@ -9,7 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://ctpqfhtmy2adw" path="res://Assets/Boxes.png" id="7_gmuhx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kuljn"]
-size = Vector2(101.03703, 48.888885)
+size = Vector2(101.03703, 61.77778)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwr44"]
 size = Vector2(259.33334, 119)
@@ -44,7 +44,7 @@ position = Vector2(162.66669, 86.66667)
 scale = Vector2(2.25, 2.25)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=508363082]
-position = Vector2(-125.62964, -37.037037)
+position = Vector2(-125.62964, -43.481487)
 shape = SubResource("RectangleShape2D_kuljn")
 
 [node name="UI-hitbox" type="Area2D" parent="." unique_id=703305370]

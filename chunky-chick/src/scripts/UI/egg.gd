@@ -5,6 +5,7 @@ extends Area2D
 var day: int = 1
 var demand: float = 15
 var current_progress: float = 0
+var egg_stage: int = 1
 
 signal demand_completed
 
@@ -13,6 +14,8 @@ func _ready():
 	body_exited.connect(_on_body_exited)
 	
 	_update_demand()
+	if is_ending(egg_stage):
+		print("run is finished")
 
 
 # -------------------
@@ -43,6 +46,11 @@ func _update_demand():
 
 	print("Day:", day, " Demand:", demand)
 
+func is_ending(current_stage: int) -> bool:
+	if current_stage > 5:
+		return true
+	else:
+		return false
 
 func add_food(amount: float):
 	current_progress += amount
@@ -59,5 +67,7 @@ func is_demand_met() -> bool:
 
 
 func next_day():
+	if is_demand_met():
+		egg_stage += 1
 	day += 1
 	_update_demand()

@@ -1,7 +1,15 @@
 [gd_scene format=3 uid="uid://dpmyp8fu0ddpf"]
 
-[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_f3ex0"]
 [ext_resource type="Script" uid="uid://ch3hjmn8fc110" path="res://src/scripts/Structures/turret.gd" id="1_hvctn"]
+[ext_resource type="Texture2D" uid="uid://dwxe1mnkr15lt" path="res://Assets-Extra/Asset-extra-1.png" id="2_hvctn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iga1b"]
+atlas = ExtResource("2_hvctn")
+region = Rect2(263.6861, 1271.7114, 618.436, 502.47913)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_awlgl"]
+atlas = ExtResource("2_hvctn")
+region = Rect2(921.4178, 1209.9946, 399.40656, 526.5054)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hvctn"]
 radius = 107.86
@@ -14,23 +22,24 @@ collision_layer = 4
 script = ExtResource("1_hvctn")
 
 [node name="BaseSprite" type="Sprite2D" parent="." unique_id=1212524731]
-position = Vector2(1, -6)
-texture = ExtResource("1_f3ex0")
+position = Vector2(-20, -6)
+scale = Vector2(0.55, 0.55)
+texture = SubResource("AtlasTexture_iga1b")
 
 [node name="Head" type="Node2D" parent="." unique_id=656052195]
 
 [node name="HeadSprite" type="Sprite2D" parent="Head" unique_id=1297887165]
-position = Vector2(-0.5, -0.5000019)
+position = Vector2(1, 1)
 rotation = 1.5707964
 scale = Vector2(0.4921875, 0.5703125)
-texture = ExtResource("1_f3ex0")
+texture = SubResource("AtlasTexture_awlgl")
 
 [node name="Muzzle" type="Marker2D" parent="Head" unique_id=1593777282]
 
 [node name="DetectionArea" type="Area2D" parent="." unique_id=880882161]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DetectionArea" unique_id=1244256373]
-position = Vector2(2, -6.5)
+position = Vector2(-2.9999995, -2.3841858e-07)
 scale = Vector2(5, 5)
 shape = SubResource("CircleShape2D_hvctn")
 
