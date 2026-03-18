@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://k11y8xgtvtok"]
+
+[ext_resource type="Script" uid="uid://dtsik4126wncf" path="res://src/scripts/Managers/Env_Generator/allowed_spawns.gd" id="1_yllcm"]
+
+[node name="SpawnZone" type="Area2D" unique_id=1746260349]
+script = ExtResource("1_yllcm")

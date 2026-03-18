@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Chunky-chick"
-run/main_scene="uid://b38g1isc5lpdj"
+run/main_scene="uid://cebj4caoqts2w"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://Assets-Extra/icon.svg"
 
