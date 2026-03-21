@@ -29,7 +29,7 @@ texture = SubResource("AtlasTexture_iga1b")
 [node name="Head" type="Node2D" parent="." unique_id=656052195]
 
 [node name="HeadSprite" type="Sprite2D" parent="Head" unique_id=1297887165]
-position = Vector2(1, 1)
+position = Vector2(-13, 3)
 rotation = 1.5707964
 scale = Vector2(0.4921875, 0.5703125)
 texture = SubResource("AtlasTexture_awlgl")
@@ -49,11 +49,3 @@ wait_time = 0.053
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1022374796]
 position = Vector2(2, -6.5)
 shape = SubResource("RectangleShape2D_iga1b")
-
-[node name="Label" type="Label" parent="." unique_id=202734915]
-offset_left = -49.0
-offset_top = -64.0
-offset_right = 49.0
-offset_bottom = 49.0
-text = "Turret
-"

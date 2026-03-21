@@ -9,4 +9,4 @@
 
 [resource]
 script = ExtResource("1_nl8ht")
-talismans = Array[ExtResource("2_lexoi")]([ExtResource("3_lexoi"), ExtResource("4_67pq6"), ExtResource("5_a3ero"), ExtResource("3_lexoi"), ExtResource("4_67pq6"), ExtResource("4_67pq6"), ExtResource("4_67pq6"), ExtResource("3_lexoi"), ExtResource("5_a3ero"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("4_67pq6"), ExtResource("5_a3ero"), ExtResource("5_a3ero")])
+talismans = Array[ExtResource("2_lexoi")]([ExtResource("3_lexoi"), ExtResource("4_67pq6"), ExtResource("5_a3ero"), ExtResource("3_lexoi"), ExtResource("4_67pq6"), ExtResource("4_67pq6"), ExtResource("4_67pq6"), ExtResource("3_lexoi"), ExtResource("5_a3ero"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("6_fhewc"), ExtResource("4_67pq6"), ExtResource("5_a3ero"), ExtResource("5_a3ero"), ExtResource("5_a3ero")])

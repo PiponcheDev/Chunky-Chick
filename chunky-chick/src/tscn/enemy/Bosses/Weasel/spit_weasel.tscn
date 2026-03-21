@@ -1,11 +1,131 @@
 [gd_scene format=3 uid="uid://286rkm6va786"]
 
-[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_o3okn"]
 [ext_resource type="Script" uid="uid://78vcjpi1mv0f" path="res://src/scripts/enemy/Bosses/Weasel/spit_weasel.gd" id="1_swem7"]
+[ext_resource type="Texture2D" uid="uid://bvyfq6e2df1ov" path="res://Assets-Extra/Spit-weasel.png" id="2_swem7"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_swem7"]
 radius = 75.0
 height = 192.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_28ffx"]
+atlas = ExtResource("2_swem7")
+region = Rect2(0, 0, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pxv6w"]
+atlas = ExtResource("2_swem7")
+region = Rect2(795, 0, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_psiq4"]
+atlas = ExtResource("2_swem7")
+region = Rect2(1590, 0, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rmx7l"]
+atlas = ExtResource("2_swem7")
+region = Rect2(2385, 0, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iji4p"]
+atlas = ExtResource("2_swem7")
+region = Rect2(0, 826, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n2v47"]
+atlas = ExtResource("2_swem7")
+region = Rect2(795, 826, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vvyav"]
+atlas = ExtResource("2_swem7")
+region = Rect2(1590, 826, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_001sr"]
+atlas = ExtResource("2_swem7")
+region = Rect2(2385, 826, 795, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3ovff"]
+atlas = ExtResource("2_swem7")
+region = Rect2(0, 0, 786, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dtat2"]
+atlas = ExtResource("2_swem7")
+region = Rect2(786, 0, 786, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fx1cy"]
+atlas = ExtResource("2_swem7")
+region = Rect2(1572, 0, 786, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_05tu3"]
+atlas = ExtResource("2_swem7")
+region = Rect2(2358, 0, 786, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1l2d8"]
+atlas = ExtResource("2_swem7")
+region = Rect2(0, 826, 786, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0nndh"]
+atlas = ExtResource("2_swem7")
+region = Rect2(786, 826, 786, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_st8tq"]
+atlas = ExtResource("2_swem7")
+region = Rect2(1572, 826, 786, 826)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nxapi"]
+atlas = ExtResource("2_swem7")
+region = Rect2(2358, 826, 786, 826)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_cyktc"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_28ffx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pxv6w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_psiq4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rmx7l")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iji4p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n2v47")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vvyav")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_001sr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3ovff")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dtat2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fx1cy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_05tu3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1l2d8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0nndh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_st8tq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nxapi")
+}],
+"loop": true,
+"name": &"default",
+"speed": 13.0
+}]
 
 [node name="Spit-weasel" type="CharacterBody2D" unique_id=1720051241]
 scale = Vector2(0.6, 0.6)
@@ -16,6 +136,7 @@ script = ExtResource("1_swem7")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=940264078]
 shape = SubResource("CapsuleShape2D_swem7")
 
-[node name="Icon" type="Sprite2D" parent="." unique_id=419006173]
+[node name="Icon" type="AnimatedSprite2D" parent="." unique_id=424231190]
 position = Vector2(-1, -6)
-texture = ExtResource("1_o3okn")
+sprite_frames = SubResource("SpriteFrames_cyktc")
+frame_progress = 0.26715606

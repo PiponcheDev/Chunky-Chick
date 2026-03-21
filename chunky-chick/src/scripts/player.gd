@@ -55,8 +55,8 @@ var carried_item: Node = null
 var angle_degrees := 0.0
 var snapped_angle := 0
 
-var dash_speed := BASE_SPEED + 1400.0
 var dash_distance := 250.0
+var dash_speed_bonus := 1400.0
 var is_dashing := false
 var dash_direction := Vector2.ZERO
 var dash_traveled := 0.0
@@ -88,7 +88,7 @@ func _ready():
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash"):
 		_start_dash()
-	direction = Input.get_vector("walk_left","walk_right","walk_up","walk_down").normalized()
+	direction = Input.get_vector("walk_left", "walk_right", "walk_up", "walk_down").normalized()
 	if direction != Vector2.ZERO:
 		last_direction = direction
 	cooldown -= delta
@@ -119,18 +119,30 @@ func _handle_normal_state(delta):
 		PlayerState.IDLE_PECKING:
 			_handle_idle_pecking()
 
+func _get_fat_speed_multiplier() -> float:
+	var denom: float = fatness_max + fatness_max_bonus
+	if denom <= 0.01:
+		denom = 0.01
+	var fat_ratio: float = fatness / denom
+	return 1.0 - (fat_ratio * FAT_SPEED_PENALTY)
+
+func _get_move_speed() -> float:
+	return (BASE_SPEED + speed_bonus) * _get_fat_speed_multiplier()
+
+func _get_dash_speed() -> float:
+	return _get_move_speed() + dash_speed_bonus
+
 func _handle_moving():
 	if direction == Vector2.ZERO:
 		_transition_to_idle()
 		return
-	var fat_ratio: float = fatness / (fatness_max + fatness_max_bonus)
-	var speed_multiplier: float = 1.0 - (fat_ratio * FAT_SPEED_PENALTY)
-	velocity = direction * (BASE_SPEED + speed_bonus) * speed_multiplier
+	velocity = direction * _get_move_speed()
 	sprite.play("walking")
 	last_dir = direction
 	_update_rotation(direction)
 
 func _handle_idle_standing(delta):
+	velocity = Vector2.ZERO
 	if direction != Vector2.ZERO:
 		current_state = PlayerState.MOVING
 		return
@@ -141,6 +153,7 @@ func _handle_idle_standing(delta):
 		idle_time = 0
 
 func _handle_idle_pecking():
+	velocity = Vector2.ZERO
 	if direction != Vector2.ZERO:
 		current_state = PlayerState.MOVING
 
@@ -167,7 +180,9 @@ func _start_dash():
 	dash_traveled = 0
 	ghost_timer = 0
 	dash_cooldown.start()
-	dash_direction = direction if direction != Vector2.ZERO else last_direction
+	dash_direction = (direction if direction != Vector2.ZERO else last_direction).normalized()
+	if dash_direction == Vector2.ZERO:
+		dash_direction = Vector2.DOWN
 	sprite.play("walking")
 	sprite.speed_scale = dash_anim_speed
 	_apply_dash_stretch()
@@ -179,9 +194,9 @@ func _apply_dash_stretch():
 	sprite.scale = Vector2(stretch_y, stretch_x)
 
 func _handle_dash(delta):
-	var move_amount: float = dash_speed * delta
-	dash_traveled += move_amount
-	velocity = dash_direction * dash_speed
+	var current_dash_speed: float = _get_dash_speed()
+	dash_traveled += current_dash_speed * delta
+	velocity = dash_direction * current_dash_speed
 	ghost_timer -= delta
 	if ghost_timer <= 0.0:
 		_spawn_ghost()
@@ -191,8 +206,20 @@ func _handle_dash(delta):
 
 func _end_dash():
 	is_dashing = false
+	velocity = Vector2.ZERO
 	sprite.scale = Vector2.ONE
 	sprite.speed_scale = normal_anim_speed
+	_sync_animation_after_dash()
+
+func _sync_animation_after_dash():
+	if direction != Vector2.ZERO:
+		current_state = PlayerState.MOVING
+		sprite.play("walking")
+	elif current_state == PlayerState.IDLE_PECKING:
+		sprite.play("idle_peck")
+	else:
+		current_state = PlayerState.IDLE_STANDING
+		sprite.play("idle_standing")
 
 func _spawn_ghost():
 	var ghost: Sprite2D = Sprite2D.new()
@@ -351,16 +378,13 @@ func _update_cooldown_multiplier():
 func get_dash_cooldown_ratio() -> float:
 	if dash_cooldown.wait_time <= 0:
 		return 1.0
-	
 	if dash_cooldown.is_stopped():
 		return 1.0
-	
 	return 1.0 - (dash_cooldown.time_left / dash_cooldown.wait_time)
 
 func eat_food(amount: float) -> void:
 	var bonus := 1.0 + fatness_from_food_bonus
 	fatness += amount * bonus
-	
 	var max_fat := fatness_max + fatness_max_bonus
 	if fatness > max_fat:
 		fatness = max_fat
