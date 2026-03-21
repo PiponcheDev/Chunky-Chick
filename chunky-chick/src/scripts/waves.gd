@@ -24,6 +24,10 @@ var angles: Array[float] = []
 
 
 var _t: float = 0.0
+var randomness := RandomNumberGenerator.new()
+var c_fast := 0
+var c_tank := 0
+var c_range:= 0
 
 func _ready() -> void:
 	var a: float = randf() * TAU
@@ -109,26 +113,44 @@ func _add_point_at_angle(a: float) -> void:
 func _angle_difference(a: float, b: float) -> float:
 	return wrapf(a - b, -PI, PI)
 
-func _input(event: InputEvent) -> void:
+func _input(_event: InputEvent) -> void:
 	if Input.is_action_just_pressed("wave"):
 		var count := randi_range(10, 20)
 
-	
 		var base_angle: float = angles[-1]
 		var half_arc: float = deg_to_rad(40.0) * 0.5
 
 		for i in count:
+			await get_tree().create_timer(randf_range(0.5, 1)).timeout
 			var t = 0.0 if count == 1 else float(i) / float(count - 1)
 			var a = lerp(base_angle - half_arc, base_angle + half_arc, t)
 			var p_local: Vector2 = center + Vector2(cos(a), sin(a)) * radius
 			var p_global: Vector2 = to_global(p_local)
 
 			var e := enemy.instantiate() as Node2D
+			e.enemy_type = pick_type(randomness, c_fast, c_range, c_tank)
 			get_parent().add_child(e)
 			e.global_position = p_global
+			match e.enemy_type:
+				0:
+					c_range+=1
+				1:
+					c_fast+=1
+				2:
+					c_tank+=1
 
-func spawn_enemy() -> void:
-	var spawned_enemy = enemy.instantiate()
-	spawned_enemy.global_position = to_global(points[-1])
-	var parent := get_parent()
-	parent.add_child(spawned_enemy)
+
+func pick_type(rng: RandomNumberGenerator, fast:int, range:int, tank:int, jitter:float=0.2) -> int:
+	var total := fast + range + tank
+	var desired := Vector3(0.5, 1.0/3.0, 1.0/6.0) * float(total + 1)
+	var deficit := desired - Vector3(c_fast, c_range, c_tank)
+
+	var score := Vector3(
+		max(0.01, deficit.x + rng.randf_range(-jitter, jitter)),
+		max(0.01, deficit.y + rng.randf_range(-jitter, jitter)),
+		max(0.01, deficit.z + rng.randf_range(-jitter, jitter))
+	)
+
+	var sum := score.x + score.y + score.z
+	var r := rng.randf() * sum
+	return 1 if r < score.x else (0 if r < score.x + score.y else 2)

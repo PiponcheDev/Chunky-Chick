@@ -6,8 +6,12 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_cb60r"]
 radius = 1.4142135
 
-[node name="Enemy" type="CharacterBody2D" unique_id=1192490396]
+[sub_resource type="CircleShape2D" id="CircleShape2D_0tlmy"]
+radius = 4.0
+
+[node name="Enemy" type="CharacterBody2D" unique_id=1192490396 groups=["enemy"]]
 scale = Vector2(10, 10)
+collision_layer = 3
 script = ExtResource("1_0tlmy")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=4175955]
@@ -25,8 +29,19 @@ path_postprocessing = 1
 avoidance_enabled = true
 debug_enabled = true
 
-[node name="Timer" type="Timer" parent="." unique_id=706602399]
+[node name="Path" type="Timer" parent="." unique_id=706602399]
 wait_time = 0.2
 autostart = true
 
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[node name="Area2D" type="Area2D" parent="." unique_id=670467681]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=2066215138]
+shape = SubResource("CircleShape2D_0tlmy")
+
+[node name="AttackCooldown" type="Timer" parent="." unique_id=761552947]
+one_shot = true
+
+[connection signal="timeout" from="Path" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

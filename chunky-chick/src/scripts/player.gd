@@ -12,7 +12,10 @@ signal carried_item_changed(is_carrying: bool)
 const BASE_SPEED := 450.0
 const IDLE_TIME_MIN := 1.0
 const IDLE_TIME_MAX := 5.0
-const BULLET_SCENE = preload("res://src/tscn/player_bullets.tscn")
+const BULLET_SCENE = preload("res://src/tscn/Bullets.tscn")
+const DAMAGE := 25
+var health := 150
+
 
 # --- Item bonuses ---
 var speed_bonus := 0.0
@@ -266,10 +269,12 @@ func _handle_shooting():
 	if Input.is_action_pressed("shoot") and cooldown <= 0:
 		cooldown = 0.6 * cooldown_multiplier
 		var bullet = BULLET_SCENE.instantiate()
+		bullet.shooter = self
 		get_tree().current_scene.add_child(bullet)
 		bullet.global_position = global_position
 		bullet.start_pos = global_position
 		bullet.direction = -last_dir
+		bullet.damage = DAMAGE
 		bullet.bullet_freed.connect(_on_bullet_freed)
 
 func _on_bullet_freed(pos: Vector2) -> void:
@@ -295,3 +300,10 @@ func get_dash_cooldown_ratio() -> float:
 	if dash_cooldown.wait_time == 0:
 		return 0.0
 	return clamp(dash_cooldown.time_left / dash_cooldown.wait_time, 0.0, 1.0)
+
+
+func take_damage(amount: int) -> void:
+	health = max(health - amount, 0)
+
+	if health == 0:
+		queue_free()

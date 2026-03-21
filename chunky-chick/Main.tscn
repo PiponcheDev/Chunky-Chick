@@ -76,5 +76,5 @@ grow_horizontal = 1
 grow_vertical = 1
 
 [node name="circle" parent="." unique_id=1726487523 instance=ExtResource("8_trn2v")]
-position = Vector2(615.9999, 263.99997)
+position = Vector2(-128, 192)
 scale = Vector2(0.99999994, 0.99999994)
