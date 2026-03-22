@@ -15,6 +15,11 @@ var state: BossState = BossState.ORBIT
 
 @onready var sprite: Node2D = $Icon
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
+@onready var audioPlayer: AudioStreamPlayer2D = $AudioStreamPlayer2D
+
+const SFX_BLEHH: AudioStream = preload("res://Assets/Audio/enemy/bosses/weasel/blehh.ogg")
+const SFX_GRAVEL: AudioStream = preload("res://Assets/Audio/enemy/bosses/weasel/gravel.ogg")
+const SFX_SLASH: AudioStream = preload("res://Assets/Audio/enemy/bosses/weasel/slash.ogg")
 
 var hp: int = 220
 
@@ -135,8 +140,15 @@ func _load_projectile_scenes() -> void:
 			_rock_scene = r
 
 
-func _physics_process(delta: float) -> void:
+func _play_sfx(stream: AudioStream) -> void:
+	if audioPlayer == null or stream == null:
+		return
+	audioPlayer.stop()
+	audioPlayer.stream = stream
+	audioPlayer.play()
 
+
+func _physics_process(delta: float) -> void:
 	if state == BossState.DEAD:
 		return
 
@@ -153,7 +165,6 @@ func _physics_process(delta: float) -> void:
 	var current_pos: Vector2 = global_position
 
 	match state:
-
 		BossState.ORBIT:
 			_orbit_logic(delta)
 			_attack_decision()
@@ -205,6 +216,7 @@ func _physics_process(delta: float) -> void:
 	if sprite and player:
 		sprite.rotation = (player.global_position - global_position).angle()
 
+
 func _update_player_speed(delta: float) -> void:
 	if player == null:
 		_player_velocity = Vector2.ZERO
@@ -214,6 +226,7 @@ func _update_player_speed(delta: float) -> void:
 	_player_velocity = vel
 	_player_speed = vel.length()
 	_player_last_pos = player.global_position
+
 
 func _orbit_logic(delta: float) -> void:
 	if player == null:
@@ -239,6 +252,7 @@ func _orbit_logic(delta: float) -> void:
 	orbit_target += perp * _rng.randf_range(-6.0, 6.0)
 	desired_velocity = (orbit_target - global_position).normalized() * move_speed
 
+
 func choose_orbit() -> void:
 	if _rng.randf() < 0.6:
 		orbit_radius = orbit_radius_inner
@@ -247,6 +261,7 @@ func choose_orbit() -> void:
 	var arc_deg: float = _rng.randf_range(90.0, 160.0)
 	orbit_arc_remaining = deg_to_rad(arc_deg) * orbit_radius
 	orbit_dir = (-1 if _rng.randi_range(0, 1) == 0 else 1)
+
 
 func _attack_decision() -> void:
 	if player == null:
@@ -261,6 +276,7 @@ func _attack_decision() -> void:
 	if state == BossState.ORBIT and dist > 420.0 and spit_cooldown <= 0.0:
 		if _rng.randf() < 0.18:
 			enter_spit()
+
 
 func enter_dash_lock(force: bool = false) -> void:
 	if not force and state != BossState.ORBIT:
@@ -287,11 +303,13 @@ func enter_dash_lock(force: bool = false) -> void:
 		sprite.position = Vector2.ZERO
 		sprite.scale = Vector2.ONE
 
+
 func enter_dash_coil() -> void:
 	state = BossState.DASH_COIL
 	state_timer = DASH_COIL_DUR
 	_coil_elapsed = 0.0
 	desired_velocity = Vector2.ZERO
+
 
 func _process_coil(delta: float) -> void:
 	_coil_elapsed += delta
@@ -306,6 +324,7 @@ func _process_coil(delta: float) -> void:
 		var yscale: float = lerp(1.0, 1.0 - amplitude, s)
 		sprite.scale = Vector2(xscale, yscale)
 
+
 func enter_dash_exec() -> void:
 	state = BossState.DASH_EXEC
 	if dash_stage == 0:
@@ -316,10 +335,13 @@ func enter_dash_exec() -> void:
 		sprite.scale = Vector2.ONE
 	_ghost_active = true
 	_ghost_timer = 0.0
+	_play_sfx(SFX_SLASH)
+
 
 func start_double_dash() -> void:
 	dash_stage = 0
 	enter_dash_lock(false)
+
 
 func _segment_point_distance(a: Vector2, b: Vector2, p: Vector2) -> float:
 	var ab: Vector2 = b - a
@@ -329,6 +351,7 @@ func _segment_point_distance(a: Vector2, b: Vector2, p: Vector2) -> float:
 		t = clamp(((p - a).dot(ab)) / denom, 0.0, 1.0)
 	var proj: Vector2 = a + ab * t
 	return p.distance_to(proj)
+
 
 func _check_dash_hit_segment(delta: float, current_pos: Vector2) -> void:
 	if player == null:
@@ -342,6 +365,7 @@ func _check_dash_hit_segment(delta: float, current_pos: Vector2) -> void:
 		if player.has_method("apply_damage"):
 			player.apply_damage(DASH_PLAYER_DAMAGE)
 		state_timer = 0.0
+
 
 func _enter_post_dash() -> void:
 	_ghost_active = false
@@ -359,12 +383,14 @@ func _enter_post_dash() -> void:
 	_allow_orbit_change = false
 	enter_orbit()
 
+
 func enter_orbit() -> void:
 	state = BossState.ORBIT
 	state_timer = 0.0
 	if sprite:
 		sprite.scale = Vector2.ONE
 		sprite.position = Vector2.ZERO
+
 
 func enter_spit() -> void:
 	if state != BossState.ORBIT:
@@ -373,16 +399,21 @@ func enter_spit() -> void:
 	state_timer = SPIT_WINDUP
 	desired_velocity = Vector2.ZERO
 
+
 func _fire_ranged() -> void:
 	if _spit_scene != null and player and global_position.distance_to(player.global_position) > 420.0:
+		_play_sfx(SFX_BLEHH)
 		_fire_spit_scene()
 	elif _rock_scene != null:
+		_play_sfx(SFX_GRAVEL)
 		_fire_rock_volley()
 	else:
+		_play_sfx(SFX_GRAVEL)
 		_fire_pebble_volley()
 	spit_cooldown = SPIT_COOLDOWN
 	state = BossState.SPIT_RECOVER
 	state_timer = SPIT_RECOVER
+
 
 func _predict_player_pos_for_projectile(proj_speed: float) -> Vector2:
 	if player == null:
@@ -391,6 +422,7 @@ func _predict_player_pos_for_projectile(proj_speed: float) -> Vector2:
 	var dist: float = to_player.length()
 	var lead: float = clamp(dist / max(proj_speed, 1.0), 0.05, 1.0)
 	return player.global_position + _player_velocity * lead
+
 
 func _fire_spit_scene() -> void:
 	var inst = _spit_scene.instantiate()
@@ -402,6 +434,7 @@ func _fire_spit_scene() -> void:
 		inst.launch(forward)
 	elif inst.has_variable("velocity"):
 		inst.velocity = forward * DEFAULT_PEBBLE_SPEED
+
 
 func _fire_rock_volley() -> void:
 	var boss_forward: Vector2 = Vector2.RIGHT
@@ -426,6 +459,7 @@ func _fire_rock_volley() -> void:
 				if inst.has_method("set"):
 					inst.set("life_timer", PEBBLE_VOLLEY_LIFETIME)
 
+
 func _fire_pebble_volley() -> void:
 	var forward_center: Vector2 = Vector2.RIGHT
 	if player:
@@ -435,8 +469,9 @@ func _fire_pebble_volley() -> void:
 		var t = 0.0 if PEBBLE_FAN_COUNT == 1 else float(i) / float(PEBBLE_FAN_COUNT - 1)
 		var ang = lerp(-half_span, half_span, t)
 		var dir = forward_center.rotated(ang).normalized()
-		var vel = dir * PEBBLE_VOLLEY_SPEED + Vector2(0, -30.0) # slight upward arc
+		var vel = dir * PEBBLE_VOLLEY_SPEED + Vector2(0, -30.0)
 		_spawn_pebble_with_params(global_position, vel, PEBBLE_VOLLEY_LIFETIME, PEBBLE_VOLLEY_DAMAGE, PEBBLE_VOLLEY_RADIUS, "rock")
+
 
 func _spawn_pebble_with_params(start_pos: Vector2, initial_vel: Vector2, life_time: float, damage: int, radius: float, kind: String = "spit") -> void:
 	var pebble_node: Node2D = Node2D.new()
@@ -462,11 +497,13 @@ func _spawn_pebble_with_params(start_pos: Vector2, initial_vel: Vector2, life_ti
 	_pebbles.append(peb)
 	get_tree().get_current_scene().add_child(pebble_node)
 
+
 func _spawn_pebble(kind: String = "spit") -> void:
 	var forward: Vector2 = _predict_player_pos_for_projectile(DEFAULT_PEBBLE_SPEED) - global_position
 	forward = forward.normalized().rotated(_rng.randf_range(-0.18, 0.18))
 	var vel: Vector2 = forward * DEFAULT_PEBBLE_SPEED + Vector2(0, -60.0)
 	_spawn_pebble_with_params(global_position, vel, DEFAULT_PEBBLE_LIFETIME, DEFAULT_PEBBLE_DAMAGE, DEFAULT_PEBBLE_RADIUS, kind)
+
 
 func _update_pebbles(delta: float) -> void:
 	for i in range(_pebbles.size() - 1, -1, -1):
@@ -519,6 +556,7 @@ func _update_pebbles(delta: float) -> void:
 				peb["node"].queue_free()
 			_pebbles.remove_at(i)
 
+
 func _spawn_slippery_patch(pos: Vector2, reason: String = "") -> void:
 	var a: Area2D = Area2D.new()
 	var col: CollisionShape2D = CollisionShape2D.new()
@@ -536,12 +574,14 @@ func _spawn_slippery_patch(pos: Vector2, reason: String = "") -> void:
 	t.timeout.connect(Callable(a, "queue_free"))
 	t.start()
 
+
 func stun() -> void:
 	state = BossState.STUNNED
 	state_timer = 0.6
 	desired_velocity = Vector2.ZERO
 	if sprite:
 		sprite.scale = Vector2(0.85, 1.15)
+
 
 func apply_damage(dmg: float) -> void:
 	if state == BossState.STUNNED:
@@ -552,9 +592,11 @@ func apply_damage(dmg: float) -> void:
 		state = BossState.DEAD
 		queue_free()
 
+
 func _draw() -> void:
 	if Engine.is_editor_hint() and player:
 		draw_circle(to_local(player.global_position), orbit_radius, Color(1, 0, 0, 0.12))
+
 
 func _update_dash_ghosts(delta: float) -> void:
 	if not _ghost_active:
@@ -563,6 +605,7 @@ func _update_dash_ghosts(delta: float) -> void:
 	if _ghost_timer <= 0.0:
 		_spawn_dash_ghost()
 		_ghost_timer = ghost_interval
+
 
 func _spawn_dash_ghost() -> void:
 	var tex: Texture2D = null
