@@ -29,12 +29,13 @@ var FrequencyRandomness = 3
 @export var dumpsters : Array[SpringBoneCollisionCapsule3D] 
 #Obviously needs to be changed to the correct data structure
 
+@export_subgroup("Clumps")
 var currentClumpPos:Vector2 = Vector2(0,0)
 var currentClumpWeight:int = 0
 #How many spawns are currently in the clump
-var clumpCapacity = 5
+@export var clumpCapacity = 5
 #How many spawns fits in a clump
-var clumpDensity = 5
+@export var clumpDensity = 5
 #How close to the center the spawns are
 var amountOfClumps = 0
 
