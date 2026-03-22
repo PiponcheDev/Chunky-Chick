@@ -15,11 +15,41 @@ script = ExtResource("1_bepjn")
 
 [node name="Fatness-bar" type="ProgressBar" parent="." unique_id=818161336]
 layout_mode = 0
-offset_right = 1056.0
-offset_bottom = 160.0
+offset_left = 752.0
+offset_top = 32.0
+offset_right = 1808.0
+offset_bottom = 192.0
 
 [node name="Dash-cooldown" type="ProgressBar" parent="." unique_id=1245878445]
 layout_mode = 0
-offset_top = 208.0
-offset_right = 880.0
-offset_bottom = 360.0
+offset_left = 752.0
+offset_top = 240.0
+offset_right = 1632.0
+offset_bottom = 392.0
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1586422515]
+layout_mode = 0
+offset_left = 32.0
+offset_top = 40.0
+offset_right = 544.0
+offset_bottom = 440.0
+scale = Vector2(0.9618539, 1)
+
+[node name="Active-cooldown" type="ProgressBar" parent="." unique_id=1197306834]
+layout_mode = 0
+offset_left = 552.0
+offset_top = 32.0
+offset_right = 631.16675
+offset_bottom = 432.0
+scale = Vector2(1.9199988, 1)
+fill_mode = 3
+
+[node name="Guide" type="Label" parent="." unique_id=1188179078]
+layout_mode = 0
+offset_left = 1392.0
+offset_top = 1152.0
+offset_right = 2816.0
+offset_bottom = 1440.0
+text = "Interact?"
+horizontal_alignment = 1
+vertical_alignment = 1

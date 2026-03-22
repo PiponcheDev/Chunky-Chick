@@ -293,20 +293,22 @@ func _activate_active_talisman(talisman: TalismanData):
 	_apply_active_bonuses(talisman)
 	active_talisman_is_triggered = true
 	active_talisman_time_left = talisman.active_duration
-	active_talisman_cooldown_left = talisman.active_cooldown
+	active_talisman_cooldown_left = 0.0
 	emit_signal("active_talisman_activated", talisman)
-	print("Activated talisman:", talisman.talisman_name, "for", talisman.active_duration, "s (cooldown:", talisman.active_cooldown, "s)")
+	print("Activated talisman:", talisman.talisman_name, "for", talisman.active_duration, "s")
 
 func _deactivate_active_talisman():
 	if active_talisman == null:
 		active_talisman_is_triggered = false
 		active_talisman_time_left = 0.0
+		active_talisman_cooldown_left = 0.0
 		return
 	_remove_active_bonuses(active_talisman)
-	emit_signal("active_talisman_deactivated", active_talisman)
-	print("Deactivated talisman:", active_talisman.talisman_name)
 	active_talisman_is_triggered = false
 	active_talisman_time_left = 0.0
+	active_talisman_cooldown_left = active_talisman.active_cooldown
+	emit_signal("active_talisman_deactivated", active_talisman)
+	print("Deactivated talisman:", active_talisman.talisman_name, "cooldown started:", active_talisman.active_cooldown, "s")
 
 func _apply_active_bonuses(talisman: TalismanData):
 	speed_bonus += talisman.speed_bonus

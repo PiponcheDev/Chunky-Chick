@@ -1,11 +1,13 @@
 [gd_resource type="Resource" script_class="TalismanData" format=3 uid="uid://duob4inimyqjo"]
 
+[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_0lu1g"]
 [ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="1_h7s3l"]
 
 [resource]
 script = ExtResource("1_h7s3l")
 talisman_name = "Battery From Somewhere"
 description = "Unlimited power"
+icon = ExtResource("1_0lu1g")
 isActive = true
 attack_speed_bonus = 20.0
 active_duration = 8.0
