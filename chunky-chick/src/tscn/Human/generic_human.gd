@@ -42,7 +42,6 @@ func _process(delta: float) -> void:
 			abandon_feeding_timer.start()
 	elif state == FEEDING:
 		pass #Give player seeds or smt
-	print(state)
 		
 	
 	#Manage the animation
