@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://q6rg8aao0wsr"]
 
-[ext_resource type="Script" uid="uid://rj2kje50cd7k" path="res://src/scripts/waves.gd" id="1_015if"]
-[ext_resource type="PackedScene" uid="uid://bpj5f8x3g4g63" path="res://src/tscn/Enemy.tscn" id="2_sdjwj"]
+[ext_resource type="Script" uid="uid://rj2kje50cd7k" path="res://src/scripts/enemy/waves.gd" id="1_015if"]
+[ext_resource type="PackedScene" uid="uid://bpj5f8x3g4g63" path="res://src/tscn/enemy/Enemy.tscn" id="2_sdjwj"]
 
 [node name="circle" type="Node2D" unique_id=1726487523]
 script = ExtResource("1_015if")
