@@ -12,10 +12,13 @@ signal active_talisman_deactivated(talisman)
 const BASE_SPEED := 450.0
 const IDLE_TIME_MIN := 1.0
 const IDLE_TIME_MAX := 5.0
-const BULLET_SCENE = preload("res://src/tscn/player_bullets.tscn")
 const ITEM_SCENE_PATH := "res://src/tscn/talisman-pickup.tscn"
 var ITEM_SCENE: PackedScene = null
 const BASE_SHOT_COOLDOWN := 0.6
+const BULLET_SCENE = preload("res://src/tscn/Bullets.tscn")
+const DAMAGE := 25
+var health := 150
+
 
 var speed_bonus := 0.0
 var damage_bonus := 0.0
@@ -350,10 +353,12 @@ func _handle_shooting():
 	if Input.is_action_pressed("shoot") and cooldown <= 0:
 		cooldown = BASE_SHOT_COOLDOWN * cooldown_multiplier
 		var bullet = BULLET_SCENE.instantiate()
+		bullet.shooter = self
 		get_tree().current_scene.add_child(bullet)
 		bullet.global_position = global_position
 		bullet.start_pos = global_position
 		bullet.direction = -last_dir
+		bullet.damage = DAMAGE
 		bullet.bullet_freed.connect(_on_bullet_freed)
 
 func _on_bullet_freed(pos: Vector2) -> void:
@@ -390,3 +395,9 @@ func eat_food(amount: float) -> void:
 	var max_fat := fatness_max + fatness_max_bonus
 	if fatness > max_fat:
 		fatness = max_fat
+		
+func take_damage(amount: int) -> void:
+	health = max(health - amount, 0)
+
+	if health == 0:
+		queue_free()

@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://q6rg8aao0wsr"]
+
+[ext_resource type="Script" uid="uid://rj2kje50cd7k" path="res://src/scripts/waves.gd" id="1_015if"]
+
+[node name="circle" type="Node2D" unique_id=1726487523]
+script = ExtResource("1_015if")
+indicator_color = Color(0, 0, 0, 1)
