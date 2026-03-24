@@ -10,15 +10,12 @@ signal active_talisman_activated(talisman)
 signal active_talisman_deactivated(talisman)
 
 const BASE_SPEED := 450.0
-const IDLE_TIME_MIN := 1.0
-const IDLE_TIME_MAX := 5.0
 const ITEM_SCENE_PATH := "res://src/tscn/talisman-pickup.tscn"
 var ITEM_SCENE: PackedScene = null
 const BASE_SHOT_COOLDOWN := 0.6
 const BULLET_SCENE = preload("res://src/tscn/Bullets.tscn")
 const DAMAGE := 25
 var health := 150
-
 
 var speed_bonus := 0.0
 var damage_bonus := 0.0
@@ -39,13 +36,8 @@ var active_talisman_is_triggered: bool = false
 var active_talisman_time_left: float = 0.0
 var active_talisman_cooldown_left: float = 0.0
 
-enum PlayerState { MOVING, IDLE_STANDING, IDLE_PECKING }
-var current_state: PlayerState = PlayerState.IDLE_STANDING
-
 var direction := Vector2.ZERO
 var last_direction := Vector2.DOWN
-var idle_time := 0.0
-var idle_rng := 0.0
 var rng = RandomNumberGenerator.new()
 
 var last_dir: Vector2 = Vector2.DOWN
@@ -78,8 +70,6 @@ func _ready():
 	main_camera.add_to_group("main_camera")
 	add_to_group("player")
 	rng.randomize()
-	idle_rng = rng.randf_range(IDLE_TIME_MIN, IDLE_TIME_MAX)
-	sprite.play("idle_standing")
 	sprite.animation_finished.connect(_on_animation_finished)
 	if FileAccess.file_exists(ITEM_SCENE_PATH):
 		ITEM_SCENE = load(ITEM_SCENE_PATH)
@@ -87,6 +77,7 @@ func _ready():
 		ITEM_SCENE = null
 		printerr("ITEM_SCENE_PATH not found. Update ITEM_SCENE_PATH to your item pickup scene to enable dropping active talismans.")
 	_update_cooldown_multiplier()
+	_update_animation_state()
 
 func _physics_process(delta: float) -> void:
 	if Input.is_action_just_pressed("dash"):
@@ -98,7 +89,7 @@ func _physics_process(delta: float) -> void:
 	if is_dashing:
 		_handle_dash(delta)
 	else:
-		_handle_normal_state(delta)
+		_handle_normal_state()
 	move_and_slide()
 	_handle_pickup()
 	_handle_shooting()
@@ -113,14 +104,11 @@ func _physics_process(delta: float) -> void:
 		if active_talisman_cooldown_left < 0.0:
 			active_talisman_cooldown_left = 0.0
 
-func _handle_normal_state(delta):
-	match current_state:
-		PlayerState.MOVING:
-			_handle_moving()
-		PlayerState.IDLE_STANDING:
-			_handle_idle_standing(delta)
-		PlayerState.IDLE_PECKING:
-			_handle_idle_pecking()
+func _handle_normal_state():
+	if direction != Vector2.ZERO:
+		_handle_moving()
+	else:
+		_handle_stationary()
 
 func _get_fat_speed_multiplier() -> float:
 	var denom: float = fatness_max + fatness_max_bonus
@@ -136,45 +124,21 @@ func _get_dash_speed() -> float:
 	return _get_move_speed() + dash_speed_bonus
 
 func _handle_moving():
-	if direction == Vector2.ZERO:
-		_transition_to_idle()
-		return
 	velocity = direction * _get_move_speed()
-	sprite.play("walking")
 	last_dir = direction
 	_update_rotation(direction)
-
-func _handle_idle_standing(delta):
-	velocity = Vector2.ZERO
-	if direction != Vector2.ZERO:
-		current_state = PlayerState.MOVING
+	if sprite.animation == "attack" and sprite.is_playing():
 		return
-	idle_time += delta
-	if idle_time >= idle_rng:
-		current_state = PlayerState.IDLE_PECKING
-		sprite.play("idle_peck")
-		idle_time = 0
+	sprite.play("walking")
 
-func _handle_idle_pecking():
+func _handle_stationary():
 	velocity = Vector2.ZERO
-	if direction != Vector2.ZERO:
-		current_state = PlayerState.MOVING
-
-func _transition_to_idle():
-	current_state = PlayerState.IDLE_STANDING
-	sprite.play("idle_standing")
-	idle_time = 0
-	idle_rng = rng.randf_range(IDLE_TIME_MIN, IDLE_TIME_MAX)
-	velocity = Vector2.ZERO
+	_update_animation_state()
 
 func _update_rotation(dir: Vector2):
 	angle_degrees = rad_to_deg(dir.angle())
-	snapped_angle = (round(angle_degrees / 45) * 45) - 90
+	snapped_angle = round(angle_degrees / 45) * 45 + 90
 	sprite.rotation_degrees = snapped_angle
-
-func _on_animation_finished():
-	if current_state == PlayerState.IDLE_PECKING:
-		_transition_to_idle()
 
 func _start_dash():
 	if is_dashing or not dash_cooldown.is_stopped():
@@ -215,14 +179,20 @@ func _end_dash():
 	_sync_animation_after_dash()
 
 func _sync_animation_after_dash():
+	_update_animation_state()
+
+func _update_animation_state():
+	if sprite.animation == "attack" and sprite.is_playing():
+		return
 	if direction != Vector2.ZERO:
-		current_state = PlayerState.MOVING
 		sprite.play("walking")
-	elif current_state == PlayerState.IDLE_PECKING:
-		sprite.play("idle_peck")
 	else:
-		current_state = PlayerState.IDLE_STANDING
-		sprite.play("idle_standing")
+		sprite.play("walking")
+		sprite.frame = 0
+		sprite.stop()
+
+func _play_attack_animation():
+	sprite.play("attack")
 
 func _spawn_ghost():
 	var ghost: Sprite2D = Sprite2D.new()
@@ -352,6 +322,7 @@ func _drop_active_talisman_to_world(talisman: TalismanData):
 func _handle_shooting():
 	if Input.is_action_pressed("shoot") and cooldown <= 0:
 		cooldown = BASE_SHOT_COOLDOWN * cooldown_multiplier
+		_play_attack_animation()
 		var bullet = BULLET_SCENE.instantiate()
 		bullet.shooter = self
 		get_tree().current_scene.add_child(bullet)
@@ -360,6 +331,10 @@ func _handle_shooting():
 		bullet.direction = -last_dir
 		bullet.damage = DAMAGE
 		bullet.bullet_freed.connect(_on_bullet_freed)
+
+func _on_animation_finished():
+	if sprite.animation == "attack":
+		_update_animation_state()
 
 func _on_bullet_freed(pos: Vector2) -> void:
 	if bomb_bullets_unlocked:
@@ -395,7 +370,7 @@ func eat_food(amount: float) -> void:
 	var max_fat := fatness_max + fatness_max_bonus
 	if fatness > max_fat:
 		fatness = max_fat
-		
+
 func take_damage(amount: int) -> void:
 	health = max(health - amount, 0)
 

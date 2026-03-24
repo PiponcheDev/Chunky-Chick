@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dlkge1c31esjr"]
 
-[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_ey1g7"]
 [ext_resource type="Script" uid="uid://c16utq2jgtad5" path="res://src/scripts/nest.gd" id="2_ueg0u"]
 [ext_resource type="Script" uid="uid://4kejxw7axybf" path="res://src/scripts/UI/ui_hitbox.gd" id="3_7arkk"]
 [ext_resource type="PackedScene" uid="uid://di8qyu0l1gw7l" path="res://src/tscn/UI/selection_menu.tscn" id="4_kuljn"]
 [ext_resource type="PackedScene" uid="uid://cbxj3b6gsa1ql" path="res://src/tscn/UI/upgrade_selec.tscn" id="5_kuljn"]
+[ext_resource type="Texture2D" uid="uid://cusmfv2f7nphm" path="res://Assets-Extra/chick.png" id="6_gmuhx"]
 [ext_resource type="Script" uid="uid://clhwy44dkbsgw" path="res://src/scripts/UI/egg.gd" id="6_hwr44"]
 [ext_resource type="Texture2D" uid="uid://ctpqfhtmy2adw" path="res://Assets/Boxes.png" id="7_gmuhx"]
 
@@ -19,6 +19,26 @@ radius = 155.93423
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hwr44"]
 radius = 62.943924
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_eerui"]
+atlas = ExtResource("6_gmuhx")
+region = Rect2(46.523804, 59.65988, 192.1535, 158.73553)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_okcfb"]
+atlas = ExtResource("6_gmuhx")
+region = Rect2(242.85455, 88.900635, 192.15356, 187.97629)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gmuhx"]
+atlas = ExtResource("6_gmuhx")
+region = Rect2(435.00812, 0, 284.05298, 368.7764)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o68ys"]
+atlas = ExtResource("6_gmuhx")
+region = Rect2(710.7066, 0, 367.59808, 385.48544)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vfa27"]
+atlas = ExtResource("6_gmuhx")
+region = Rect2(1095.0137, 0, 426.07935, 460.67593)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gmuhx"]
 size = Vector2(18.666683, 435.33334)
@@ -92,11 +112,32 @@ shape = SubResource("CircleShape2D_kuljn")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Egg" unique_id=500119499]
 shape = SubResource("CircleShape2D_hwr44")
 
-[node name="Icon" type="Sprite2D" parent="Egg" unique_id=157249103]
-z_index = 1
-position = Vector2(-2.3841858e-06, -0.73563766)
-scale = Vector2(1.0000001, 1.0000001)
-texture = ExtResource("1_ey1g7")
+[node name="Node2D" type="Node2D" parent="Egg" unique_id=1886362741]
+
+[node name="1-stage" type="Sprite2D" parent="Egg/Node2D" unique_id=1737687235]
+visible = false
+texture = SubResource("AtlasTexture_eerui")
+
+[node name="2-stage" type="Sprite2D" parent="Egg/Node2D" unique_id=1978902415]
+visible = false
+texture = SubResource("AtlasTexture_okcfb")
+
+[node name="3-stage" type="Sprite2D" parent="Egg/Node2D" unique_id=724616408]
+visible = false
+position = Vector2(-12.800001, -33.839085)
+texture = SubResource("AtlasTexture_gmuhx")
+
+[node name="4-stage" type="Sprite2D" parent="Egg/Node2D" unique_id=1612530968]
+visible = false
+position = Vector2(16.29091, -42.66667)
+scale = Vector2(1.2, 1.2)
+texture = SubResource("AtlasTexture_o68ys")
+
+[node name="5-stage" type="Sprite2D" parent="Egg/Node2D" unique_id=2087454100]
+visible = false
+position = Vector2(-225.74545, -331.03455)
+scale = Vector2(5, 5)
+texture = SubResource("AtlasTexture_vfa27")
 
 [node name="Walls" type="Node2D" parent="." unique_id=994603355]
 
