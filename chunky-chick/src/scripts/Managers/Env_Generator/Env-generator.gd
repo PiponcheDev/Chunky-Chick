@@ -54,13 +54,13 @@ func _setup_spawnzones():
 				item_spawn_zones.append(child.get_child(0))
 				print(child.get_child(0))
 			if child.foods:
-				food_spawn_zones.append(child)
+				food_spawn_zones.append(child.get_child(0))
 			if child.talimen:
-				talimen_spawn_zones.append(child)
+				talimen_spawn_zones.append(child.get_child(0))
 			if child.trashcans:
-				trashcan_spawn_zones.append(child)
+				trashcan_spawn_zones.append(child.get_child(0))
 			if child.dumpsters:
-				dumpster_spawn_zones.append(child)
+				dumpster_spawn_zones.append(child.get_child(0))
 	print(item_spawn_zones)
 
 

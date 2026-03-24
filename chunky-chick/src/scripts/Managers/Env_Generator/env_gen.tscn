@@ -41,6 +41,7 @@ size = Vector2(2548, 1426)
 
 [node name="Env-gen" type="Node2D" unique_id=1350189090]
 script = ExtResource("1_cae22")
+clumpDensity = 100
 
 [node name="TileMapLayer3" type="TileMapLayer" parent="." unique_id=406226139]
 scale = Vector2(0.099999994, 0.099999994)
