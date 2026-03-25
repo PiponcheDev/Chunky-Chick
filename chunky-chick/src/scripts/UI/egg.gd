@@ -1,5 +1,8 @@
 extends Area2D
 
+signal stage_changed(stage: int)
+signal demand_completed
+
 @onready var ui = get_tree().get_first_node_in_group("ui")
 @onready var stage_1 = $"../Node2D/1-stage"
 @onready var stage_2 = $"../Node2D/2-stage"
@@ -10,15 +13,15 @@ extends Area2D
 var day: int = 1
 var demand: float = 15
 var current_progress: float = 0
-var egg_stage: int = 1
-
-signal demand_completed
+var egg_stage: int = 5
 
 func _ready():
+	add_to_group("egg")
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
 	_update_demand()
 	_update_stage_visibility()
+	stage_changed.emit(egg_stage)
 	if is_ending(egg_stage):
 		print("run is finished")
 
@@ -48,7 +51,7 @@ func _update_stage_visibility():
 	stage_5.visible = egg_stage == 5
 
 func is_ending(current_stage: int) -> bool:
-	return current_stage > 5
+	return current_stage >= 5
 
 func add_food(amount: float):
 	current_progress += amount
@@ -63,9 +66,10 @@ func is_demand_met() -> bool:
 	return current_progress >= demand
 
 func next_day():
-	if is_demand_met():
+	if is_demand_met() and egg_stage < 5:
 		egg_stage += 1
 		_update_stage_visibility()
+		stage_changed.emit(egg_stage)
 	day += 1
 	_update_demand()
 	if is_ending(egg_stage):

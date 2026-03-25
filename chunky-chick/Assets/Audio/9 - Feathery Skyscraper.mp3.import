@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bumvsi1006u6t"
+path="res://.godot/imported/9 - Feathery Skyscraper.mp3-a7720ef319d0865b450725e66186ccd3.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/9 - Feathery Skyscraper.mp3"
+dest_files=["res://.godot/imported/9 - Feathery Skyscraper.mp3-a7720ef319d0865b450725e66186ccd3.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

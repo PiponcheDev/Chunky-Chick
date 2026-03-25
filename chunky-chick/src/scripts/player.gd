@@ -3,11 +3,15 @@ extends CharacterBody2D
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var main_camera: Camera2D = $Camera2D
 @onready var dash_cooldown: Timer = $"dash-cooldown"
+@onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
 signal carried_item_changed(is_carrying: bool)
 signal active_talisman_changed(new_talisman)
 signal active_talisman_activated(talisman)
 signal active_talisman_deactivated(talisman)
+
+const AUDIO_SHOOT: AudioStream = preload("res://Assets/Audio/player/fart7.ogg")
+const AUDIO_STEP: AudioStream = preload("res://Assets/Audio/player/step.ogg")
 
 const BASE_SPEED := 450.0
 const ITEM_SCENE_PATH := "res://src/tscn/talisman-pickup.tscn"
@@ -15,6 +19,7 @@ var ITEM_SCENE: PackedScene = null
 const BASE_SHOT_COOLDOWN := 0.6
 const BULLET_SCENE = preload("res://src/tscn/Bullets.tscn")
 const DAMAGE := 25
+const STEP_INTERVAL := 1.0 / 3.0
 var health := 150
 
 var speed_bonus := 0.0
@@ -66,6 +71,8 @@ var ghost_timer := 0.0
 var ghost_lifetime := 0.35
 var ghost_color := Color(0.8, 0.9, 1.0, 0.6)
 
+var step_timer := 0.0
+
 func _ready():
 	main_camera.add_to_group("main_camera")
 	add_to_group("player")
@@ -90,6 +97,7 @@ func _physics_process(delta: float) -> void:
 		_handle_dash(delta)
 	else:
 		_handle_normal_state()
+	_update_step_sounds(delta)
 	move_and_slide()
 	_handle_pickup()
 	_handle_shooting()
@@ -323,6 +331,7 @@ func _handle_shooting():
 	if Input.is_action_pressed("shoot") and cooldown <= 0:
 		cooldown = BASE_SHOT_COOLDOWN * cooldown_multiplier
 		_play_attack_animation()
+		_play_shoot_sound()
 		var bullet = BULLET_SCENE.instantiate()
 		bullet.shooter = self
 		get_tree().current_scene.add_child(bullet)
@@ -331,6 +340,23 @@ func _handle_shooting():
 		bullet.direction = -last_dir
 		bullet.damage = DAMAGE
 		bullet.bullet_freed.connect(_on_bullet_freed)
+
+func _play_shoot_sound():
+	audio_player.stream = AUDIO_SHOOT
+	audio_player.play()
+
+func _play_step_sound():
+	audio_player.stream = AUDIO_STEP
+	audio_player.play()
+
+func _update_step_sounds(delta: float) -> void:
+	if is_dashing or direction == Vector2.ZERO:
+		step_timer = 0.0
+		return
+	step_timer += delta
+	while step_timer >= STEP_INTERVAL:
+		step_timer -= STEP_INTERVAL
+		_play_step_sound()
 
 func _on_animation_finished():
 	if sprite.animation == "attack":

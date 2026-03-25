@@ -47,6 +47,7 @@ offset_right = 2395.9243
 offset_bottom = 1359.9996
 grow_horizontal = 1
 grow_vertical = 1
+metadata/_edit_use_anchors_ = true
 
 [node name="circle" parent="." unique_id=1726487523 instance=ExtResource("8_trn2v")]
 position = Vector2(-128, 192)

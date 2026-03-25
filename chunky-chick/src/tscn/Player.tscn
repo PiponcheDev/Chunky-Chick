@@ -57,7 +57,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack",
-"speed": 9.0
+"speed": 13.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -94,9 +94,9 @@ script = ExtResource("1_gce6r")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=354118984]
 sprite_frames = SubResource("SpriteFrames_aisno")
-animation = &"walking"
+animation = &"attack"
 frame = 3
-frame_progress = 0.23070325
+frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=452942286]
 position = Vector2(3, 0)
@@ -112,3 +112,6 @@ zoom = Vector2(0.6, 0.6)
 [node name="dash-cooldown" type="Timer" parent="." unique_id=725720001]
 wait_time = 0.62
 one_shot = true
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1923645767]
+volume_db = 0.13

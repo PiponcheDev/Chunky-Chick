@@ -90,14 +90,6 @@ offset_top = -8.0
 offset_right = 4.0
 offset_bottom = -8.0
 
-[node name="Label" type="Label" parent="." unique_id=921305913]
-z_index = 2
-offset_left = -31.333334
-offset_top = -31.333334
-offset_right = 40.0
-offset_bottom = 23.000002
-text = "Nest"
-
 [node name="Egg" type="StaticBody2D" parent="." unique_id=279210769]
 position = Vector2(90.66667, 2.3841858e-07)
 scale = Vector2(0.5729167, 0.45312497)
@@ -185,5 +177,8 @@ scale = Vector2(4.152, 3.6133335)
 texture = ExtResource("7_gmuhx")
 hframes = 2
 frame = 1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=955225125]
+volume_db = -6.764
 
 [connection signal="body_exited" from="UI-hitbox" to="Upgrade-Layer/Upgrade-selec" method="_on_u_ihitbox_body_exited"]

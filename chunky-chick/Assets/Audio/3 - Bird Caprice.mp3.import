@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://boiwri0gd004p"
+path="res://.godot/imported/3 - Bird Caprice.mp3-954c00c93f7bc29b019644ba89810cb9.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/3 - Bird Caprice.mp3"
+dest_files=["res://.godot/imported/3 - Bird Caprice.mp3-954c00c93f7bc29b019644ba89810cb9.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
