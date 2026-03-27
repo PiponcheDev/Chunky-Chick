@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://vxnhxnc8fji4" path="res://src/tscn/Food.tscn" id="5_03owx"]
 [ext_resource type="PackedScene" uid="uid://pn32tdtruix8" path="res://src/tscn/Structures/trash_can.tscn" id="6_3dxm6"]
 [ext_resource type="PackedScene" uid="uid://djbhuhkk5k3hi" path="res://src/tscn/UI/player-ui.tscn" id="7_lgr22"]
+[ext_resource type="PackedScene" uid="uid://cebj4caoqts2w" path="res://src/scripts/Managers/Env_Generator/env_gen.tscn" id="8_03owx"]
 [ext_resource type="PackedScene" uid="uid://q6rg8aao0wsr" path="res://src/tscn/enemy/waves.tscn" id="8_trn2v"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_lgr22"]
@@ -55,3 +56,6 @@ scale = Vector2(0.99999994, 0.99999994)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1908240877]
 navigation_polygon = SubResource("NavigationPolygon_lgr22")
+
+[node name="Env-gen" parent="." unique_id=1350189090 instance=ExtResource("8_03owx")]
+visible = false

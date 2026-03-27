@@ -13,7 +13,7 @@ enum BossState {
 
 var state: BossState = BossState.ORBIT
 
-@onready var sprite: Node2D = $Icon
+@onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 @onready var audioPlayer: AudioStreamPlayer2D = $AudioStreamPlayer2D
 
@@ -25,7 +25,7 @@ var hp: int = 220
 
 @export var move_speed: float = 400.0
 @export var orbit_radius_inner: float = 350.0
-@export var orbit_radius_outer: float = 600.0
+@export var orbit_radius_outer: float = 900.0
 
 var orbit_radius: float = orbit_radius_outer
 var orbit_angle: float = 0.0
@@ -75,7 +75,7 @@ const SPIT_COOLDOWN: float = 6.0
 const SPIT_WINDUP: float = 0.4
 const SPIT_RECOVER: float = 0.6
 
-const DEFAULT_PEBBLE_SPEED: float = 350.0
+const DEFAULT_PEBBLE_SPEED: float = 900.0
 const DEFAULT_PEBBLE_LIFETIME: float = 3.0
 const DEFAULT_PEBBLE_RADIUS: float = 8.0
 const DEFAULT_PEBBLE_DAMAGE: int = 15
@@ -126,6 +126,10 @@ func _ready() -> void:
 	choose_orbit()
 	_allow_orbit_change = false
 	_prev_global_pos = global_position
+	
+	# Start the default animation
+	if anim_sprite:
+		anim_sprite.play("Walk")
 
 
 func _load_projectile_scenes() -> void:
@@ -213,8 +217,8 @@ func _physics_process(delta: float) -> void:
 
 	_prev_global_pos = current_pos
 
-	if sprite and player:
-		sprite.rotation = (player.global_position - global_position).angle()
+	if anim_sprite and player:
+		anim_sprite.rotation = (player.global_position - global_position).angle() + deg_to_rad(90)
 
 
 func _update_player_speed(delta: float) -> void:
@@ -274,7 +278,7 @@ func _attack_decision() -> void:
 		start_double_dash()
 		return
 	if state == BossState.ORBIT and dist > 420.0 and spit_cooldown <= 0.0:
-		if _rng.randf() < 0.18:
+		if _rng.randf() < 0.35:
 			enter_spit()
 
 
@@ -284,6 +288,10 @@ func enter_dash_lock(force: bool = false) -> void:
 	state = BossState.DASH_LOCK
 	state_timer = DASH_LOCK_DUR
 	desired_velocity = Vector2.ZERO
+	
+	if anim_sprite:
+		anim_sprite.play("Charge")
+		
 	if player:
 		var dist: float = global_position.distance_to(player.global_position)
 		var lead_time: float = clamp(dist / max(dash_speed_first, 1.0), 0.08, 0.6)
@@ -299,9 +307,10 @@ func enter_dash_lock(force: bool = false) -> void:
 	_coil_elapsed = 0.0
 	_coil_total = DASH_COIL_DUR
 	_did_hit_player = false
-	if sprite:
-		sprite.position = Vector2.ZERO
-		sprite.scale = Vector2.ONE
+	
+	if anim_sprite:
+		anim_sprite.position = Vector2.ZERO
+		anim_sprite.scale = Vector2.ONE
 
 
 func enter_dash_coil() -> void:
@@ -309,6 +318,8 @@ func enter_dash_coil() -> void:
 	state_timer = DASH_COIL_DUR
 	_coil_elapsed = 0.0
 	desired_velocity = Vector2.ZERO
+	if anim_sprite:
+		anim_sprite.play("Charge")
 
 
 func _process_coil(delta: float) -> void:
@@ -317,12 +328,12 @@ func _process_coil(delta: float) -> void:
 	var smooth: float = t * t * (3.0 - 2.0 * t)
 	var s: float = sin(smooth * PI)
 	var amplitude: float = 0.42
-	if sprite:
+	if anim_sprite:
 		var back_offset: Vector2 = -dash_vector * (12.0 * s)
-		sprite.position = back_offset
+		anim_sprite.position = back_offset
 		var xscale: float = lerp(1.0, 1.0 + amplitude, s)
 		var yscale: float = lerp(1.0, 1.0 - amplitude, s)
-		sprite.scale = Vector2(xscale, yscale)
+		anim_sprite.scale = Vector2(xscale, yscale)
 
 
 func enter_dash_exec() -> void:
@@ -331,8 +342,10 @@ func enter_dash_exec() -> void:
 		state_timer = 0.35
 	else:
 		state_timer = 0.45
-	if sprite:
-		sprite.scale = Vector2.ONE
+	if anim_sprite:
+		anim_sprite.scale = Vector2.ONE
+		anim_sprite.play("Walk")
+		
 	_ghost_active = true
 	_ghost_timer = 0.0
 	_play_sfx(SFX_SLASH)
@@ -387,9 +400,10 @@ func _enter_post_dash() -> void:
 func enter_orbit() -> void:
 	state = BossState.ORBIT
 	state_timer = 0.0
-	if sprite:
-		sprite.scale = Vector2.ONE
-		sprite.position = Vector2.ZERO
+	if anim_sprite:
+		anim_sprite.scale = Vector2.ONE
+		anim_sprite.position = Vector2.ZERO
+		anim_sprite.play("Walk")
 
 
 func enter_spit() -> void:
@@ -398,18 +412,28 @@ func enter_spit() -> void:
 	state = BossState.SPIT_WINDUP
 	state_timer = SPIT_WINDUP
 	desired_velocity = Vector2.ZERO
+	
+	if anim_sprite:
+		anim_sprite.play("Fire_proj")
 
 
 func _fire_ranged() -> void:
-	if _spit_scene != null and player and global_position.distance_to(player.global_position) > 420.0:
+	var dist = global_position.distance_to(player.global_position)
+
+	var use_spit := _rng.randf() < 0.5  
+
+	if use_spit and _spit_scene != null:
 		_play_sfx(SFX_BLEHH)
 		_fire_spit_scene()
+
 	elif _rock_scene != null:
 		_play_sfx(SFX_GRAVEL)
 		_fire_rock_volley()
+
 	else:
 		_play_sfx(SFX_GRAVEL)
 		_fire_pebble_volley()
+
 	spit_cooldown = SPIT_COOLDOWN
 	state = BossState.SPIT_RECOVER
 	state_timer = SPIT_RECOVER
@@ -437,11 +461,7 @@ func _fire_spit_scene() -> void:
 
 
 func _fire_rock_volley() -> void:
-	var boss_forward: Vector2 = Vector2.RIGHT
-	if sprite:
-		boss_forward = Vector2(cos(sprite.rotation), sin(sprite.rotation)).normalized()
-	elif player:
-		boss_forward = (player.global_position - global_position).normalized()
+	var boss_forward: Vector2 = (player.global_position - global_position).normalized()
 	var half_span = PEBBLE_FAN_ANGLE * 0.5
 	for i in range(PEBBLE_FAN_COUNT):
 		var t = 0.0 if PEBBLE_FAN_COUNT == 1 else float(i) / float(PEBBLE_FAN_COUNT - 1)
@@ -579,8 +599,8 @@ func stun() -> void:
 	state = BossState.STUNNED
 	state_timer = 0.6
 	desired_velocity = Vector2.ZERO
-	if sprite:
-		sprite.scale = Vector2(0.85, 1.15)
+	if anim_sprite:
+		anim_sprite.scale = Vector2(0.85, 1.15)
 
 
 func apply_damage(dmg: float) -> void:
@@ -608,47 +628,22 @@ func _update_dash_ghosts(delta: float) -> void:
 
 
 func _spawn_dash_ghost() -> void:
-	var tex: Texture2D = null
-	var anim_sprite := sprite if sprite is AnimatedSprite2D else sprite.get_node_or_null("AnimatedSprite2D")
-	if anim_sprite and anim_sprite is AnimatedSprite2D:
-		tex = anim_sprite.sprite_frames.get_frame_texture(anim_sprite.animation, anim_sprite.frame)
-	else:
-		var s2 := sprite if sprite is Sprite2D else sprite.get_node_or_null("Sprite2D")
-		if s2 and s2 is Sprite2D:
-			tex = s2.texture
-
-	if tex:
-		var ghost := Sprite2D.new()
-		ghost.texture = tex
-		ghost.global_position = sprite.global_position if sprite else global_position
-		ghost.global_rotation = sprite.global_rotation if sprite else global_rotation
-		ghost.scale = sprite.scale if sprite else Vector2.ONE
-		ghost.modulate = Color(ghost_color_base.r, ghost_color_base.g, ghost_color_base.b, ghost_start_alpha)
-		get_tree().current_scene.add_child(ghost)
-		var tw = create_tween()
-		tw.tween_property(ghost, "modulate:a", 0.0, ghost_lifetime)
-		tw.parallel().tween_property(ghost, "scale", ghost.scale * ghost_scale_mult, ghost_lifetime)
-		tw.tween_callback(Callable(ghost, "queue_free"))
+	if not anim_sprite or not anim_sprite.sprite_frames:
+		return
+		
+	var tex: Texture2D = anim_sprite.sprite_frames.get_frame_texture(anim_sprite.animation, anim_sprite.frame)
+	if not tex:
 		return
 
-	var dup := sprite.duplicate() if sprite else null
-	if dup:
-		dup.global_position = sprite.global_position if sprite else global_position
-		dup.global_rotation = sprite.global_rotation if sprite else global_rotation
-		dup.set_process(false)
-		dup.set_physics_process(false)
-		if dup is CanvasItem:
-			dup.modulate = Color(ghost_color_base.r, ghost_color_base.g, ghost_color_base.b, ghost_start_alpha)
-		get_tree().current_scene.add_child(dup)
-		var tw2 = create_tween()
-		if dup is CanvasItem:
-			tw2.tween_property(dup, "modulate:a", 0.0, ghost_lifetime)
-			tw2.parallel().tween_property(dup, "scale", dup.scale * ghost_scale_mult, ghost_lifetime)
-			tw2.tween_callback(Callable(dup, "queue_free"))
-		else:
-			var timer = Timer.new()
-			timer.one_shot = true
-			timer.wait_time = ghost_lifetime
-			dup.add_child(timer)
-			timer.timeout.connect(Callable(dup, "queue_free"))
-			timer.start()
+	var ghost := Sprite2D.new()
+	ghost.texture = tex
+	ghost.global_position = anim_sprite.global_position
+	ghost.global_rotation = anim_sprite.global_rotation
+	ghost.scale = anim_sprite.scale
+	ghost.modulate = Color(ghost_color_base.r, ghost_color_base.g, ghost_color_base.b, ghost_start_alpha)
+	get_tree().current_scene.add_child(ghost)
+	
+	var tw = create_tween()
+	tw.tween_property(ghost, "modulate:a", 0.0, ghost_lifetime)
+	tw.parallel().tween_property(ghost, "scale", ghost.scale * ghost_scale_mult, ghost_lifetime)
+	tw.tween_callback(Callable(ghost, "queue_free"))

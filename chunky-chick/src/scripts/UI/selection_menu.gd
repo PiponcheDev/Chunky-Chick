@@ -9,103 +9,51 @@ signal feed_pressed
 @onready var feed_button: Button = $Feed
 
 var current_player: Node = null
-var egg: Node = null
-
 
 func _ready():
-
 	add_to_group("ui")
-
-	egg = get_tree().get_first_node_in_group("egg")
-
 	visible = false
-	sleep_button.visible = false
-	buy_button.visible = false
-	feed_button.visible = false
+	if sleep_button: sleep_button.visible = false
+	if buy_button: buy_button.visible = false
+	if feed_button: feed_button.visible = false
 
 	if buy_button:
-		buy_button.pressed.connect(_on_continue_pressed)
-
+		buy_button.pressed.connect(func(): continue_pressed.emit())
 	if sleep_button:
-		sleep_button.pressed.connect(_on_sleep_pressed)
-
+		sleep_button.pressed.connect(func(): sleep_pressed.emit())
 	if feed_button:
-		feed_button.pressed.connect(_on_feed_pressed)
+		feed_button.pressed.connect(func(): feed_pressed.emit())
 
-
-# -------------------
-# UI Modes
-# -------------------
-
-func show_buy_only() -> void:
-	visible = true
-	buy_button.visible = true
-	sleep_button.visible = false
-	feed_button.visible = false
-
-
-func show_interaction(player_node: Node = null, can_sleep: bool = false) -> void:
-
+# Simplified this function to handle the logic properly
+func show_interaction(player: Node, demand_met: bool, is_night: bool):
+	current_player = player
 	visible = true
 
-	buy_button.visible = false
-	sleep_button.visible = can_sleep
+	# Buy button is hidden when near the egg (separate region logic)
+	if buy_button:
+		buy_button.visible = false
 
-	current_player = player_node
+	# Sleep button ONLY shows if demand is met and it's not night
+	if sleep_button:
+		sleep_button.visible = demand_met and not is_night
 
-	if current_player != null:
-		feed_button.visible = current_player.fatness > 0
-	else:
-		feed_button.visible = false
+	# Feed button ONLY shows if demand is NOT met and it's not night
+	if feed_button:
+		feed_button.visible = not demand_met and not is_night
 
+func show_buy_only():
+	visible = true
+	if buy_button: buy_button.visible = true
+	if sleep_button: sleep_button.visible = false
+	if feed_button: feed_button.visible = false
 
-func hide_popup() -> void:
-
+func hide_popup():
 	visible = false
-	sleep_button.visible = false
-	buy_button.visible = false
-	feed_button.visible = false
+	current_player = null
 
-
-# -------------------
-# Button Handlers
-# -------------------
-
-func _on_continue_pressed() -> void:
-
-	hide_popup()
-	emit_signal("continue_pressed")
-
-
-func _on_sleep_pressed() -> void:
-
-	hide_popup()
-	emit_signal("sleep_pressed")
-
-
-func _on_feed_pressed() -> void:
-
-	if not current_player:
-		print("No player reference!")
-		return
-
-	if not egg:
-		egg = get_tree().get_first_node_in_group("egg")
-		if not egg:
-			print("No egg found!")
-			return
-
-	var feed_amount = min(10.0, current_player.fatness)
-
-	if feed_amount <= 0:
-		print("No fatness to feed")
-		return
-
-	# ✅ apply feeding
-	current_player.fatness -= feed_amount
-	egg.add_food(feed_amount)
-
-	print("Fed:", feed_amount)
-
-	# ✅ refresh UI state after feeding
-	show_interaction(current_player, egg.is_demand_met())
+func update_visuals(demand_met: bool, is_night: bool):
+	# This keeps the buttons updated in real-time if the menu is open
+	if feed_button:
+		feed_button.visible = not is_night and not demand_met
+	if sleep_button:
+		sleep_button.visible = not is_night and demand_met

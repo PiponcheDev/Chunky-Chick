@@ -22,37 +22,51 @@ texture = ExtResource("2_8saeu")
 
 [node name="Start" type="Button" parent="." unique_id=1175555593]
 layout_mode = 0
-offset_left = 385.0
-offset_top = 80.0
-offset_right = 756.0
-offset_bottom = 171.0
+offset_left = 384.0
+offset_top = 272.0
+offset_right = 755.0
+offset_bottom = 363.0
+scale = Vector2(0.7707338, 0.65279734)
 theme_override_font_sizes/font_size = 60
 text = "Start"
 
+[node name="Continue" type="Button" parent="." unique_id=224560670]
+layout_mode = 0
+offset_left = 384.0
+offset_top = 336.0
+offset_right = 755.0
+offset_bottom = 427.0
+scale = Vector2(0.7707338, 0.65279734)
+theme_override_font_sizes/font_size = 60
+text = "Continue"
+
 [node name="Settings" type="Button" parent="." unique_id=559956064]
 layout_mode = 0
-offset_left = 385.0
-offset_top = 213.0
-offset_right = 756.0
-offset_bottom = 304.0
+offset_left = 384.0
+offset_top = 400.0
+offset_right = 755.0
+offset_bottom = 491.0
+scale = Vector2(0.7707338, 0.65279776)
 theme_override_font_sizes/font_size = 60
 text = "Settings"
 
 [node name="Credits" type="Button" parent="." unique_id=1600177283]
 layout_mode = 0
-offset_left = 385.0
-offset_top = 346.0
-offset_right = 756.0
-offset_bottom = 437.0
+offset_left = 383.99997
+offset_top = 528.0
+offset_right = 755.0
+offset_bottom = 619.0
+scale = Vector2(0.7707338, 0.65279776)
 theme_override_font_sizes/font_size = 60
 text = "Credits"
 
 [node name="Quit" type="Button" parent="." unique_id=813780662]
 layout_mode = 0
-offset_left = 385.0
-offset_top = 475.0
-offset_right = 756.0
-offset_bottom = 566.0
+offset_left = 384.0
+offset_top = 463.99997
+offset_right = 755.0
+offset_bottom = 555.0
+scale = Vector2(0.7707338, 0.65279776)
 theme_override_font_sizes/font_size = 60
 text = "Quit"
 
@@ -65,6 +79,7 @@ stream = ExtResource("4_o6on8")
 autoplay = true
 
 [connection signal="pressed" from="Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Continue" to="." method="_on_continue_pressed"]
 [connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Credits" to="." method="_on_credits_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]

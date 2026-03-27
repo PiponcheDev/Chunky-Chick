@@ -20,6 +20,7 @@ config/icon="res://Assets-Extra/icon.svg"
 Settings="*uid://cegt5u20gf4yc"
 GameLoad="*uid://cko840a3xfgua"
 Resources="*uid://dl677slqw5jr4"
+Egg="*uid://clhwy44dkbsgw"
 
 [file_customization]
 

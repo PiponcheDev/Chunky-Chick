@@ -35,13 +35,17 @@ func _angle_diff(a: float, b: float) -> float:
 func _physics_process(delta: float) -> void:
 	if evaporated:
 		return
+
 	life_timer -= delta
 	if life_timer <= 0:
 		queue_free()
 		return
+
 	var current_speed = velocity.length()
 	current_speed = min(current_speed + acceleration * delta, max_speed)
+
 	var move_dir = velocity.normalized()
+
 	if homing_timer > 0 and is_instance_valid(target):
 		homing_timer -= delta
 		var to_target = target.global_position - global_position
@@ -57,7 +61,7 @@ func _physics_process(delta: float) -> void:
 			var max_turn = homing_turn_rate * delta
 			var new_angle = a_cur + clamp(a_diff, -max_turn, max_turn)
 			move_dir = Vector2(cos(new_angle), sin(new_angle))
-			
+
 	elif not evaporated:
 		evaporated = true
 		velocity = Vector2.ZERO
@@ -65,6 +69,9 @@ func _physics_process(delta: float) -> void:
 		await get_tree().create_timer(0.3).timeout
 		queue_free()
 		return
-	
+
 	velocity = move_dir * current_speed
+
+	rotation = velocity.angle() + deg_to_rad(90)
+
 	move_and_slide()

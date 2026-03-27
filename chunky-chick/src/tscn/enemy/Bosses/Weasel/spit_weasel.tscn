@@ -39,37 +39,37 @@ region = Rect2(1590, 826, 795, 826)
 atlas = ExtResource("2_swem7")
 region = Rect2(2385, 826, 795, 826)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_swem7"]
+atlas = ExtResource("2_swem7")
+region = Rect2(2394, 826, 798, 826)
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_3ovff"]
 atlas = ExtResource("2_swem7")
-region = Rect2(0, 0, 786, 826)
+region = Rect2(1596, 826, 798, 826)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dtat2"]
 atlas = ExtResource("2_swem7")
-region = Rect2(786, 0, 786, 826)
+region = Rect2(798, 826, 798, 826)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_fx1cy"]
 atlas = ExtResource("2_swem7")
-region = Rect2(1572, 0, 786, 826)
+region = Rect2(0, 826, 798, 826)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_05tu3"]
 atlas = ExtResource("2_swem7")
-region = Rect2(2358, 0, 786, 826)
+region = Rect2(2394, 0, 798, 826)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_1l2d8"]
 atlas = ExtResource("2_swem7")
-region = Rect2(0, 826, 786, 826)
+region = Rect2(1596, 0, 798, 826)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_0nndh"]
 atlas = ExtResource("2_swem7")
-region = Rect2(786, 826, 786, 826)
+region = Rect2(798, 0, 798, 826)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_st8tq"]
 atlas = ExtResource("2_swem7")
-region = Rect2(1572, 826, 786, 826)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_nxapi"]
-atlas = ExtResource("2_swem7")
-region = Rect2(2358, 826, 786, 826)
+region = Rect2(0, 0, 798, 826)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_cyktc"]
 animations = [{
@@ -99,6 +99,9 @@ animations = [{
 "texture": SubResource("AtlasTexture_001sr")
 }, {
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_swem7")
+}, {
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_3ovff")
 }, {
 "duration": 1.0,
@@ -118,13 +121,10 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_st8tq")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_nxapi")
 }],
 "loop": true,
 "name": &"default",
-"speed": 13.0
+"speed": 17.0
 }]
 
 [node name="Spit-weasel" type="CharacterBody2D" unique_id=1720051241]
@@ -138,5 +138,9 @@ shape = SubResource("CapsuleShape2D_swem7")
 
 [node name="Icon" type="AnimatedSprite2D" parent="." unique_id=424231190]
 position = Vector2(-1, -6)
+rotation = 1.5707964
+scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_cyktc")
-frame_progress = 0.26715606
+autoplay = "default"
+frame = 15
+frame_progress = 1.0

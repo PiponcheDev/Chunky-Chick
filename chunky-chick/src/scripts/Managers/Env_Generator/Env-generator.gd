@@ -46,6 +46,25 @@ var food_spawn_zones :Array[CollisionShape2D]= []
 var trashcan_spawn_zones :Array[CollisionShape2D]= []
 var dumpster_spawn_zones :Array[CollisionShape2D]= []
 
+
+var _spawn_index: int = 0
+
+func _next_id(prefix: String) -> String:
+	_spawn_index += 1
+	return "%s_%d_%d" % [prefix, Time.get_unix_time_from_system(), _spawn_index]
+
+func _register_spawn(node: Node, kind: String, id: String) -> void:
+	if GameLoad == null or GameLoad.current_run == null or id.is_empty():
+		return
+	GameLoad.set_world_state(id, {
+		"kind": kind,
+		"position": node.global_position,
+		"collected": false,
+		"opened": false,
+		"eaten": false,
+		"held": false
+	})
+
 func _setup_spawnzones():
 	for child in self.get_children():
 		if child is Area2D:
@@ -73,16 +92,23 @@ func _generate_map():
 func spawn_object(spawn_zones, Frequency):
 	var i = 0
 	while i < _get_AmountOFSpawns(Frequency):
-		#print("Items Spawned: "+str(i))
 		var spawnPos = getSpawnposInClump(spawn_zones)
-		
 		var newitem = items.pick_random().instantiate()
 		newitem.global_position = spawnPos
-		self.add_child(newitem)
-		
-		print("spawnpos:" + str(spawnPos))
-	#	print(currentClumpPos)
-	#	print(currentClumpWeight)
+
+		var id := ""
+
+		# SAFE property check + assignment
+		if newitem.has_method("set") and newitem.get("persistent_id") != null:
+			id = _next_id("spawn")
+			newitem.set("persistent_id", id)
+
+		add_child(newitem)
+
+		# Only register if valid
+		if not id.is_empty():
+			_register_spawn(newitem, "spawned_item", id)
+
 		i += 1
 
 func getSpawnposInClump(Spawn_Zones:Array[CollisionShape2D]):

@@ -13,6 +13,6 @@ func _ready():
 
 func _on_body_entered(body):
 	if body.is_in_group("player"):
-		body.eat_food(5)
+		body.eat_food(50)
 		food_collected.emit()
 		queue_free()

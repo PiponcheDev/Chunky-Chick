@@ -7,7 +7,9 @@ const ENDING_DIALOGUE_TIME_PER_CHAR: float = 0.03
 const ENDING_DIALOGUE_MIN_TIME: float = 12.0
 const ENDING_DIALOGUE_FADE_TIME: float = 2.0
 const ENDING_POST_DIALOGUE_HOLD: float = 1.0
-const MAIN_MENU_SCENE_PATH: String = "res://MainMenu.tscn"
+const MAIN_MENU_SCENE_PATH: String = "res://src/tscn/Main Menu/MainMenu.tscn"
+
+var is_night: bool = false
 
 var day_timer: Timer
 var DAY_DURATION: float = 900.0
@@ -35,7 +37,7 @@ var deposit_count: int = 0
 @onready var hitbox_area: Area2D = $Hitbox
 @onready var ui_hitbox_area: Area2D = $"UI-hitbox"
 @onready var interaction_area: Area2D = $Egg/InteractionArea
-@onready var egg: Node2D = $Egg/InteractionArea
+@onready var egg: Area2D = $Egg/InteractionArea
 @onready var music_player: AudioStreamPlayer = $AudioStreamPlayer
 
 var main_camera: Camera2D
@@ -46,6 +48,8 @@ var fade_layer: CanvasLayer
 
 var ending_layer: CanvasLayer
 var ending_label: Label
+
+var pending_boss_night: bool = false
 
 var stage_music: Dictionary = {
 	1: preload("res://Assets/Audio/1 - Fat Bird Beginnings.mp3"),
@@ -83,16 +87,16 @@ var current_boss: Node = null
 var raid_active: bool = false
 var raid_has_spawned_enemies: bool = false
 var ending_sequence_started: bool = false
+var current_player_in_range: Node = null
 
 func _ready() -> void:
 	pc.add_to_group("placement_camera")
 	add_to_group("nest")
 
-	print("Nest ready")
-
 	if popup_ui:
 		popup_ui.continue_pressed.connect(_on_popup_continue)
 		popup_ui.sleep_pressed.connect(_on_sleep_pressed)
+		popup_ui.feed_pressed.connect(_on_feed_pressed)
 
 	if upgrade_ui:
 		upgrade_ui.close_pressed.connect(_on_upgrade_closed)
@@ -122,15 +126,46 @@ func _ready() -> void:
 		interaction_area.body_entered.connect(_on_interaction_area_body_entered)
 		interaction_area.body_exited.connect(_on_interaction_area_body_exited)
 
+	_create_fade_layer()
+
 	if egg:
 		if egg.has_signal("stage_changed"):
 			egg.stage_changed.connect(_on_egg_stage_changed)
-		_play_stage_music(egg.egg_stage)
-		if egg.egg_stage >= 5:
-			_start_ending_sequence()
+		if egg.has_signal("demand_completed"):
+			egg.demand_completed.connect(_on_egg_demand_completed)
+		await get_tree().process_frame
+		_on_egg_stage_changed(egg.egg_stage)
 
-	_create_fade_layer()
+	if GameLoad != null and GameLoad.current_run != null:
+		pending_boss_night = GameLoad.current_run.is_boss_night
+		if GameLoad.current_run.is_night:
+			call_deferred("_start_night_encounter")
+
 	_start_day_timer()
+
+# Add this new function anywhere in Nest.gd
+func _on_feed_pressed() -> void:
+	
+	if ending_sequence_started or egg == null:
+		return
+	
+	# Check if we have a player and if they actually have fatness to give
+	if current_player_in_range:
+		var fat_to_give = current_player_in_range.fatness
+		_refresh_interaction_prompt()
+		if fat_to_give > 0:
+			
+			if Egg.demand < fat_to_give:
+				egg.add_food(Egg.demand)
+				fat_to_give = fat_to_give - Egg.demand
+			elif Egg.demand > fat_to_give:
+				egg.add_food(fat_to_give)
+				fat_to_give = 0
+			_refresh_interaction_prompt()
+			
+			print("Egg fed! Amount: ", fat_to_give)
+		else:
+			print("I am too skinny for this")
 
 func _play_stream(stream: AudioStream) -> void:
 	if stream == null:
@@ -171,6 +206,7 @@ func _play_stage_music(stage: int) -> void:
 		return
 	if raid_active:
 		return
+
 	if stage_music.has(stage):
 		_play_stream(stage_music[stage])
 	else:
@@ -181,8 +217,27 @@ func _on_egg_stage_changed(stage: int) -> void:
 		return
 
 	_play_stage_music(stage)
+	_refresh_interaction_prompt()
+
 	if stage >= 5:
 		_start_ending_sequence()
+
+func _on_egg_demand_completed() -> void:
+	_refresh_interaction_prompt()
+
+func _refresh_interaction_prompt() -> void:
+	if popup_ui == null or egg == null:
+		return
+
+	var bodies = interaction_area.get_overlapping_bodies()
+	for body in bodies:
+		if body != null and body.is_in_group("player"):
+			current_player_in_range = body
+			# Passing current state: demand_met, and current night status
+			popup_ui.show_interaction(body, egg.demand_met, egg.is_night)
+			return
+
+	current_player_in_range = null
 
 func _start_raid_theme() -> void:
 	if ending_sequence_started:
@@ -196,6 +251,10 @@ func _end_raid_theme() -> void:
 		return
 	raid_active = false
 	raid_has_spawned_enemies = false
+	
+	if egg: 
+		egg.is_night = false 
+
 	_sync_music()
 
 func _register_boss(boss: Node) -> void:
@@ -210,11 +269,17 @@ func _on_boss_tree_exited() -> void:
 	if ending_sequence_started:
 		return
 	current_boss = null
+	
+	if not _are_raid_enemies_alive():
+		if egg:
+			egg.is_night = false
+			
 	_sync_music()
 
 func _are_raid_enemies_alive() -> bool:
 	for group_name in ["raid_enemy", "raid", "enemy"]:
-		for enemy in get_tree().get_nodes_in_group(group_name):
+		var group_nodes := get_tree().get_nodes_in_group(group_name)
+		for enemy in group_nodes:
 			if not is_instance_valid(enemy):
 				continue
 			if enemy.is_queued_for_deletion():
@@ -265,6 +330,54 @@ func _ensure_ending_ui() -> void:
 
 	ending_layer.add_child(ending_label)
 
+func capture_into_run_data(run: RunData) -> void:
+	if run == null or egg == null:
+		return
+
+	run.curr_day = egg.day
+	run.egg_stage = egg.egg_stage
+	run.egg_demand = egg.demand
+	run.is_night = egg.is_night
+	run.is_day = not egg.is_night
+	run.is_boss_night = pending_boss_night
+
+	run.turrets.clear()
+	run.watchtowers.clear()
+
+	for turret in get_tree().get_nodes_in_group("turret"):
+		if turret.has_method("capture_into_run_data"):
+			var turret_state: Dictionary = turret.capture_into_run_data()
+			run.turrets.append(turret_state)
+
+	for watchtower in get_tree().get_nodes_in_group("watchtower"):
+		if watchtower.has_method("capture_into_run_data"):
+			var watchtower_state: Dictionary = watchtower.capture_into_run_data()
+			run.watchtowers.append(watchtower_state)
+
+	run.turret_count = run.turrets.size()
+	run.watchtower_count = run.watchtowers.size()
+
+func apply_run_data(run: RunData) -> void:
+	if run == null:
+		return
+
+	pending_boss_night = run.is_boss_night
+	raid_active = false
+
+	for turret in get_tree().get_nodes_in_group("turret"):
+		if turret.has_method("apply_run_data"):
+			turret.apply_run_data(_find_structure_state(run.turrets, turret.persistent_id))
+
+	for watchtower in get_tree().get_nodes_in_group("watchtower"):
+		if watchtower.has_method("apply_run_data"):
+			watchtower.apply_run_data(_find_structure_state(run.watchtowers, watchtower.persistent_id))
+
+func _find_structure_state(list: Array, id: String) -> Dictionary:
+	for entry in list:
+		if entry is Dictionary and entry.get("id", "") == id:
+			return entry
+	return {}
+
 func _start_ending_sequence() -> void:
 	if ending_sequence_started:
 		return
@@ -281,7 +394,6 @@ func _start_ending_sequence() -> void:
 		upgrade_ui.visible = false
 
 	_sync_music()
-
 	call_deferred("_run_ending_sequence")
 
 func _run_ending_sequence() -> void:
@@ -303,7 +415,6 @@ func _run_ending_sequence() -> void:
 	ending_label.visible_ratio = 0.0
 	ending_label.modulate.a = 1.0
 
-	# Explicitly typed dialogue_time as a float to prevent Variant inference warning
 	var dialogue_time: float = max(ENDING_DIALOGUE_MIN_TIME, float(ending_dialogue.length()) * ENDING_DIALOGUE_TIME_PER_CHAR)
 	var dialogue_tween: Tween = create_tween()
 	dialogue_tween.tween_property(ending_label, "visible_ratio", 1.0, dialogue_time)
@@ -333,21 +444,47 @@ func _move_camera_to_placement() -> void:
 func _sleep_transition() -> void:
 	var tween: Tween = create_tween()
 	tween.tween_property(fade_rect, "modulate:a", 1.0, 1.2)
-	tween.tween_callback(_spawn_weasel)
+	tween.tween_callback(_start_night_encounter)
 	tween.tween_property(fade_rect, "modulate:a", 0.0, 1.2)
+
+func _start_night_encounter() -> void:
+	if pending_boss_night:
+		_start_boss_night()
+	else:
+		_start_raid_night()
+
+func _start_boss_night() -> void:
+	raid_active = false
+	raid_has_spawned_enemies = false
+	current_boss = null
+	_play_stream(boss_theme)
+
+	if egg == null or not weasel_scene:
+		return
+
+	var count: int = max(1, int(egg.day / 5))
+	for i in range(count):
+		var boss: Node = weasel_scene.instantiate()
+		get_tree().current_scene.add_child(boss)
+		boss.global_position = global_position + Vector2(0, -2500 - (i * 160))
+		if i == 0:
+			_register_boss(boss)
+
+func _start_raid_night() -> void:
+	raid_active = true
+	raid_has_spawned_enemies = false
+	current_boss = null
+	_sync_music()
 
 func _spawn_weasel() -> void:
 	if not weasel_scene:
 		return
 
-	# Explicitly typed as Node to prevent Variant warning
 	var boss: Node = weasel_scene.instantiate()
-	get_tree().get_current_scene().add_child(boss)
+	get_tree().current_scene.add_child(boss)
 	boss.global_position = global_position + Vector2(0, -2500)
 
 	_register_boss(boss)
-
-	print("Weasel boss spawned.")
 
 func _on_sleep_pressed() -> void:
 	if ending_sequence_started:
@@ -355,18 +492,22 @@ func _on_sleep_pressed() -> void:
 	if popup_ui:
 		popup_ui.hide_popup()
 
-	_sleep_transition()
-
 	if egg:
 		egg.next_day()
+		pending_boss_night = (egg.day % 5 == 0)
+	else:
+		pending_boss_night = false
 
-	_start_day_timer()
+	if GameLoad != null and GameLoad.current_run != null:
+		GameLoad.current_run.is_night = true
+		GameLoad.save_current_state(null, egg)
+
+	_sleep_transition()
 
 func _on_buy_turret_pressed() -> void:
 	if ending_sequence_started:
 		return
 	if not Resources.spend_cardboard(turret_cost):
-		print("Not enough cardboard")
 		return
 	_upgrade_to_placement(turret_scene)
 	placing_turret = true
@@ -376,7 +517,6 @@ func _on_buy_watchtower_pressed() -> void:
 	if ending_sequence_started:
 		return
 	if not Resources.spend_cardboard(watchtower_cost):
-		print("Not enough cardboard")
 		return
 	_upgrade_to_placement(watchtower_scene)
 	placing_watchtower = true
@@ -410,30 +550,50 @@ func deposit_item(item: Node) -> void:
 	if item.is_in_group("material") and item.material_type == "cardboard":
 		Resources.add_cardboard(item.material_amount)
 
-	deposit_count += 1
-	print("Items Deposited:", deposit_count)
+	if GameLoad != null and "persistent_id" in item and not item.persistent_id.is_empty():
+		GameLoad.save_world_state(item.persistent_id, {
+			"kind": "material",
+			"removed": true
+		})
 
+	deposit_count += 1
 	item.queue_free()
 
 func _on_ui_hitbox_body_entered(body: Node) -> void:
 	if body and body.is_in_group("player"):
+		# Don't show Buy menu if player is already touching the egg
+		if interaction_area and interaction_area.overlaps_body(body):
+			return 
 		if popup_ui:
 			popup_ui.show_buy_only()
 
 func _on_ui_hitbox_body_exited(body: Node) -> void:
 	if body and body.is_in_group("player"):
-		if popup_ui:
-			popup_ui.hide_popup()
+		# If player is still on the egg, show egg menu. Otherwise hide.
+		if interaction_area and interaction_area.overlaps_body(body):
+			_refresh_interaction_prompt()
+		else:
+			if popup_ui:
+				popup_ui.hide_popup()
 
 func _on_interaction_area_body_entered(body: Node) -> void:
 	if body and body.is_in_group("player"):
+		current_player_in_range = body
 		if popup_ui:
-			popup_ui.show_interaction(body)
+			# Explicitly show Feed/Sleep and hide Buy
+			popup_ui.show_interaction(body, egg.demand_met, egg.is_night)
 
 func _on_interaction_area_body_exited(body: Node) -> void:
 	if body and body.is_in_group("player"):
+		if current_player_in_range == body:
+			current_player_in_range = null
+		
 		if popup_ui:
-			popup_ui.hide_popup()
+			# If they leave egg but stay in Buy area, switch to Buy menu
+			if ui_hitbox_area and ui_hitbox_area.overlaps_body(body):
+				popup_ui.show_buy_only()
+			else:
+				popup_ui.hide_popup()
 
 func _process(delta: float) -> void:
 	if ending_sequence_started:
@@ -451,7 +611,6 @@ func _process(delta: float) -> void:
 	if not ghost_turret:
 		return
 
-	# Explicitly typed to prevent Variant inference warning
 	var mouse_pos: Vector2 = placement_camera.get_global_mouse_position() if placement_camera else Vector2.ZERO
 
 	if placing_turret:
@@ -475,17 +634,13 @@ func _unhandled_input(event: InputEvent) -> void:
 				placement_stage = 2
 			elif placement_stage == 2:
 				ghost_turret.modulate = Color(1, 1, 1, 1)
-
 				if ghost_turret.has_method("lock_head_rotation"):
 					ghost_turret.lock_head_rotation()
-
 				_reset_placement()
 		elif placing_watchtower:
 			ghost_turret.modulate = Color(1, 1, 1, 1)
-
 			if ghost_turret.has_method("finalize_placement"):
 				ghost_turret.finalize_placement()
-
 			_reset_placement()
 
 func _reset_placement() -> void:
@@ -518,12 +673,9 @@ func _start_day_timer() -> void:
 	add_child(day_timer)
 	day_timer.start()
 
-	print("Day started: 15 min timer")
-
 func _on_day_timeout() -> void:
 	if ending_sequence_started:
 		return
-	print("Day time over → forcing sleep")
 	_force_sleep()
 
 func _force_sleep() -> void:
