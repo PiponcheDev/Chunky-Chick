@@ -129,8 +129,7 @@ animations = [{
 
 [node name="Spit-weasel" type="CharacterBody2D" unique_id=1720051241]
 scale = Vector2(0.6, 0.6)
-collision_layer = 0
-collision_mask = 0
+collision_layer = 2
 script = ExtResource("1_swem7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=940264078]

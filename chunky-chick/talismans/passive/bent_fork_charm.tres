@@ -1,10 +1,16 @@
 [gd_resource type="Resource" script_class="TalismanData" format=3 uid="uid://bbbytp5q1m7io"]
 
+[ext_resource type="Texture2D" uid="uid://c4n5fvwx7fvw0" path="res://Assets-Extra/Untitled_Artwork.png" id="1_lhup2"]
 [ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="1_xuv00"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cdbm0"]
+atlas = ExtResource("1_lhup2")
+region = Rect2(1509.8241, 81.11975, 321.4856, 372.92328)
 
 [resource]
 script = ExtResource("1_xuv00")
 talisman_name = "Bent Fork Charm"
 description = "Pointy good"
+icon = SubResource("AtlasTexture_cdbm0")
 damage_bonus = 20.0
 metadata/_custom_type_script = "uid://dpeqe6622sp7j"

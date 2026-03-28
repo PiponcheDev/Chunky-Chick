@@ -1,10 +1,16 @@
 [gd_resource type="Resource" script_class="TalismanData" format=3 uid="uid://j2rmocb5hme7"]
 
 [ext_resource type="Script" uid="uid://dpeqe6622sp7j" path="res://src/scripts/talisman_data.gd" id="1_51o06"]
+[ext_resource type="Texture2D" uid="uid://c4n5fvwx7fvw0" path="res://Assets-Extra/Untitled_Artwork.png" id="1_n2c2k"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o5rih"]
+atlas = ExtResource("1_n2c2k")
+region = Rect2(141.62671, 551.29376, 358.1726, 376.081)
 
 [resource]
 script = ExtResource("1_51o06")
 talisman_name = "Pocket Bread Crumbs"
 description = "More food later"
+icon = SubResource("AtlasTexture_o5rih")
 fatness_from_food_bonus = 1.815
 metadata/_custom_type_script = "uid://dpeqe6622sp7j"

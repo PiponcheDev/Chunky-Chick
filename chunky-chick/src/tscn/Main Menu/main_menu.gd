@@ -4,11 +4,22 @@ extends Control
 var is_transitioning: bool = false
 
 func _ready() -> void:
+	
+	check_save()
+	
 	print("MENU: _ready()")
 	print("MENU: current_run:", GameLoad.current_run)
 	print("MENU: load_existing_run:", GameLoad.load_existing_run)
 	print("MENU: loaded_from_save:", GameLoad.loaded_from_save)
 	print("MENU: file exists:", GameLoad.has_saved_run())
+
+func check_save() -> void:
+	if GameLoad.has_saved_run() == false:
+		$Continue.visible = false
+		$Start.set_position($Continue.position, false)
+	else:
+		$Continue.visible = true
+
 
 func _start_game(use_saved_run: bool) -> void:
 	if is_transitioning:
@@ -31,6 +42,8 @@ func _start_game(use_saved_run: bool) -> void:
 
 func _on_start_pressed() -> void:
 	print("MENU: start pressed")
+	if GameLoad.has_saved_run():
+		GameLoad.destroy_save_file()
 	_start_game(false)
 
 func _on_continue_pressed() -> void:
@@ -40,3 +53,6 @@ func _on_continue_pressed() -> void:
 		_start_game(false)
 		return
 	_start_game(true)
+
+func _on_quit_pressed():
+	get_tree().quit()

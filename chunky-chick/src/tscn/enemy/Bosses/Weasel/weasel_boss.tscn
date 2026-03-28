@@ -3,8 +3,9 @@
 [ext_resource type="Script" uid="uid://c4ki1unneo7d4" path="res://src/tscn/Temporary/weasel_boss.gd" id="1_2p87b"]
 [ext_resource type="Texture2D" uid="uid://c30rqdi2le4uw" path="res://Assets-Extra/Wesl.png" id="2_pgkqi"]
 
-[sub_resource type="CircleShape2D" id="CircleShape2D_v5ddb"]
-radius = 93.065834
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pgkqi"]
+radius = 50.0
+height = 317.0
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_toy65"]
 atlas = ExtResource("2_pgkqi")
@@ -136,14 +137,19 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_toy65"]
+radius = 37.0
+height = 202.0
+
 [node name="Weasel-boss" type="CharacterBody2D" unique_id=983820579 groups=["enemy"]]
+collision_layer = 2
 script = ExtResource("1_2p87b")
 move_speed = 516.045
 PEBBLE_FAN_COUNT = 6
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=673628272]
-position = Vector2(-1, 1.5)
-shape = SubResource("CircleShape2D_v5ddb")
+position = Vector2(-3, -25)
+shape = SubResource("CapsuleShape2D_pgkqi")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=880177973]
 
@@ -156,3 +162,11 @@ animation = &"Fire_proj"
 frame = 5
 frame_progress = 1.0
 offset = Vector2(2.975, 0)
+
+[node name="Dash_hitbox" type="Area2D" parent="." unique_id=498665734]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Dash_hitbox" unique_id=681684043]
+position = Vector2(-3, -177)
+rotation = 1.5923036
+shape = SubResource("CapsuleShape2D_toy65")

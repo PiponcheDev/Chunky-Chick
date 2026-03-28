@@ -129,11 +129,11 @@ func _update_guide_label() -> void:
 	var prompt := ""
 
 	if _has_nearby_talisman_pickup():
-		prompt = "Pick up talisman"
+		prompt = "Pick up talisman [E]"
 	elif _has_nearby_trash_can():
-		prompt = "Open trash can"
+		prompt = "Open trash can [E]"
 	elif _has_nearby_material():
-		prompt = "Pick up material"
+		prompt = "Pick up material [E]"
 
 	guide.text = prompt
 	guide.visible = prompt != ""

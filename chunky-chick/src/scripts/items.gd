@@ -1,6 +1,6 @@
 extends Area2D
 
-@export var hold_distance: float = 70.0
+@export var hold_distance: float = -70.0
 @export var material_type := "cardboard"
 @export var material_amount := 1
 
@@ -32,8 +32,8 @@ func pick_up(player: Node):
 func drop():
 	carried = false
 	carrier = null
-	set_deferred("collision_layer", 1)
-	set_deferred("collision_mask", 1)
+	set_deferred("collision_layer", 2)
+	set_deferred("collision_mask", 3)
 
 func _process(delta):
 	if carried and carrier:
@@ -42,6 +42,7 @@ func _process(delta):
 func _update_position():
 	if not carrier:
 		return
+
 	var angle_rad: float = deg_to_rad(carrier.snapped_angle + 90)
 	var dir: Vector2 = Vector2(cos(angle_rad), sin(angle_rad))
 	global_position = carrier.global_position + dir * hold_distance

@@ -16,6 +16,7 @@ var state: BossState = BossState.ORBIT
 @onready var anim_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var nav: NavigationAgent2D = $NavigationAgent2D
 @onready var audioPlayer: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var dash_hitbox: Area2D = $Dash_hitbox
 
 const SFX_BLEHH: AudioStream = preload("res://Assets/Audio/enemy/bosses/weasel/blehh.ogg")
 const SFX_GRAVEL: AudioStream = preload("res://Assets/Audio/enemy/bosses/weasel/gravel.ogg")
@@ -47,6 +48,7 @@ var dash_count: int = 0
 var dash_cooldown: float = 0.0
 var dash_stage: int = 0
 var _did_hit_player: bool = false
+var _dash_damage_applied: bool = false
 
 const DASH_LOCK_DUR: float = 0.15
 const DASH_COIL_DUR: float = 0.25
@@ -126,8 +128,12 @@ func _ready() -> void:
 	choose_orbit()
 	_allow_orbit_change = false
 	_prev_global_pos = global_position
-	
-	# Start the default animation
+
+	if dash_hitbox:
+		dash_hitbox.monitoring = false
+		if not dash_hitbox.body_entered.is_connected(Callable(self, "_on_dash_hitbox_body_entered")):
+			dash_hitbox.body_entered.connect(Callable(self, "_on_dash_hitbox_body_entered"))
+
 	if anim_sprite:
 		anim_sprite.play("Walk")
 
@@ -150,6 +156,52 @@ func _play_sfx(stream: AudioStream) -> void:
 	audioPlayer.stop()
 	audioPlayer.stream = stream
 	audioPlayer.play()
+
+
+func _set_dash_hitbox_active(active: bool) -> void:
+	if dash_hitbox == null:
+		return
+	dash_hitbox.monitoring = active
+
+
+func _damage_player(target_node: Node, amount: int) -> void:
+	if target_node == null:
+		return
+	if target_node.has_method("take_damage"):
+		target_node.take_damage(amount)
+	elif target_node.has_method("apply_damage"):
+		target_node.apply_damage(amount)
+
+
+func _on_dash_hitbox_body_entered(body: Node2D) -> void:
+	if state != BossState.DASH_EXEC:
+		return
+	if _dash_damage_applied:
+		return
+	if body == null or body == self:
+		return
+	if not body.is_in_group("player"):
+		return
+
+	_dash_damage_applied = true
+	_did_hit_player = true
+	_damage_player(body, DASH_PLAYER_DAMAGE)
+	state_timer = 0.0
+	_set_dash_hitbox_active(false)
+
+
+func _check_dash_hitbox_overlap() -> void:
+	if state != BossState.DASH_EXEC:
+		return
+	if _dash_damage_applied:
+		return
+	if dash_hitbox == null:
+		return
+
+	for body in dash_hitbox.get_overlapping_bodies():
+		if body and body.is_in_group("player"):
+			_on_dash_hitbox_body_entered(body)
+			return
 
 
 func _physics_process(delta: float) -> void:
@@ -184,6 +236,7 @@ func _physics_process(delta: float) -> void:
 
 		BossState.DASH_EXEC:
 			_check_dash_hit_segment(delta, current_pos)
+			_check_dash_hitbox_overlap()
 			if state_timer <= 0.0:
 				_enter_post_dash()
 
@@ -288,10 +341,10 @@ func enter_dash_lock(force: bool = false) -> void:
 	state = BossState.DASH_LOCK
 	state_timer = DASH_LOCK_DUR
 	desired_velocity = Vector2.ZERO
-	
+
 	if anim_sprite:
 		anim_sprite.play("Charge")
-		
+
 	if player:
 		var dist: float = global_position.distance_to(player.global_position)
 		var lead_time: float = clamp(dist / max(dash_speed_first, 1.0), 0.08, 0.6)
@@ -307,7 +360,8 @@ func enter_dash_lock(force: bool = false) -> void:
 	_coil_elapsed = 0.0
 	_coil_total = DASH_COIL_DUR
 	_did_hit_player = false
-	
+	_dash_damage_applied = false
+
 	if anim_sprite:
 		anim_sprite.position = Vector2.ZERO
 		anim_sprite.scale = Vector2.ONE
@@ -345,7 +399,10 @@ func enter_dash_exec() -> void:
 	if anim_sprite:
 		anim_sprite.scale = Vector2.ONE
 		anim_sprite.play("Walk")
-		
+
+	_dash_damage_applied = false
+	_set_dash_hitbox_active(true)
+
 	_ghost_active = true
 	_ghost_timer = 0.0
 	_play_sfx(SFX_SLASH)
@@ -375,13 +432,15 @@ func _check_dash_hit_segment(delta: float, current_pos: Vector2) -> void:
 	var dist_to_segment: float = _segment_point_distance(current_pos, next_pos, player.global_position)
 	if dist_to_segment <= DASH_HIT_RADIUS:
 		_did_hit_player = true
-		if player.has_method("apply_damage"):
-			player.apply_damage(DASH_PLAYER_DAMAGE)
+		_dash_damage_applied = true
+		_damage_player(player, DASH_PLAYER_DAMAGE)
+		_set_dash_hitbox_active(false)
 		state_timer = 0.0
 
 
 func _enter_post_dash() -> void:
 	_ghost_active = false
+	_set_dash_hitbox_active(false)
 
 	if dash_stage == 0 and (_did_hit_player or (player and global_position.distance_to(player.global_position) <= DASH_CHAIN_DISTANCE)):
 		dash_stage = 1
@@ -391,6 +450,7 @@ func _enter_post_dash() -> void:
 	dash_cooldown = DASH_COOLDOWN
 	dash_stage = 0
 	_did_hit_player = false
+	_dash_damage_applied = false
 	_allow_orbit_change = true
 	choose_orbit()
 	_allow_orbit_change = false
@@ -400,6 +460,7 @@ func _enter_post_dash() -> void:
 func enter_orbit() -> void:
 	state = BossState.ORBIT
 	state_timer = 0.0
+	_set_dash_hitbox_active(false)
 	if anim_sprite:
 		anim_sprite.scale = Vector2.ONE
 		anim_sprite.position = Vector2.ZERO
@@ -412,15 +473,13 @@ func enter_spit() -> void:
 	state = BossState.SPIT_WINDUP
 	state_timer = SPIT_WINDUP
 	desired_velocity = Vector2.ZERO
-	
+
 	if anim_sprite:
 		anim_sprite.play("Fire_proj")
 
 
 func _fire_ranged() -> void:
-	var dist = global_position.distance_to(player.global_position)
-
-	var use_spit := _rng.randf() < 0.5  
+	var use_spit := _rng.randf() < 0.5
 
 	if use_spit and _spit_scene != null:
 		_play_sfx(SFX_BLEHH)
@@ -451,8 +510,9 @@ func _predict_player_pos_for_projectile(proj_speed: float) -> Vector2:
 func _fire_spit_scene() -> void:
 	var inst = _spit_scene.instantiate()
 	get_tree().get_current_scene().add_child(inst)
-	inst.global_position = global_position
+	var spawn_offset := 160.0
 	var forward: Vector2 = _predict_player_pos_for_projectile(DEFAULT_PEBBLE_SPEED) - global_position
+	inst.global_position = global_position + forward.normalized() * spawn_offset
 	forward = forward.normalized().rotated(_rng.randf_range(-0.18, 0.18))
 	if inst.has_method("launch"):
 		inst.launch(forward)
@@ -463,21 +523,22 @@ func _fire_spit_scene() -> void:
 func _fire_rock_volley() -> void:
 	var boss_forward: Vector2 = (player.global_position - global_position).normalized()
 	var half_span = PEBBLE_FAN_ANGLE * 0.5
+	var spawn_offset := 60.0
+
 	for i in range(PEBBLE_FAN_COUNT):
 		var t = 0.0 if PEBBLE_FAN_COUNT == 1 else float(i) / float(PEBBLE_FAN_COUNT - 1)
 		var ang = lerp(-half_span, half_span, t)
 		var dir = boss_forward.rotated(ang).normalized()
+
 		var inst = _rock_scene.instantiate()
 		get_tree().get_current_scene().add_child(inst)
-		inst.global_position = global_position
+
+		inst.global_position = global_position + dir * spawn_offset
+
 		var final_dir = dir.rotated(_rng.randf_range(-0.04, 0.04)).normalized()
+
 		if inst.has_method("launch"):
 			inst.launch(final_dir)
-		else:
-			if inst.has_meta("velocity") or inst.has_method("set"):
-				inst.set("velocity", final_dir * PEBBLE_VOLLEY_SPEED)
-				if inst.has_method("set"):
-					inst.set("life_timer", PEBBLE_VOLLEY_LIFETIME)
 
 
 func _fire_pebble_volley() -> void:
@@ -541,8 +602,7 @@ func _update_pebbles(delta: float) -> void:
 		var pradius: float = peb.get("radius", DEFAULT_PEBBLE_RADIUS)
 		var pdmg: int = peb.get("damage", DEFAULT_PEBBLE_DAMAGE)
 		if player and pos.distance_to(player.global_position) < (pradius + 12.0):
-			if player.has_method("apply_damage"):
-				player.apply_damage(pdmg)
+			_damage_player(player, pdmg)
 			if player.has_method("apply_debuff"):
 				player.apply_debuff("blur", 0.8)
 			_spawn_slippery_patch(pos, "player_hit")
@@ -599,18 +659,26 @@ func stun() -> void:
 	state = BossState.STUNNED
 	state_timer = 0.6
 	desired_velocity = Vector2.ZERO
+	_set_dash_hitbox_active(false)
 	if anim_sprite:
 		anim_sprite.scale = Vector2(0.85, 1.15)
 
 
-func apply_damage(dmg: float) -> void:
+func take_damage(amount: int) -> void:
+	if state == BossState.DEAD:
+		return
 	if state == BossState.STUNNED:
-		dmg *= 1.2
-	hp -= dmg
+		amount = int(round(float(amount) * 1.2))
+	hp -= amount
 	modulate = Color(1, 1, 1)
 	if hp <= 0:
 		state = BossState.DEAD
+		_set_dash_hitbox_active(false)
 		queue_free()
+
+
+func apply_damage(dmg: float) -> void:
+	take_damage(int(round(dmg)))
 
 
 func _draw() -> void:
@@ -630,7 +698,7 @@ func _update_dash_ghosts(delta: float) -> void:
 func _spawn_dash_ghost() -> void:
 	if not anim_sprite or not anim_sprite.sprite_frames:
 		return
-		
+
 	var tex: Texture2D = anim_sprite.sprite_frames.get_frame_texture(anim_sprite.animation, anim_sprite.frame)
 	if not tex:
 		return
@@ -642,7 +710,7 @@ func _spawn_dash_ghost() -> void:
 	ghost.scale = anim_sprite.scale
 	ghost.modulate = Color(ghost_color_base.r, ghost_color_base.g, ghost_color_base.b, ghost_start_alpha)
 	get_tree().current_scene.add_child(ghost)
-	
+
 	var tw = create_tween()
 	tw.tween_property(ghost, "modulate:a", 0.0, ghost_lifetime)
 	tw.parallel().tween_property(ghost, "scale", ghost.scale * ghost_scale_mult, ghost_lifetime)

@@ -1,3 +1,4 @@
+# Nest.gd
 extends Node2D
 
 const ENDING_CAMERA_MOVE_TIME: float = 4.0
@@ -8,6 +9,9 @@ const ENDING_DIALOGUE_MIN_TIME: float = 12.0
 const ENDING_DIALOGUE_FADE_TIME: float = 2.0
 const ENDING_POST_DIALOGUE_HOLD: float = 1.0
 const MAIN_MENU_SCENE_PATH: String = "res://src/tscn/Main Menu/MainMenu.tscn"
+
+@export var deposit_padding: Vector2 = Vector2(128, 128)
+@export var deposit_fallback_radius: float = 220.0
 
 var is_night: bool = false
 
@@ -80,7 +84,7 @@ var ending_dialogue: String = "I kept you warm.\n\n" + \
 	"Out there, the world doesn’t care how much I love you.\n" + \
 	"I thought I was saving you.\n" + \
 	"I wanted you to live.\n" + \
-    "I didn’t know I was teaching you how to die."
+	"I didn’t know I was teaching you how to die."
 
 var current_music_stage: int = -1
 var current_boss: Node = null
@@ -116,7 +120,8 @@ func _ready() -> void:
 	placement_camera = p_cams[0] as Camera2D if p_cams.size() > 0 else null
 
 	if hitbox_area:
-		hitbox_area.body_entered.connect(_on_hitbox_body_entered)
+		hitbox_area.monitoring = true
+		hitbox_area.area_entered.connect(_on_hitbox_area_entered)
 
 	if ui_hitbox_area:
 		ui_hitbox_area.body_entered.connect(_on_ui_hitbox_body_entered)
@@ -143,26 +148,28 @@ func _ready() -> void:
 
 	_start_day_timer()
 
-# Add this new function anywhere in Nest.gd
+func _physics_process(delta: float) -> void:
+	if ending_sequence_started:
+		return
+
+	_try_deposit_items_in_zone()
+
 func _on_feed_pressed() -> void:
-	
 	if ending_sequence_started or egg == null:
 		return
-	
-	# Check if we have a player and if they actually have fatness to give
+
 	if current_player_in_range:
 		var fat_to_give = current_player_in_range.fatness
 		_refresh_interaction_prompt()
 		if fat_to_give > 0:
-			
-			if Egg.demand < fat_to_give:
-				egg.add_food(Egg.demand)
-				fat_to_give = fat_to_give - Egg.demand
-			elif Egg.demand > fat_to_give:
+			if egg.demand < fat_to_give:
+				egg.add_food(egg.demand)
+				fat_to_give = fat_to_give - egg.demand
+			elif egg.demand > fat_to_give:
 				egg.add_food(fat_to_give)
 				fat_to_give = 0
 			_refresh_interaction_prompt()
-			
+
 			print("Egg fed! Amount: ", fat_to_give)
 		else:
 			print("I am too skinny for this")
@@ -233,7 +240,6 @@ func _refresh_interaction_prompt() -> void:
 	for body in bodies:
 		if body != null and body.is_in_group("player"):
 			current_player_in_range = body
-			# Passing current state: demand_met, and current night status
 			popup_ui.show_interaction(body, egg.demand_met, egg.is_night)
 			return
 
@@ -251,9 +257,9 @@ func _end_raid_theme() -> void:
 		return
 	raid_active = false
 	raid_has_spawned_enemies = false
-	
-	if egg: 
-		egg.is_night = false 
+
+	if egg:
+		egg.is_night = false
 
 	_sync_music()
 
@@ -269,11 +275,11 @@ func _on_boss_tree_exited() -> void:
 	if ending_sequence_started:
 		return
 	current_boss = null
-	
+
 	if not _are_raid_enemies_alive():
 		if egg:
 			egg.is_night = false
-			
+
 	_sync_music()
 
 func _are_raid_enemies_alive() -> bool:
@@ -542,34 +548,81 @@ func _on_popup_continue() -> void:
 func _on_upgrade_closed() -> void:
 	upgrade_ui.visible = false
 
-func _on_hitbox_body_entered(body: Node) -> void:
-	if body.is_in_group("material") and body.in_range:
-		deposit_item(body)
+func _on_hitbox_area_entered(area: Area2D) -> void:
+	if not area:
+		return
+	if area.is_in_group("material") and not area.carried:
+		deposit_item(area)
+
+func _try_deposit_items_in_zone() -> void:
+	for node in get_tree().get_nodes_in_group("material"):
+		if not is_instance_valid(node):
+			continue
+		if node.is_queued_for_deletion():
+			continue
+		if node.carried:
+			continue
+		if node is Node2D and _is_point_inside_deposit_zone(node.global_position):
+			deposit_item(node)
+
+func _is_point_inside_deposit_zone(world_pos: Vector2) -> bool:
+	if hitbox_area == null:
+		return false
+
+	var local_pos: Vector2 = hitbox_area.to_local(world_pos)
+
+	var shape_node := hitbox_area.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node and shape_node.shape:
+		if shape_node.shape is RectangleShape2D:
+			var rect_shape := shape_node.shape as RectangleShape2D
+			var extents: Vector2 = rect_shape.extents + deposit_padding
+			return abs(local_pos.x) <= extents.x and abs(local_pos.y) <= extents.y
+
+		elif shape_node.shape is CircleShape2D:
+			var circle_shape := shape_node.shape as CircleShape2D
+			var radius: float = circle_shape.radius + max(deposit_padding.x, deposit_padding.y)
+			return local_pos.length() <= radius
+
+		elif shape_node.shape is CapsuleShape2D:
+			var capsule_shape := shape_node.shape as CapsuleShape2D
+			var radius_capsule: float = max(capsule_shape.radius, capsule_shape.height * 0.5) + max(deposit_padding.x, deposit_padding.y)
+			return local_pos.length() <= radius_capsule
+
+	return local_pos.length() <= deposit_fallback_radius
 
 func deposit_item(item: Node) -> void:
+	if not is_instance_valid(item):
+		return
+
+	if item.is_queued_for_deletion():
+		return
+
+	if item.carried:
+		return
+
 	if item.is_in_group("material") and item.material_type == "cardboard":
 		Resources.add_cardboard(item.material_amount)
 
-	if GameLoad != null and "persistent_id" in item and not item.persistent_id.is_empty():
-		GameLoad.save_world_state(item.persistent_id, {
-			"kind": "material",
-			"removed": true
-		})
+	if GameLoad != null and item.has_meta("persistent_id"):
+		var persistent_id = str(item.get_meta("persistent_id"))
+		if persistent_id != "":
+			GameLoad.save_world_state(persistent_id, {
+				"kind": "material",
+				"removed": true
+			})
 
 	deposit_count += 1
 	item.queue_free()
 
 func _on_ui_hitbox_body_entered(body: Node) -> void:
 	if body and body.is_in_group("player"):
-		# Don't show Buy menu if player is already touching the egg
 		if interaction_area and interaction_area.overlaps_body(body):
-			return 
+			return
 		if popup_ui:
 			popup_ui.show_buy_only()
 
 func _on_ui_hitbox_body_exited(body: Node) -> void:
 	if body and body.is_in_group("player"):
-		# If player is still on the egg, show egg menu. Otherwise hide.
 		if interaction_area and interaction_area.overlaps_body(body):
 			_refresh_interaction_prompt()
 		else:
@@ -580,16 +633,14 @@ func _on_interaction_area_body_entered(body: Node) -> void:
 	if body and body.is_in_group("player"):
 		current_player_in_range = body
 		if popup_ui:
-			# Explicitly show Feed/Sleep and hide Buy
 			popup_ui.show_interaction(body, egg.demand_met, egg.is_night)
 
 func _on_interaction_area_body_exited(body: Node) -> void:
 	if body and body.is_in_group("player"):
 		if current_player_in_range == body:
 			current_player_in_range = null
-		
+
 		if popup_ui:
-			# If they leave egg but stay in Buy area, switch to Buy menu
 			if ui_hitbox_area and ui_hitbox_area.overlaps_body(body):
 				popup_ui.show_buy_only()
 			else:

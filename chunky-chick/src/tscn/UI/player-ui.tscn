@@ -46,10 +46,11 @@ fill_mode = 3
 
 [node name="Guide" type="Label" parent="." unique_id=1188179078]
 layout_mode = 0
-offset_left = 1392.0
-offset_top = 1152.0
-offset_right = 2816.0
-offset_bottom = 1440.0
+offset_left = 1688.0
+offset_top = 1856.0
+offset_right = 3112.0
+offset_bottom = 2144.0
+theme_override_font_sizes/font_size = 62
 text = "Interact?"
 horizontal_alignment = 1
 vertical_alignment = 1

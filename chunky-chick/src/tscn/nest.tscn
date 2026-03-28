@@ -62,6 +62,8 @@ zoom = Vector2(0.5, 0.5)
 [node name="Hitbox" type="Area2D" parent="." unique_id=875762905]
 position = Vector2(162.66669, 86.66667)
 scale = Vector2(2.25, 2.25)
+collision_layer = 4294967295
+collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=508363082]
 position = Vector2(-125.62964, -43.481487)
