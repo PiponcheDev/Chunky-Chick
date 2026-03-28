@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://cbxj3b6gsa1ql"]
 
 [ext_resource type="Script" uid="uid://culqa87yvdp3j" path="res://src/scripts/UI/upgrade_selec.gd" id="1_jgruj"]
+[ext_resource type="SystemFont" uid="uid://bxcvre63m8aar" path="res://Assets/Ui/TextFont.tres" id="2_7s0ic"]
+[ext_resource type="StyleBox" uid="uid://b4oruhiydy41t" path="res://Assets/Ui/NinesliceFlat.tres" id="2_ps3ha"]
+[ext_resource type="StyleBox" uid="uid://rigjob130ywm" path="res://Assets/Ui/NinesliceButton.tres" id="3_ps3ha"]
 
 [node name="Upgrade-selec" type="Control" unique_id=1839561250 groups=["ui"]]
 layout_mode = 3
@@ -16,82 +19,112 @@ grow_vertical = 2
 script = ExtResource("1_jgruj")
 
 [node name="Turret" type="Label" parent="." unique_id=2010771536 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
-offset_left = 34.0
-offset_top = 24.0
-offset_right = 200.0
-offset_bottom = 145.0
+offset_left = 17.0
+offset_top = 11.0
+offset_right = 183.0
+offset_bottom = 132.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("2_ps3ha")
 text = "Turret"
 
 [node name="Turret-buy" type="Button" parent="Turret" unique_id=1847999379 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_top = 32.0
 offset_right = 82.0
 offset_bottom = 75.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("3_ps3ha")
 text = "Buy"
 
 [node name="WatchTower" type="Label" parent="." unique_id=609020236 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
-offset_left = 27.0
-offset_top = 148.0
-offset_right = 193.0
-offset_bottom = 269.0
+offset_left = 16.0
+offset_top = 144.0
+offset_right = 182.0
+offset_bottom = 265.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("2_ps3ha")
 text = "Watch tower"
 
 [node name="WatchTower-buy" type="Button" parent="WatchTower" unique_id=1795653727 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_left = 2.0
 offset_top = 29.0
 offset_right = 69.0
 offset_bottom = 64.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("3_ps3ha")
 text = "Buy"
 
 [node name="Recycling-bot" type="Label" parent="." unique_id=146819102 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
-offset_left = 26.0
-offset_top = 285.0
-offset_right = 192.0
-offset_bottom = 406.0
+offset_left = 18.0
+offset_top = 280.0
+offset_right = 178.0
+offset_bottom = 385.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("2_ps3ha")
 text = "Recycling bot"
 
 [node name="Button" type="Button" parent="Recycling-bot" unique_id=1695919530 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_left = -2.0
 offset_top = 24.0
 offset_right = 62.0
 offset_bottom = 75.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("3_ps3ha")
 text = "Buy"
 
 [node name="Nuke" type="Label" parent="." unique_id=1903872491 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_left = 18.0
 offset_top = 417.0
 offset_right = 184.0
 offset_bottom = 538.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("2_ps3ha")
 text = "Giant bird shit"
 
 [node name="Button" type="Button" parent="Nuke" unique_id=429652654 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_left = 5.0
 offset_top = 31.0
 offset_right = 81.0
 offset_bottom = 63.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("3_ps3ha")
 text = "Buy"
 
 [node name="Items" type="Label" parent="." unique_id=2041547345 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_left = 990.0
 offset_top = 24.0
 offset_right = 1131.0
 offset_bottom = 73.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("2_ps3ha")
 text = "Items:
 Carboard-"
 
 [node name="Close" type="Button" parent="." unique_id=1805506427 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_left = 60.0
 offset_top = 559.0
 offset_right = 1049.0
 offset_bottom = 577.0
+theme_override_fonts/font = ExtResource("2_7s0ic")
+theme_override_styles/normal = ExtResource("3_ps3ha")
 text = "Back
 "

@@ -1,6 +1,8 @@
 [gd_scene format=3 uid="uid://di8qyu0l1gw7l"]
 
 [ext_resource type="Script" uid="uid://35e5wp84t1hc" path="res://src/scripts/UI/selection_menu.gd" id="1_fpfg0"]
+[ext_resource type="SystemFont" uid="uid://bxcvre63m8aar" path="res://Assets/Ui/TextFont.tres" id="2_36oki"]
+[ext_resource type="StyleBox" uid="uid://rigjob130ywm" path="res://Assets/Ui/NinesliceButton.tres" id="2_hh56o"]
 
 [node name="PopupUI" type="Control" unique_id=506710227]
 layout_mode = 3
@@ -12,25 +14,34 @@ grow_vertical = 2
 script = ExtResource("1_fpfg0")
 
 [node name="Sleep" type="Button" parent="." unique_id=2079106935 groups=["ui"]]
+texture_filter = 1
 layout_mode = 0
 offset_left = 126.0
 offset_top = 435.0
 offset_right = 1043.0
 offset_bottom = 466.0
+theme_override_fonts/font = ExtResource("2_36oki")
+theme_override_styles/normal = ExtResource("2_hh56o")
 text = "Sleep"
 
 [node name="Continue" type="Button" parent="." unique_id=437593828]
+texture_filter = 1
 layout_mode = 0
 offset_left = 128.0
 offset_top = 480.0
 offset_right = 1051.0
 offset_bottom = 511.0
+theme_override_fonts/font = ExtResource("2_36oki")
+theme_override_styles/normal = ExtResource("2_hh56o")
 text = "Buy"
 
 [node name="Feed" type="Button" parent="." unique_id=595554164]
+texture_filter = 1
 layout_mode = 0
 offset_left = 120.0
 offset_top = 480.0
 offset_right = 1048.0
 offset_bottom = 512.0
+theme_override_fonts/font = ExtResource("2_36oki")
+theme_override_styles/normal = ExtResource("2_hh56o")
 text = "Feed"
