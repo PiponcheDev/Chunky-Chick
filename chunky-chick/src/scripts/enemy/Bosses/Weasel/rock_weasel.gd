@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 @onready var sprite: Sprite2D = $Icon
 
-@export var speed: float = 350.0
+@export var speed: float = 900.0
 @export var lifetime: float = 1.2  
 
 @export var moss_spin_min: float = 6.0

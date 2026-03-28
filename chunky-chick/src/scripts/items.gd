@@ -1,11 +1,9 @@
 extends Area2D
 
-# Exported properties
 @export var hold_distance: float = 70.0
 @export var material_type := "cardboard"
 @export var material_amount := 1
 
-# State
 var carried: bool = false
 var carrier: Node = null
 var in_range: bool = false
@@ -44,8 +42,7 @@ func _process(delta):
 func _update_position():
 	if not carrier:
 		return
-	var angle_rad = deg_to_rad(carrier.snapped_angle + 90)
-	var dir = Vector2(cos(angle_rad), sin(angle_rad))
+	var angle_rad: float = deg_to_rad(carrier.snapped_angle + 90)
+	var dir: Vector2 = Vector2(cos(angle_rad), sin(angle_rad))
 	global_position = carrier.global_position + dir * hold_distance
-	# Rotate item with player
 	rotation_degrees = carrier.snapped_angle

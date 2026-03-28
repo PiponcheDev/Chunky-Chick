@@ -1,5 +1,7 @@
 extends Node2D
 
+@export var persistent_id: String = ""
+
 @onready var head: Node2D = $Head
 @onready var muzzle: Marker2D = $Head/Muzzle
 @onready var detection_area: Area2D = $DetectionArea
@@ -12,19 +14,16 @@ extends Node2D
 
 var detection_radius: float
 var attack_angle_deg: float
-
 var temp_range_multiplier: float = 1.0
 var temp_angle_multiplier: float = 1.0
-
 var range_multiplier: float = 1.0
 var angle_multiplier: float = 1.0
-
 var enemies_in_range: Array = []
 var target: Node2D = null
 var head_locked: bool = false
 var show_preview: bool = false
 
-var BulletScene := preload("res://src/tscn/Structures/turret_bullet.tscn")
+var BulletScene: PackedScene = preload("res://src/tscn/Structures/turret_bullet.tscn")
 
 func _ready():
 	add_to_group("turret")
@@ -35,10 +34,34 @@ func _ready():
 	fire_timer.timeout.connect(_fire)
 	fire_timer.start()
 
+func capture_into_run_data() -> Dictionary:
+	return {
+		"kind": "turret",
+		"id": persistent_id,
+		"position": global_position,
+		"rotation": head.rotation,
+		"range_multiplier": range_multiplier,
+		"angle_multiplier": angle_multiplier,
+		"locked": head_locked
+	}
+
+func apply_run_data(state: Dictionary) -> void:
+	if state.is_empty():
+		return
+	if state.has("position"):
+		global_position = state["position"]
+	if state.has("rotation"):
+		head.rotation = state["rotation"]
+
+	range_multiplier = float(state.get("range_multiplier", 1.0))
+	angle_multiplier = float(state.get("angle_multiplier", 1.0))
+	head_locked = bool(state.get("locked", false))
+	_recalculate_stats()
+
 func _recalculate_stats():
 	detection_radius = base_detection_radius * range_multiplier
 	attack_angle_deg = base_attack_angle_deg * angle_multiplier
-	var circle := detection_shape.shape as CircleShape2D
+	var circle: CircleShape2D = detection_shape.shape as CircleShape2D
 	circle.radius = detection_radius
 	queue_redraw()
 
@@ -65,7 +88,7 @@ func _process_targeting():
 	for enemy in enemies_in_range:
 		if not is_instance_valid(enemy):
 			continue
-		var distance := global_position.distance_to(enemy.global_position)
+		var distance: float = global_position.distance_to(enemy.global_position)
 		if distance > detection_radius:
 			continue
 		if _is_enemy_in_attack_cone(enemy):
@@ -73,11 +96,10 @@ func _process_targeting():
 			return
 	target = null
 
-
 func _is_enemy_in_attack_cone(enemy: Node2D) -> bool:
 	var to_enemy: Vector2 = (enemy.global_position - global_position).normalized()
 	var forward: Vector2 = Vector2.RIGHT.rotated(head.global_rotation)
-	var angle_diff := rad_to_deg(acos(clamp(forward.dot(to_enemy), -1, 1)))
+	var angle_diff: float = rad_to_deg(acos(clamp(forward.dot(to_enemy), -1.0, 1.0)))
 	return angle_diff <= attack_angle_deg / 2.0
 
 func _fire():
@@ -102,7 +124,7 @@ func _on_body_exited(body):
 func rotate_head_towards(global_mouse_pos: Vector2):
 	if head_locked:
 		return
-	var dir := global_mouse_pos - global_position
+	var dir: Vector2 = global_mouse_pos - global_position
 	head.rotation = dir.angle()
 
 func lock_head_rotation():
@@ -117,16 +139,16 @@ func enable_preview():
 func _draw():
 	if not show_preview:
 		return
-	var display_radius = detection_radius * temp_range_multiplier
-	var display_angle = attack_angle_deg * temp_angle_multiplier
+	var display_radius: float = detection_radius * temp_range_multiplier
+	var display_angle: float = attack_angle_deg * temp_angle_multiplier
 	draw_circle(Vector2.ZERO, display_radius, Color(0, 1, 0, 0.2))
-	var half_angle = deg_to_rad(display_angle / 2.0)
-	var forward_angle = head.global_rotation
-	var points = [Vector2.ZERO]
-	var segments = 24
+	var half_angle: float = deg_to_rad(display_angle / 2.0)
+	var forward_angle: float = head.global_rotation
+	var points: Array[Vector2] = [Vector2.ZERO]
+	var segments: int = 24
 	for i in range(segments + 1):
-		var t = float(i) / segments
-		var angle = forward_angle - half_angle + (display_angle * t * PI / 180.0)
-		var dir = Vector2.RIGHT.rotated(angle)
+		var t: float = float(i) / segments
+		var angle: float = forward_angle - half_angle + (display_angle * t * PI / 180.0)
+		var dir: Vector2 = Vector2.RIGHT.rotated(angle)
 		points.append(dir * display_radius)
 	draw_colored_polygon(points, Color(1, 0, 0, 0.25))

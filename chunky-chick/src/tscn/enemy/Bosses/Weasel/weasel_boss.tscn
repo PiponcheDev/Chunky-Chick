@@ -1,10 +1,140 @@
 [gd_scene format=3 uid="uid://dtp8jwfiygm1c"]
 
 [ext_resource type="Script" uid="uid://c4ki1unneo7d4" path="res://src/tscn/Temporary/weasel_boss.gd" id="1_2p87b"]
-[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_lbvnu"]
+[ext_resource type="Texture2D" uid="uid://c30rqdi2le4uw" path="res://Assets-Extra/Wesl.png" id="2_pgkqi"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_v5ddb"]
 radius = 93.065834
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_toy65"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(1640, 1200, 328, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i36qa"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(1353, 1200, 314, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xx414"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(1046, 1200, 312, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iet5b"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(751, 1200, 309, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s2nxj"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(451, 1200, 308, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7l6st"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(150, 1200, 307, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2xpnj"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(150, 600, 307, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_psc3b"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(451, 600, 308, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k8nuu"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(751, 600, 309, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_clivm"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(1046, 600, 312, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g4461"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(1353, 600, 314, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a38bh"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(1640, 600, 328, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rmgrv"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(150, 0, 307, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_co455"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(451, 0, 308, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ksuq"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(751, 0, 309, 600)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jvq6i"]
+atlas = ExtResource("2_pgkqi")
+region = Rect2(1046, 0, 312, 600)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_f6cxu"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_toy65")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i36qa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xx414")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iet5b")
+}, {
+"duration": 1.4,
+"texture": SubResource("AtlasTexture_s2nxj")
+}, {
+"duration": 1.5,
+"texture": SubResource("AtlasTexture_7l6st")
+}],
+"loop": false,
+"name": &"Charge",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2xpnj")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_psc3b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k8nuu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_clivm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g4461")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a38bh")
+}],
+"loop": false,
+"name": &"Fire_proj",
+"speed": 15.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rmgrv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_co455")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ksuq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jvq6i")
+}],
+"loop": true,
+"name": &"Walk",
+"speed": 10.0
+}]
 
 [node name="Weasel-boss" type="CharacterBody2D" unique_id=983820579 groups=["enemy"]]
 script = ExtResource("1_2p87b")
@@ -15,10 +145,14 @@ PEBBLE_FAN_COUNT = 6
 position = Vector2(-1, 1.5)
 shape = SubResource("CircleShape2D_v5ddb")
 
-[node name="Icon" type="Sprite2D" parent="." unique_id=1487425113]
-position = Vector2(-3, 1)
-texture = ExtResource("2_lbvnu")
-
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=880177973]
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=28003871]
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1767053340]
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_f6cxu")
+animation = &"Fire_proj"
+frame = 5
+frame_progress = 1.0
+offset = Vector2(2.975, 0)
