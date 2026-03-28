@@ -40,7 +40,6 @@ var deposit_count: int = 0
 @onready var turret_container: Node = get_tree().get_current_scene().get_node("TurretContainer")
 @onready var hitbox_area: Area2D = $Hitbox
 @onready var ui_hitbox_area: Area2D = $"UI-hitbox"
-@onready var interaction_area: Area2D = $Egg/InteractionArea
 @onready var egg: Area2D = $Egg/InteractionArea
 @onready var music_player: AudioStreamPlayer = $AudioStreamPlayer
 
@@ -127,9 +126,9 @@ func _ready() -> void:
 		ui_hitbox_area.body_entered.connect(_on_ui_hitbox_body_entered)
 		ui_hitbox_area.body_exited.connect(_on_ui_hitbox_body_exited)
 
-	if interaction_area:
-		interaction_area.body_entered.connect(_on_interaction_area_body_entered)
-		interaction_area.body_exited.connect(_on_interaction_area_body_exited)
+	if egg:
+		egg.body_entered.connect(_on_egg_body_entered)
+		egg.body_exited.connect(_on_egg_body_exited)
 
 	_create_fade_layer()
 
@@ -236,7 +235,7 @@ func _refresh_interaction_prompt() -> void:
 	if popup_ui == null or egg == null:
 		return
 
-	var bodies = interaction_area.get_overlapping_bodies()
+	var bodies = egg.get_overlapping_bodies()
 	for body in bodies:
 		if body != null and body.is_in_group("player"):
 			current_player_in_range = body
@@ -616,26 +615,26 @@ func deposit_item(item: Node) -> void:
 
 func _on_ui_hitbox_body_entered(body: Node) -> void:
 	if body and body.is_in_group("player"):
-		if interaction_area and interaction_area.overlaps_body(body):
+		if egg and egg.overlaps_body(body):
 			return
 		if popup_ui:
 			popup_ui.show_buy_only()
 
 func _on_ui_hitbox_body_exited(body: Node) -> void:
 	if body and body.is_in_group("player"):
-		if interaction_area and interaction_area.overlaps_body(body):
+		if egg and egg.overlaps_body(body):
 			_refresh_interaction_prompt()
 		else:
 			if popup_ui:
 				popup_ui.hide_popup()
 
-func _on_interaction_area_body_entered(body: Node) -> void:
+func _on_egg_body_entered(body: Node) -> void:
 	if body and body.is_in_group("player"):
 		current_player_in_range = body
 		if popup_ui:
 			popup_ui.show_interaction(body, egg.demand_met, egg.is_night)
 
-func _on_interaction_area_body_exited(body: Node) -> void:
+func _on_egg_body_exited(body: Node) -> void:
 	if body and body.is_in_group("player"):
 		if current_player_in_range == body:
 			current_player_in_range = null

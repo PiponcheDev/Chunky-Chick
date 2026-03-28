@@ -7,6 +7,7 @@
 size = Vector2(54, 52)
 
 [node name="Carboard-Items" type="Area2D" unique_id=1133717472 groups=["item", "material"]]
+scale = Vector2(2, 2)
 collision_layer = 2
 script = ExtResource("1_r72vo")
 

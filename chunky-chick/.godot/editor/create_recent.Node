@@ -1,0 +1,15 @@
+CollisionShape2D
+Area2D
+AnimatedSprite2D
+Button
+AudioStreamPlayer2D
+AudioStreamPlayer
+Sprite2D
+Node2D
+NavigationRegion2D
+Label
+ProgressBar
+TextureRect
+NavigationAgent2D
+CharacterBody2D
+RigidBody2D
