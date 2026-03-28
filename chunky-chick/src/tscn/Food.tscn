@@ -7,7 +7,6 @@
 radius = 1.0
 
 [node name="Area2D" type="Area2D" unique_id=2090540503]
-scale = Vector2(50, 50)
 script = ExtResource("1_5ljg7")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1613050783]

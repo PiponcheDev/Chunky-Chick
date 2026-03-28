@@ -2,8 +2,6 @@ extends Node2D
 
 func _ready():
 	_setup_spawnzones()
-	var zone = item_spawn_zones.pick_random()
-	currentClumpPos = _get_randomSpotInZone(zone.shape.size,false) + zone.position + zone.get_parent().position - Vector2(zone.shape.size.x/2,zone.shape.size.y/2)
 	_generate_map()
 
 
@@ -22,9 +20,9 @@ func _ready():
 var FrequencyRandomness = 3
 
 @export_subgroup("Lists")
-@export var items : Array[PackedScene] = [preload("uid://crykqrn4dikhk")]
+@export var items : Array[PackedScene] = [preload("uid://e3t6v4jtmdh6")]
 @export var talismen : Array[SpringBoneCollisionCapsule3D] 
-@export var foods : Array[SpringBoneCollisionCapsule3D] 
+@export var foods : Array[PackedScene] = [preload("uid://vxnhxnc8fji4")] 
 @export var trashCans : Array[SpringBoneCollisionCapsule3D] 
 @export var dumpsters : Array[SpringBoneCollisionCapsule3D] 
 #Obviously needs to be changed to the correct data structure
@@ -37,6 +35,7 @@ var currentClumpWeight:int = 0
 #How many spawns fits in a clump
 @export var clumpDensity = 5
 #How close to the center the spawns are
+#There is a possibility of the items spilling out of the spawn zone if this is high enough
 var amountOfClumps = 0
 
 
@@ -55,6 +54,8 @@ func _setup_spawnzones():
 				print(child.get_child(0))
 			if child.foods:
 				food_spawn_zones.append(child.get_child(0))
+			print(child.get_child(0))
+
 			if child.talimen:
 				talimen_spawn_zones.append(child.get_child(0))
 			if child.trashcans:
@@ -62,21 +63,26 @@ func _setup_spawnzones():
 			if child.dumpsters:
 				dumpster_spawn_zones.append(child.get_child(0))
 	print(item_spawn_zones)
+	print(food_spawn_zones)
 
 
 func _generate_map():
-	spawn_object(item_spawn_zones,itemFrequency)
+	spawn_object(items, item_spawn_zones,itemFrequency)
 	#spawn_object(talimen_spawn_zones,talismanFrequency)
-	#spawn_object(food_spawn_zones,foodFrequency)
+	spawn_object(foods, food_spawn_zones,foodFrequency)
 
 
-func spawn_object(spawn_zones, Frequency):
+func spawn_object(objects, spawn_zones, Frequency):
+	var zone = spawn_zones.pick_random()
+	currentClumpPos = _get_randomSpotInZone(zone.shape.size,false) + zone.position + zone.get_parent().position - Vector2(zone.shape.size.x/2,zone.shape.size.y/2)
+	if len(spawn_zones) == 0:
+		return
 	var i = 0
 	while i < _get_AmountOFSpawns(Frequency):
 		#print("Items Spawned: "+str(i))
 		var spawnPos = getSpawnposInClump(spawn_zones)
 		
-		var newitem = items.pick_random().instantiate()
+		var newitem = objects.pick_random().instantiate()
 		newitem.global_position = spawnPos
 		self.add_child(newitem)
 		
