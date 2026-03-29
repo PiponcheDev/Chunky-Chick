@@ -1,7 +1,0 @@
-res://src/scripts/UI/egg.gd
-res://src/tscn/nest.tscn
-res://talismans/passive/pocket_bread_crumbs.tres
-res://talismans/passive/sticky_street_gum.tres
-res://talismans/passive/bent_fork_charm.tres
-res://talismans/active/battery_from_somewhere.tres
-res://src/scripts/player.gd
