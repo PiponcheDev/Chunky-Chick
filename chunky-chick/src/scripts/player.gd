@@ -117,7 +117,7 @@ func _create_fade_layer() -> void:
 	fade_layer.name = "DeathFadeLayer"
 	fade_layer.layer = 128
 
-	get_tree().root.add_child(fade_layer)
+	get_tree().root.add_child.call_deferred(fade_layer)
 
 	fade_rect = ColorRect.new()
 	fade_rect.name = "DeathFadeRect"

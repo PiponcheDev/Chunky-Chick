@@ -130,7 +130,7 @@ func _try_melee_hit() -> void:
 		return
 	if Goal_Entity:
 		Goal_Entity.take_damage(damage)
-		print(Goal_Entity, "\nhealth: ", Goal_Entity.health)
+		
 	AttackCooldown.start()
 
 

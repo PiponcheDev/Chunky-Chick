@@ -1,29 +1,7 @@
-res://src/scripts/items.gd
-res://Main.tscn
+res://src/scripts/UI/egg.gd
 res://src/tscn/nest.tscn
-res://src/tscn/items.tscn
-res://src/scripts/player.gd
-res://src/scripts/nest.gd
-res://src/tscn/UI/player-ui.tscn
-res://src/scripts/UI/player_ui.gd
-res://src/tscn/Player.tscn
-res://src/scripts/player_bullets.gd
-res://src/scripts/enemy/enemy.gd
-res://src/tscn/Temporary/weasel_boss.gd
-res://src/scripts/enemy/Bosses/Weasel/spit_weasel.gd
-res://src/scripts/enemy/Bosses/Weasel/rock_weasel.gd
-res://src/tscn/enemy/Bosses/Weasel/weasel_boss.tscn
-res://src/tscn/enemy/Bosses/Weasel/spit_weasel.tscn
-res://src/tscn/enemy/Bosses/Weasel/rock_weasel.tscn
-res://src/scripts/GameLoader.gd
-res://src/tscn/Main Menu/main_menu.gd
-res://src/tscn/Main Menu/MainMenu.tscn
 res://talismans/passive/pocket_bread_crumbs.tres
 res://talismans/passive/sticky_street_gum.tres
 res://talismans/passive/bent_fork_charm.tres
 res://talismans/active/battery_from_somewhere.tres
-res://src/scripts/Managers/Env_Generator/Env-generator.gd
-res://src/scripts/Managers/Env_Generator/env_gen.tscn
-res://src/tscn/Food.tscn
-res://src/tscn/UI/selection_menu.tscn
-res://src/tscn/UI/upgrade_selec.tscn
+res://src/scripts/player.gd

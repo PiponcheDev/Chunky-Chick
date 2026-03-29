@@ -44,7 +44,6 @@ func _try_melee_hit() -> void:
 	if Goal_Entity:
 		sprite.play("attack")
 		Goal_Entity.take_damage(damage)
-		print(Goal_Entity, "\nhealth: ",Goal_Entity.health)
 	AttackCooldown.start()
 	await sprite.animation_finished
 	sprite.play("walking")
