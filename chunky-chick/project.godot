@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Chunky-chick"
-run/main_scene="uid://c866howesb3g7"
+run/main_scene="uid://nbk6ckc1v8qp"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://Assets-Extra/icon.svg"
 
@@ -21,6 +21,7 @@ Settings="*uid://cegt5u20gf4yc"
 GameLoad="*uid://cko840a3xfgua"
 Resources="*uid://dl677slqw5jr4"
 Egg="*uid://clhwy44dkbsgw"
+GameData="*uid://cvld2h71gy3n2"
 
 [file_customization]
 
@@ -98,6 +99,11 @@ dash={
 wave={
 "deadzone": 0.2,
 "events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":59,"key_label":0,"unicode":59,"location":0,"echo":false,"script":null)
+]
+}
+spawn_one_enemy={
+"deadzone": 0.2,
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":-1,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":77,"key_label":0,"unicode":109,"location":0,"echo":false,"script":null)
 ]
 }
 

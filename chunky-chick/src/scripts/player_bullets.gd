@@ -1,10 +1,8 @@
 extends Area2D
 
 const SPEED := 800
-const MAX_RANGE := 400
+var MAX_RANGE := 400
 
-@onready var Sprite = $ColorRect
-@onready var col: CollisionShape2D = $CollisionShape2D
 
 var direction := Vector2.ZERO
 var start_pos: Vector2
@@ -16,11 +14,6 @@ var shooter: Node2D
 var inherited_velocity: Vector2 = Vector2.ZERO
 
 signal bullet_freed(pos: Vector2)
-
-func _ready() -> void:
-	if shooter and shooter.is_in_group("player"):
-		col.shape = col.shape.duplicate(true)
-		col.shape.size = Vector2(4.5, 4.5)
 
 func _physics_process(delta: float) -> void:
 	var final_velocity: Vector2
@@ -43,8 +36,9 @@ func _notification(what: int) -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if body == shooter:
 		return
-
-	if shooter and shooter.is_in_group("enemy") and body.is_in_group("enemy"):
+	if shooter == null:
+		return
+	if shooter.is_in_group("enemy") and body.is_in_group("enemy"):
 		return
 
 	if body.has_method("take_damage"):

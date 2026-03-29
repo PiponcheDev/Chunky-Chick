@@ -17,7 +17,7 @@ const ITEM_SCENE_PATH := "res://src/tscn/talisman-pickup.tscn"
 const MAIN_MENU_SCENE_PATH := "res://src/tscn/Main Menu/MainMenu.tscn"
 var ITEM_SCENE: PackedScene = null
 const BASE_SHOT_COOLDOWN := 0.6
-const BULLET_SCENE = preload("res://src/tscn/Bullets.tscn")
+const BULLET_SCENE = preload("res://src/tscn/Player-Bullets.tscn")
 const DAMAGE := 25
 const STEP_INTERVAL := 1.0 / 3.0
 

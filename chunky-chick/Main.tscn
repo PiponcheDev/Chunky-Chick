@@ -9,9 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://q6rg8aao0wsr" path="res://src/tscn/enemy/waves.tscn" id="8_trn2v"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_lgr22"]
-vertices = PackedVector2Array(29154.938, -11789.023, 28990.047, 16723.008, -22905.719, 16776.977, -22139.258, -11898.969)
+vertices = PackedVector2Array(45693.492, -23358.094, 42977.47, 31631.07, -42571.15, 32309.906, -38012.773, -24133.906)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-22149, -11909, 29165, -11799, 29000, 16733, -22916, 16787)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-38022, -24144, 45704, -23368, 42987, 31641, -42582, 32320)])
 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 
