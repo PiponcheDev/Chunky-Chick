@@ -13,7 +13,7 @@ signal demand_completed
 var day: int = 1
 var demand: float = 15
 var current_progress: float = 0
-var egg_stage: int = 5
+var egg_stage: int = 1
 
 func _ready():
 	add_to_group("egg")

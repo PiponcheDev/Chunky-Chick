@@ -1,6 +1,8 @@
 extends Node2D
 
-@export var enemy: PackedScene
+@export var enemy_range: PackedScene
+@export var enemy_fast: PackedScene
+@export var enemy_tank: PackedScene
 
 #circle for raids
 @export var radius: float = 2000.0
@@ -25,6 +27,7 @@ var angles: Array[float] = []
 
 var _t: float = 0.0
 var randomness := RandomNumberGenerator.new()
+var enemy_type : int
 var c_fast := 0
 var c_tank := 0
 var c_range:= 0
@@ -126,19 +129,35 @@ func _input(_event: InputEvent) -> void:
 			var a = lerp(base_angle - half_arc, base_angle + half_arc, t)
 			var p_local: Vector2 = center + Vector2(cos(a), sin(a)) * radius
 			var p_global: Vector2 = to_global(p_local)
-
-			var e := enemy.instantiate() as Node2D
-			e.enemy_type = pick_type(randomness, c_fast, c_range, c_tank)
-			get_parent().add_child(e)
-			e.global_position = p_global
-			match e.enemy_type:
+			var e
+			
+			enemy_type = pick_type(randomness, c_fast, c_range, c_tank)
+			match enemy_type:
 				0:
 					c_range+=1
+					e = enemy_range.instantiate() as Node2D
 				1:
 					c_fast+=1
+					e = enemy_fast.instantiate() as Node2D
 				2:
+					e= enemy_tank.instantiate() as Node2D
 					c_tank+=1
-
+			
+			get_parent().add_child(e)
+			e.global_position = p_global
+	if Input.is_action_just_pressed("spawn_one_enemy"):
+		print("hallo")
+		var base_angle: float = angles[-1]
+		var half_arc: float = deg_to_rad(40.0) * 0.5
+		await get_tree().create_timer(randf_range(0.5, 1)).timeout
+		var t = 0.0
+		var a = lerp(base_angle - half_arc, base_angle + half_arc, t)
+		var p_local: Vector2 = center + Vector2(cos(a), sin(a)) * radius
+		var p_global: Vector2 = to_global(p_local)
+		var e
+		e = enemy_tank.instantiate() as Node2D
+		get_parent().add_child(e)
+		e.global_position = p_global
 
 func pick_type(rng: RandomNumberGenerator, fast:int, range:int, tank:int, jitter:float=0.2) -> int:
 	var total := fast + range + tank

@@ -17,7 +17,7 @@ const BASE_SPEED := 450.0
 const ITEM_SCENE_PATH := "res://src/tscn/talisman-pickup.tscn"
 var ITEM_SCENE: PackedScene = null
 const BASE_SHOT_COOLDOWN := 0.6
-const BULLET_SCENE = preload("res://src/tscn/Bullets.tscn")
+const BULLET_SCENE = preload("res://src/tscn/Player-Bullets.tscn")
 const DAMAGE := 25
 const STEP_INTERVAL := 1.0 / 3.0
 var health := 150
@@ -399,6 +399,5 @@ func eat_food(amount: float) -> void:
 
 func take_damage(amount: int) -> void:
 	health = max(health - amount, 0)
-
 	if health == 0:
 		queue_free()

@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://q6rg8aao0wsr"]
 
 [ext_resource type="Script" uid="uid://rj2kje50cd7k" path="res://src/scripts/enemy/waves.gd" id="1_015if"]
-[ext_resource type="PackedScene" uid="uid://bpj5f8x3g4g63" path="res://src/tscn/enemy/Enemy.tscn" id="2_sdjwj"]
+[ext_resource type="PackedScene" uid="uid://cqyskablon78q" path="res://src/tscn/enemy/Enemy-range.tscn" id="2_3qa3n"]
+[ext_resource type="PackedScene" uid="uid://d1xupwduwunw0" path="res://src/tscn/enemy/Enemy-fast.tscn" id="3_o1n20"]
+[ext_resource type="PackedScene" uid="uid://b8qtvrpt4fsla" path="res://src/tscn/enemy/Enemy-tank.tscn" id="4_epl13"]
 
 [node name="circle" type="Node2D" unique_id=1726487523]
 script = ExtResource("1_015if")
-enemy = ExtResource("2_sdjwj")
+enemy_range = ExtResource("2_3qa3n")
+enemy_fast = ExtResource("3_o1n20")
+enemy_tank = ExtResource("4_epl13")
 indicator_color = Color(0.6392157, 0.27058825, 0, 1)
