@@ -1,17 +1,47 @@
 extends Control
 
 @onready var main_tscn: String = "res://Main.tscn"
+@onready var music_player: AudioStreamPlayer = $AudioStreamPlayer
+
+var music: Dictionary = {
+	1: preload("res://Assets/Audio/Start/Beginning fat biird beginnings.mp3"),
+	2: preload("res://Assets/Audio/Mid/Middle fat biird beginnings.mp3")
+}
+
+var current_music_mode: StringName = &"intro"
 var is_transitioning: bool = false
 
 func _ready() -> void:
-	
 	check_save()
-	
+	_play_music()
+
 	print("MENU: _ready()")
 	print("MENU: current_run:", GameLoad.current_run)
 	print("MENU: load_existing_run:", GameLoad.load_existing_run)
 	print("MENU: loaded_from_save:", GameLoad.loaded_from_save)
 	print("MENU: file exists:", GameLoad.has_saved_run())
+
+func _play_music() -> void:
+	var intro: AudioStream = music.get(1, null)
+	if intro:
+		current_music_mode = &"intro"
+		music_player.stream = intro
+		music_player.play()
+		music_player.finished.connect(_on_music_finished)
+
+func _on_music_finished() -> void:
+	if current_music_mode == &"intro":
+		var mid: AudioStream = music.get(2, null)
+		if mid:
+			current_music_mode = &"mid"
+			music_player.stream = mid
+			music_player.play()
+	elif current_music_mode == &"mid":
+		# loop mid forever
+		var mid: AudioStream = music.get(2, null)
+		if mid:
+			music_player.stream = mid
+			music_player.play()
 
 func check_save() -> void:
 	if GameLoad.has_saved_run() == false:
@@ -20,7 +50,6 @@ func check_save() -> void:
 	else:
 		$Continue.visible = true
 
-
 func _start_game(use_saved_run: bool) -> void:
 	if is_transitioning:
 		print("MENU: transition already in progress")
@@ -28,6 +57,9 @@ func _start_game(use_saved_run: bool) -> void:
 
 	is_transitioning = true
 	print("MENU: _start_game(use_saved_run=", use_saved_run, ")")
+
+	# 🔴 Abrupt stop (your requirement)
+	music_player.stop()
 
 	if use_saved_run:
 		GameLoad.request_continue_run()

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Chunky-chick"
-run/main_scene="uid://nbk6ckc1v8qp"
+run/main_scene="uid://c866howesb3g7"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://Assets-Extra/icon.svg"
 
@@ -21,7 +21,6 @@ Settings="*uid://cegt5u20gf4yc"
 GameLoad="*uid://cko840a3xfgua"
 Resources="*uid://dl677slqw5jr4"
 Egg="*uid://clhwy44dkbsgw"
-GameData="*uid://cvld2h71gy3n2"
 
 [file_customization]
 

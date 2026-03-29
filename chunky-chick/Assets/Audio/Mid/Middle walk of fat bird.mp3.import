@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bj6u4hmi4nc5n"
+path="res://.godot/imported/Middle walk of fat bird.mp3-0e02c1f056c2eee0334b84ae8314cb73.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Mid/Middle walk of fat bird.mp3"
+dest_files=["res://.godot/imported/Middle walk of fat bird.mp3-0e02c1f056c2eee0334b84ae8314cb73.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

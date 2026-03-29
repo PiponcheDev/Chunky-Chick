@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dy0d7y3kul01c"
+path="res://.godot/imported/Middle bird caprice.mp3-8789fc0cddcd2c6118da275509dea9c0.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Mid/Middle bird caprice.mp3"
+dest_files=["res://.godot/imported/Middle bird caprice.mp3-8789fc0cddcd2c6118da275509dea9c0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,9 +1,12 @@
 [gd_scene format=3 uid="uid://c866howesb3g7"]
 
 [ext_resource type="Script" uid="uid://b0tu0i2yxy1si" path="res://src/tscn/Main Menu/main_menu.gd" id="1_853f1"]
-[ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="2_8saeu"]
 [ext_resource type="PackedScene" uid="uid://bqdk0fqhaj6ei" path="res://src/tscn/Main Menu/Credits.tscn" id="3_rgre6"]
+[ext_resource type="Texture2D" uid="uid://50oa2eqaginc" path="res://Assets-Extra/image0.png" id="4_b5imc"]
 [ext_resource type="AudioStream" uid="uid://eq3rmhxtn5ek" path="res://Assets/Audio/1 - Fat Bird Beginnings.mp3" id="4_o6on8"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_rnl3w"]
+load_path = "res://.godot/imported/icon.svg-9321add83de8eac4650be2eec1e3e8fc.ctex"
 
 [node name="MainMenu" type="Control" unique_id=1716768850]
 layout_mode = 3
@@ -18,7 +21,7 @@ script = ExtResource("1_853f1")
 layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
-texture = ExtResource("2_8saeu")
+texture = SubResource("CompressedTexture2D_rnl3w")
 
 [node name="Start" type="Button" parent="." unique_id=1175555593]
 layout_mode = 0
@@ -78,8 +81,11 @@ layout_mode = 1
 stream = ExtResource("4_o6on8")
 autoplay = true
 
+[node name="Image0" type="Sprite2D" parent="." unique_id=1910676602]
+position = Vector2(544, 160)
+scale = Vector2(0.2, 0.2)
+texture = ExtResource("4_b5imc")
+
 [connection signal="pressed" from="Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Continue" to="." method="_on_continue_pressed"]
-[connection signal="pressed" from="Settings" to="." method="_on_settings_pressed"]
-[connection signal="pressed" from="Credits" to="." method="_on_credits_pressed"]
 [connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dwxds70svt478"
+path="res://.godot/imported/Middle bird eater.mp3-456331a1f100b0f934e24ffd6ea3500f.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Mid/Middle bird eater.mp3"
+dest_files=["res://.godot/imported/Middle bird eater.mp3-456331a1f100b0f934e24ffd6ea3500f.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

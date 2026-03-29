@@ -1,4 +1,3 @@
-# Nest.gd
 extends Node2D
 
 const ENDING_CAMERA_MOVE_TIME: float = 4.0
@@ -54,17 +53,26 @@ var ending_label: Label
 
 var pending_boss_night: bool = false
 
-var stage_music: Dictionary = {
-	1: preload("res://Assets/Audio/1 - Fat Bird Beginnings.mp3"),
-	2: preload("res://Assets/Audio/2 - Walk of the Fat Bird.mp3"),
-	3: preload("res://Assets/Audio/3 - Bird Caprice.mp3"),
-	4: preload("res://Assets/Audio/6 - Wandering Bird.mp3"),
-	5: preload("res://Assets/Audio/9 - Feathery Skyscraper.mp3")
+var stage_music_begining: Dictionary = {
+	1: preload("res://Assets/Audio/Start/Beginning walk of fat bird.mp3"),
+	2: preload("res://Assets/Audio/Start/Beginning bird caprice.mp3"),
+	3: preload("res://Assets/Audio/Start/Beginning wandering bird3.mp3"),
+	4: preload("res://Assets/Audio/Start/Beginning city of birds.mp3"),
+	5: preload("res://Assets/Audio/Start/Beginning feathery skyscraper.mp3"),
+	6: preload("res://Assets/Audio/Start/Beginning black hole bird.mp3")
+}
+
+var stage_music_mid: Dictionary = {
+	1: preload("res://Assets/Audio/Mid/Middle walk of fat bird.mp3"),
+	2: preload("res://Assets/Audio/Mid/Middle bird caprice.mp3"),
+	3: preload("res://Assets/Audio/Mid/Middle wandering bird.mp3"),
+	4: preload("res://Assets/Audio/Mid/Middle city of birds.mp3"),
+	5: preload("res://Assets/Audio/Mid/Middle feathery skyscraper.mp3"),
+	6: preload("res://Assets/Audio/Mid/Middle black hole bird.mp3")
 }
 
 var raid_theme: AudioStream = preload("res://Assets/Audio/enemy/bosses/theme/raids/Attack!!.mp3")
 var boss_theme: AudioStream = preload("res://Assets/Audio/enemy/bosses/theme/bosses/Angry Bee Leader.mp3")
-var end_music: AudioStream = preload("res://Assets/Audio/Game Over..mp3")
 
 var ending_dialogue: String = "I kept you warm.\n\n" + \
 	"Every scrap I found, every danger I chased away, every night I stayed awake listening for claws in the dark… it was all for you.\n" + \
@@ -86,6 +94,7 @@ var ending_dialogue: String = "I kept you warm.\n\n" + \
 	"I didn’t know I was teaching you how to die."
 
 var current_music_stage: int = -1
+var current_music_mode: StringName = &"idle"
 var current_boss: Node = null
 var raid_active: bool = false
 var raid_has_spawned_enemies: bool = false
@@ -109,6 +118,9 @@ func _ready() -> void:
 
 	if watchtower_buy_button:
 		watchtower_buy_button.pressed.connect(_on_buy_watchtower_pressed)
+
+	if music_player and not music_player.finished.is_connected(_on_music_finished):
+		music_player.finished.connect(_on_music_finished)
 
 	var cams: Array[Node] = get_tree().get_nodes_in_group("main_camera")
 	if cams.size() > 0:
@@ -182,25 +194,48 @@ func _play_stream(stream: AudioStream) -> void:
 	music_player.stream = stream
 	music_player.play()
 
+func _get_stage_stream(table: Dictionary, stage: int) -> AudioStream:
+	if table.has(stage):
+		return table[stage] as AudioStream
+	return null
+
+func _is_current_stage_stream(stream: AudioStream) -> bool:
+	if stream == null:
+		return false
+
+	return (
+		stream == _get_stage_stream(stage_music_begining, current_music_stage)
+		or stream == _get_stage_stream(stage_music_mid, current_music_stage)
+	)
+
+func _play_special_music(stream: AudioStream) -> void:
+	current_music_mode = &"special"
+	_play_stream(stream)
+
 func _sync_music() -> void:
 	if ending_sequence_started:
 		return
 
 	if current_boss != null and is_instance_valid(current_boss):
-		_play_stream(boss_theme)
+		_play_special_music(boss_theme)
 		return
 
 	if current_boss != null and not is_instance_valid(current_boss):
 		current_boss = null
 
 	if raid_active:
-		_play_stream(raid_theme)
+		_play_special_music(raid_theme)
 		return
 
-	if stage_music.has(current_music_stage):
-		_play_stream(stage_music[current_music_stage])
-	else:
+	if current_music_stage < 0:
 		music_player.stop()
+		current_music_mode = &"idle"
+		return
+
+	if music_player.playing and _is_current_stage_stream(music_player.stream):
+		return
+
+	_play_stage_music(current_music_stage)
 
 func _play_stage_music(stage: int) -> void:
 	if ending_sequence_started:
@@ -213,10 +248,41 @@ func _play_stage_music(stage: int) -> void:
 	if raid_active:
 		return
 
-	if stage_music.has(stage):
-		_play_stream(stage_music[stage])
+	current_music_mode = &"stage_intro"
+
+	var stream: AudioStream = _get_stage_stream(stage_music_begining, stage)
+	if stream == null:
+		stream = _get_stage_stream(stage_music_mid, stage)
+		current_music_mode = &"stage_mid"
+
+	if stream != null:
+		_play_stream(stream)
 	else:
 		music_player.stop()
+		current_music_mode = &"idle"
+
+func _on_music_finished() -> void:
+	if current_music_mode == &"stage_intro":
+		var mid_stream: AudioStream = _get_stage_stream(stage_music_mid, current_music_stage)
+		if mid_stream != null:
+			current_music_mode = &"stage_mid"
+			_play_stream(mid_stream)
+		else:
+			music_player.stop()
+			current_music_mode = &"idle"
+		return
+
+	if current_music_mode == &"stage_mid":
+		if ending_sequence_started:
+			return
+
+		var loop_stream: AudioStream = _get_stage_stream(stage_music_mid, current_music_stage)
+		if loop_stream != null:
+			_play_stream(loop_stream)
+		else:
+			music_player.stop()
+			current_music_mode = &"idle"
+		return
 
 func _on_egg_stage_changed(stage: int) -> void:
 	if ending_sequence_started:
@@ -225,7 +291,7 @@ func _on_egg_stage_changed(stage: int) -> void:
 	_play_stage_music(stage)
 	_refresh_interaction_prompt()
 
-	if stage >= 5:
+	if stage >= 6:
 		_start_ending_sequence()
 
 func _on_egg_demand_completed() -> void:
@@ -391,14 +457,13 @@ func _start_ending_sequence() -> void:
 	raid_active = false
 	raid_has_spawned_enemies = false
 	current_boss = null
-	current_music_stage = 5
+	music_player.stop()
 
 	if popup_ui:
 		popup_ui.hide_popup()
 	if upgrade_ui:
 		upgrade_ui.visible = false
 
-	_sync_music()
 	call_deferred("_run_ending_sequence")
 
 func _run_ending_sequence() -> void:
@@ -407,13 +472,6 @@ func _run_ending_sequence() -> void:
 
 	if fade_rect:
 		fade_rect.modulate.a = 0.0
-
-	music_player.stream = end_music
-	music_player.play()
-
-	var fade_tween: Tween = create_tween()
-	fade_tween.tween_property(fade_rect, "modulate:a", 1.0, ENDING_FADE_TIME)
-	await fade_tween.finished
 
 	_ensure_ending_ui()
 	ending_label.text = ending_dialogue
@@ -462,7 +520,7 @@ func _start_boss_night() -> void:
 	raid_active = false
 	raid_has_spawned_enemies = false
 	current_boss = null
-	_play_stream(boss_theme)
+	_play_special_music(boss_theme)
 
 	if egg == null or not weasel_scene:
 		return

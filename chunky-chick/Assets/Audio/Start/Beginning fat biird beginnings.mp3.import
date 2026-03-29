@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dm4na6r10e7bn"
+path="res://.godot/imported/Beginning fat biird beginnings.mp3-8fded9f7e771e7d764233e5b0c3fe6e0.mp3str"
+
+[deps]
+
+source_file="res://Assets/Audio/Start/Beginning fat biird beginnings.mp3"
+dest_files=["res://.godot/imported/Beginning fat biird beginnings.mp3-8fded9f7e771e7d764233e5b0c3fe6e0.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
