@@ -1,12 +1,11 @@
 [gd_scene format=3 uid="uid://c866howesb3g7"]
 
 [ext_resource type="Script" uid="uid://b0tu0i2yxy1si" path="res://src/tscn/Main Menu/main_menu.gd" id="1_853f1"]
+[ext_resource type="StyleBox" uid="uid://b4oruhiydy41t" path="res://Assets/Ui/NinesliceFlat.tres" id="2_b5imc"]
 [ext_resource type="PackedScene" uid="uid://bqdk0fqhaj6ei" path="res://src/tscn/Main Menu/Credits.tscn" id="3_rgre6"]
+[ext_resource type="StyleBox" uid="uid://rigjob130ywm" path="res://Assets/Ui/NinesliceButton.tres" id="3_rnl3w"]
 [ext_resource type="Texture2D" uid="uid://50oa2eqaginc" path="res://Assets-Extra/image0.png" id="4_b5imc"]
 [ext_resource type="AudioStream" uid="uid://eq3rmhxtn5ek" path="res://Assets/Audio/1 - Fat Bird Beginnings.mp3" id="4_o6on8"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_rnl3w"]
-load_path = "res://.godot/imported/icon.svg-9321add83de8eac4650be2eec1e3e8fc.ctex"
 
 [node name="MainMenu" type="Control" unique_id=1716768850]
 layout_mode = 3
@@ -17,11 +16,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_853f1")
 
-[node name="TextureRect" type="TextureRect" parent="." unique_id=414951036]
+[node name="TextureRect" type="Panel" parent="." unique_id=1542490464]
 layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
-texture = SubResource("CompressedTexture2D_rnl3w")
+theme_override_styles/panel = ExtResource("2_b5imc")
 
 [node name="Start" type="Button" parent="." unique_id=1175555593]
 layout_mode = 0
@@ -31,6 +30,7 @@ offset_right = 755.0
 offset_bottom = 363.0
 scale = Vector2(0.7707338, 0.65279734)
 theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = ExtResource("3_rnl3w")
 text = "Start"
 
 [node name="Continue" type="Button" parent="." unique_id=224560670]
@@ -42,26 +42,6 @@ offset_bottom = 427.0
 scale = Vector2(0.7707338, 0.65279734)
 theme_override_font_sizes/font_size = 60
 text = "Continue"
-
-[node name="Settings" type="Button" parent="." unique_id=559956064]
-layout_mode = 0
-offset_left = 384.0
-offset_top = 400.0
-offset_right = 755.0
-offset_bottom = 491.0
-scale = Vector2(0.7707338, 0.65279776)
-theme_override_font_sizes/font_size = 60
-text = "Settings"
-
-[node name="Credits" type="Button" parent="." unique_id=1600177283]
-layout_mode = 0
-offset_left = 383.99997
-offset_top = 528.0
-offset_right = 755.0
-offset_bottom = 619.0
-scale = Vector2(0.7707338, 0.65279776)
-theme_override_font_sizes/font_size = 60
-text = "Credits"
 
 [node name="Quit" type="Button" parent="." unique_id=813780662]
 layout_mode = 0

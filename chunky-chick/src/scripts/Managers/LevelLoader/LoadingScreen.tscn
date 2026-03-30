@@ -1,7 +1,60 @@
-[gd_scene format=3 uid="uid://qvudehijyhjr"]
+[gd_scene format=3 uid="uid://dtk662f8e761w"]
 
-[ext_resource type="Script" uid="uid://bg7pf4jr147yl" path="res://src/scripts/Managers/LevelLoader/LevelLoader.gd" id="1_twnqb"]
 [ext_resource type="Texture2D" uid="uid://kxdkyhvifuaw" path="res://Assets-Extra/Fatass_Bird.png" id="2_x1cqn"]
+
+[sub_resource type="GDScript" id="GDScript_i8nj0"]
+script/source = "extends Control
+
+var loading:bool = false
+var finishedLoadingStandby:bool = false
+
+#The possible levels stored under one name
+
+var level0 : Array [String] = [\"res://Assets/Levels/Example1/GenericLevel1.tscn\"]
+var level1 : Array [String] = [\"res://Assets/Levels/Example2/GenericLevel2.tscn\"]
+#Of course you add more here as more get created
+
+
+#A reference to al the above level packets
+var allLevels : Array[Array] = [level0,level1]
+
+
+var nextlevel :String
+func _process(delta: float) -> void:
+	if Input.is_action_just_pressed(\"DebugButton\"):
+		_loadNextLevel()
+	if loading:
+		var progress:Array = []
+		var status = ResourceLoader.load_threaded_get_status(nextlevel, progress)
+		if status == ResourceLoader.THREAD_LOAD_LOADED:
+			set_process(false)
+			print(\"Levelloading Finished\")
+			finishedLoadingStandby = true
+
+func _loadNextLevel() -> void:
+	self.show()
+	nextlevel = allLevels.get(GameData.currentlevel).pick_random() #Picks random of the preset levels
+	GameData.currentlevel += 1
+	if nextlevel:
+		if (ResourceLoader.has_cached(nextlevel)):
+			ResourceLoader.load_threaded_get(nextlevel)
+		else:
+			ResourceLoader.load_threaded_request(nextlevel,\"\",true)
+			loading = true
+	else:
+		push_warning(\"Ran out of levels\") 
+		#This should not happen during gameplay, but now you know why you get an error
+	$Downtime_Timer.start()
+
+
+func _on_downtime_timer_timeout() -> void:
+	print(\"Mandatory time done\")
+	await finishedLoadingStandby == true
+	print(\"Change\")
+	var newLevelScene = ResourceLoader.load_threaded_get(nextlevel)
+	get_tree().change_scene_to_packed(newLevelScene)
+	print(\"Changed\")
+"
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jujni"]
 
@@ -10,7 +63,7 @@ layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0
-script = ExtResource("1_twnqb")
+script = SubResource("GDScript_i8nj0")
 
 [node name="LoadingAnimation" type="AnimationPlayer" parent="." unique_id=1201035817]
 root_node = NodePath("../..")

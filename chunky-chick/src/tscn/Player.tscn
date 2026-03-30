@@ -106,7 +106,8 @@ script = ExtResource("3_swfga")
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=377801089 groups=["main_camera"]]
 show_behind_parent = true
-zoom = Vector2(0.6, 0.6)
+scale = Vector2(3.48, 3.48)
+zoom = Vector2(0.465, 0.465)
 
 [node name="dash-cooldown" type="Timer" parent="." unique_id=725720001]
 wait_time = 0.62

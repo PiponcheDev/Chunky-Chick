@@ -78,6 +78,8 @@ size = Vector2(95, 112)
 size = Vector2(341, 282)
 
 [node name="TrashCan" type="StaticBody2D" unique_id=541807723 groups=["talisman"]]
+z_index = 1
+scale = Vector2(1.5, 1.5)
 collision_layer = 3
 script = ExtResource("1_d3rj5")
 possible_talismans = Array[ExtResource("2_d70uw")]([ExtResource("6_rqu2i"), ExtResource("4_rqu2i"), ExtResource("5_6aykf"), ExtResource("6_iedfx")])

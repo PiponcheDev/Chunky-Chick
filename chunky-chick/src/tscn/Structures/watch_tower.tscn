@@ -10,6 +10,8 @@ size = Vector2(94, 80)
 radius = 725.0007
 
 [node name="WatchTower" type="StaticBody2D" unique_id=667863343 groups=["structure"]]
+z_index = 1
+scale = Vector2(0.7, 0.7)
 script = ExtResource("1_3op0r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1240273231]
