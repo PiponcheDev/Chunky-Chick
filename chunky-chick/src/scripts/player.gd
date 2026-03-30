@@ -4,6 +4,7 @@ extends CharacterBody2D
 @onready var main_camera: Camera2D = $Camera2D
 @onready var dash_cooldown: Timer = $"dash-cooldown"
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var hitbox: CollisionShape2D = $CollisionShape2D
 
 signal carried_item_changed(is_carrying: bool)
 signal active_talisman_changed(new_talisman)
@@ -260,7 +261,11 @@ func _handle_stationary():
 func _update_rotation(dir: Vector2):
 	angle_degrees = rad_to_deg(dir.angle())
 	snapped_angle = round(angle_degrees / 45) * 45 + 90
+	
 	sprite.rotation_degrees = snapped_angle
+	
+	if hitbox:
+		hitbox.rotation_degrees = snapped_angle
 
 func _start_dash():
 	if is_dashing or not dash_cooldown.is_stopped():
@@ -536,8 +541,8 @@ func get_dash_cooldown_ratio() -> float:
 	return 1.0 - (dash_cooldown.time_left / dash_cooldown.wait_time)
 
 func eat_food(amount: float) -> void:
-	var bonus := 1.0 + fatness_from_food_bonus
-	fatness = min(fatness + amount * bonus, fatness_max + fatness_max_bonus)
+	var bonus := 1.0 * fatness_from_food_bonus
+	fatness = min(fatness + (amount * bonus) + amount, fatness_max + fatness_max_bonus)
 
 func take_damage(amount: int) -> void:
 	if is_dead:

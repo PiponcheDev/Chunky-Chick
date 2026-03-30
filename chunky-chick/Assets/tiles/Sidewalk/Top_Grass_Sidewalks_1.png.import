@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://chmnunld3gduv"
-path="res://.godot/imported/Roads-resized-to-512x512.jpeg-4f595b05fc57f90c54b76e981b754dfd.ctex"
+uid="uid://6ro3iekdlky"
+path="res://.godot/imported/Top_Grass_Sidewalks_1.png-130b01ad6fc9d9d32d94f74b3fb40b75.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tiles/Road/Roads-resized-to-512x512.jpeg"
-dest_files=["res://.godot/imported/Roads-resized-to-512x512.jpeg-4f595b05fc57f90c54b76e981b754dfd.ctex"]
+source_file="res://Assets/tiles/Sidewalk/Top_Grass_Sidewalks_1.png"
+dest_files=["res://.godot/imported/Top_Grass_Sidewalks_1.png-130b01ad6fc9d9d32d94f74b3fb40b75.ctex"]
 
 [params]
 

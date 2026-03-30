@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dlvdtslrq8dei"
-path="res://.godot/imported/Bottom_Grass_Sidewalks_1-resized-to-512x512.jpeg-be431ebdef14abcaa5cbfc787570eeaa.ctex"
+uid="uid://bv6jm8gb5arb7"
+path="res://.godot/imported/Left_Grass_Sidewalks_2.png-b391118d0ad00b61a01f774616eed662.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Assets/tiles/Sidewalk/Bottom_Grass_Sidewalks_1-resized-to-512x512.jpeg"
-dest_files=["res://.godot/imported/Bottom_Grass_Sidewalks_1-resized-to-512x512.jpeg-be431ebdef14abcaa5cbfc787570eeaa.ctex"]
+source_file="res://Assets/tiles/Sidewalk/Left_Grass_Sidewalks_2.png"
+dest_files=["res://.godot/imported/Left_Grass_Sidewalks_2.png-b391118d0ad00b61a01f774616eed662.ctex"]
 
 [params]
 

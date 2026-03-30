@@ -1,9 +1,6 @@
 [gd_resource type="TileSet" format=3 uid="uid://deutbp3kg2b25"]
 
-[ext_resource type="Texture2D" uid="uid://chmnunld3gduv" path="res://Assets/tiles/Road/Roads-resized-to-512x512.jpeg" id="1_h7ryw"]
-
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1ttcr"]
-texture = ExtResource("1_h7ryw")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0

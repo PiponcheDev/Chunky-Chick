@@ -2,7 +2,7 @@ extends Area2D
 
 const SPEED := 800
 var MAX_RANGE := 400
-
+@onready var anim_player = $AnimatedSprite2D
 
 var direction := Vector2.ZERO
 var start_pos: Vector2
@@ -17,6 +17,9 @@ signal bullet_freed(pos: Vector2)
 
 func _physics_process(delta: float) -> void:
 	var final_velocity: Vector2
+
+	if direction != Vector2.ZERO:
+		anim_player.rotation = direction.angle() + rad_to_deg(90)
 
 	if inherited_velocity == Vector2.ZERO:
 		final_velocity = direction * SPEED

@@ -21,6 +21,8 @@ var placing_turret: bool = false
 var ghost_turret: Node2D = null
 var placement_stage: int = 0
 var placing_watchtower: bool = false
+var placement_mode_active: bool = false
+var turret_base_locked_position: Vector2 = Vector2.ZERO
 
 var turret_cost: int = 1
 var watchtower_cost: int = 1
@@ -102,6 +104,7 @@ var ending_sequence_started: bool = false
 var current_player_in_range: Node = null
 
 func _ready() -> void:
+	set_process_input(true)
 	pc.add_to_group("placement_camera")
 	add_to_group("nest")
 
@@ -166,7 +169,7 @@ func _physics_process(delta: float) -> void:
 	_try_deposit_items_in_zone()
 
 func _on_feed_pressed() -> void:
-	if ending_sequence_started or egg == null:
+	if ending_sequence_started or placement_mode_active or egg == null:
 		return
 
 	if current_player_in_range:
@@ -291,14 +294,14 @@ func _on_egg_stage_changed(stage: int) -> void:
 	_play_stage_music(stage)
 	_refresh_interaction_prompt()
 
-	if stage >= 6:
+	if stage >= 5:
 		_start_ending_sequence()
 
 func _on_egg_demand_completed() -> void:
 	_refresh_interaction_prompt()
 
 func _refresh_interaction_prompt() -> void:
-	if popup_ui == null or egg == null:
+	if popup_ui == null or egg == null or placement_mode_active:
 		return
 
 	var bodies = egg.get_overlapping_bodies()
@@ -311,7 +314,7 @@ func _refresh_interaction_prompt() -> void:
 	current_player_in_range = null
 
 func _start_raid_theme() -> void:
-	if ending_sequence_started:
+	if ending_sequence_started or placement_mode_active:
 		return
 	raid_active = true
 	raid_has_spawned_enemies = false
@@ -459,12 +462,20 @@ func _start_ending_sequence() -> void:
 	current_boss = null
 	music_player.stop()
 
-	if popup_ui:
-		popup_ui.hide_popup()
-	if upgrade_ui:
-		upgrade_ui.visible = false
+	_set_ending_lock_state(true)
 
 	call_deferred("_run_ending_sequence")
+
+func _set_ending_lock_state(lock: bool) -> void:
+	_set_player_movement_locked(lock)
+
+	if popup_ui:
+		popup_ui.hide_popup()
+
+	if upgrade_ui:
+		upgrade_ui.visible = not lock
+
+	current_player_in_range = null
 
 func _run_ending_sequence() -> void:
 	await _move_camera_to_placement()
@@ -550,7 +561,7 @@ func _spawn_weasel() -> void:
 	_register_boss(boss)
 
 func _on_sleep_pressed() -> void:
-	if ending_sequence_started:
+	if ending_sequence_started or placement_mode_active:
 		return
 	if popup_ui:
 		popup_ui.hide_popup()
@@ -568,16 +579,17 @@ func _on_sleep_pressed() -> void:
 	_sleep_transition()
 
 func _on_buy_turret_pressed() -> void:
-	if ending_sequence_started:
+	if ending_sequence_started or placement_mode_active:
 		return
 	if not Resources.spend_cardboard(turret_cost):
 		return
 	_upgrade_to_placement(turret_scene)
 	placing_turret = true
 	placement_stage = 1
+	turret_base_locked_position = Vector2.ZERO
 
 func _on_buy_watchtower_pressed() -> void:
-	if ending_sequence_started:
+	if ending_sequence_started or placement_mode_active:
 		return
 	if not Resources.spend_cardboard(watchtower_cost):
 		return
@@ -585,7 +597,11 @@ func _on_buy_watchtower_pressed() -> void:
 	placing_watchtower = true
 
 func _upgrade_to_placement(scene: PackedScene) -> void:
-	upgrade_ui.visible = false
+	placement_mode_active = true
+	if popup_ui:
+		popup_ui.hide_popup()
+	if upgrade_ui:
+		upgrade_ui.visible = false
 	if placement_camera:
 		placement_camera.make_current()
 
@@ -597,15 +613,24 @@ func _upgrade_to_placement(scene: PackedScene) -> void:
 	if ghost_turret.has_method("enable_preview"):
 		ghost_turret.enable_preview()
 
+	_update_ghost_turret_position()
+	_set_player_movement_locked(true)
+
 func _on_popup_continue() -> void:
+	if placement_mode_active:
+		return
 	if popup_ui:
 		popup_ui.visible = false
 	upgrade_ui.visible = true
 
 func _on_upgrade_closed() -> void:
+	if placement_mode_active:
+		return
 	upgrade_ui.visible = false
 
 func _on_hitbox_area_entered(area: Area2D) -> void:
+	if placement_mode_active:
+		return
 	if not area:
 		return
 	if area.is_in_group("material") and not area.carried:
@@ -647,6 +672,110 @@ func _is_point_inside_deposit_zone(world_pos: Vector2) -> bool:
 
 	return local_pos.length() <= deposit_fallback_radius
 
+func _is_point_inside_nest(world_pos: Vector2) -> bool:
+	return _is_point_inside_deposit_zone(world_pos)
+
+func _is_point_strictly_inside_nest(world_pos: Vector2) -> bool:
+	if hitbox_area == null:
+		return false
+
+	var local_pos: Vector2 = hitbox_area.to_local(world_pos)
+	var margin: float = 1.0
+
+	var shape_node := hitbox_area.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node and shape_node.shape:
+		if shape_node.shape is RectangleShape2D:
+			var rect_shape := shape_node.shape as RectangleShape2D
+			var extents: Vector2 = rect_shape.extents + deposit_padding - Vector2(margin, margin)
+			return abs(local_pos.x) < extents.x and abs(local_pos.y) < extents.y
+
+		elif shape_node.shape is CircleShape2D:
+			var circle_shape := shape_node.shape as CircleShape2D
+			var radius: float = circle_shape.radius + max(deposit_padding.x, deposit_padding.y) - margin
+			return local_pos.length() < radius
+
+		elif shape_node.shape is CapsuleShape2D:
+			var capsule_shape := shape_node.shape as CapsuleShape2D
+			var radius_capsule: float = max(capsule_shape.radius, capsule_shape.height * 0.5) + max(deposit_padding.x, deposit_padding.y) - margin
+			return local_pos.length() < radius_capsule
+
+	return local_pos.length() < deposit_fallback_radius - margin
+
+func _get_placement_mouse_world_position() -> Vector2:
+	if placement_camera:
+		return placement_camera.get_global_mouse_position()
+	return get_global_mouse_position()
+
+func _update_ghost_turret_position() -> void:
+	if not ghost_turret:
+		return
+
+	var mouse_pos: Vector2 = _get_placement_mouse_world_position()
+	var clamped_pos: Vector2 = _clamp_placement_position(mouse_pos)
+
+	if placing_turret:
+		if placement_stage == 1:
+			ghost_turret.global_position = clamped_pos
+		elif placement_stage == 2:
+			ghost_turret.global_position = turret_base_locked_position
+			if ghost_turret.has_method("rotate_head_towards"):
+				ghost_turret.rotate_head_towards(mouse_pos)
+	elif placing_watchtower:
+		ghost_turret.global_position = clamped_pos
+
+func _clamp_placement_position(world_pos: Vector2) -> Vector2:
+	if hitbox_area == null:
+		return world_pos
+
+	var shape_node := hitbox_area.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if shape_node == null or shape_node.shape == null:
+		return world_pos
+
+	var local_pos: Vector2 = hitbox_area.to_local(world_pos)
+
+	if not _is_point_inside_deposit_zone(world_pos):
+		return world_pos
+
+	if shape_node.shape is RectangleShape2D:
+		var rect_shape := shape_node.shape as RectangleShape2D
+		var extents: Vector2 = rect_shape.extents + deposit_padding
+
+		var dist_left: float = abs(local_pos.x + extents.x)
+		var dist_right: float = abs(extents.x - local_pos.x)
+		var dist_top: float = abs(local_pos.y + extents.y)
+		var dist_bottom: float = abs(extents.y - local_pos.y)
+
+		var clamped_local: Vector2 = local_pos
+
+		if min(dist_left, dist_right) <= min(dist_top, dist_bottom):
+			clamped_local.x = -extents.x if dist_left <= dist_right else extents.x
+			clamped_local.y = clampf(local_pos.y, -extents.y, extents.y)
+		else:
+			clamped_local.y = -extents.y if dist_top <= dist_bottom else extents.y
+			clamped_local.x = clampf(local_pos.x, -extents.x, extents.x)
+
+		return hitbox_area.to_global(clamped_local)
+
+	elif shape_node.shape is CircleShape2D:
+		var circle_shape := shape_node.shape as CircleShape2D
+		var radius: float = circle_shape.radius + max(deposit_padding.x, deposit_padding.y)
+
+		if local_pos.length() == 0.0:
+			return hitbox_area.to_global(Vector2(radius, 0.0))
+
+		return hitbox_area.to_global(local_pos.normalized() * radius)
+
+	elif shape_node.shape is CapsuleShape2D:
+		var capsule_shape := shape_node.shape as CapsuleShape2D
+		var radius_capsule: float = max(capsule_shape.radius, capsule_shape.height * 0.5) + max(deposit_padding.x, deposit_padding.y)
+
+		if local_pos.length() == 0.0:
+			return hitbox_area.to_global(Vector2(radius_capsule, 0.0))
+
+		return hitbox_area.to_global(local_pos.normalized() * radius_capsule)
+
+	return world_pos
+
 func deposit_item(item: Node) -> void:
 	if not is_instance_valid(item):
 		return
@@ -672,6 +801,8 @@ func deposit_item(item: Node) -> void:
 	item.queue_free()
 
 func _on_ui_hitbox_body_entered(body: Node) -> void:
+	if placement_mode_active:
+		return
 	if body and body.is_in_group("player"):
 		if egg and egg.overlaps_body(body):
 			return
@@ -679,6 +810,8 @@ func _on_ui_hitbox_body_entered(body: Node) -> void:
 			popup_ui.show_buy_only()
 
 func _on_ui_hitbox_body_exited(body: Node) -> void:
+	if placement_mode_active:
+		return
 	if body and body.is_in_group("player"):
 		if egg and egg.overlaps_body(body):
 			_refresh_interaction_prompt()
@@ -687,12 +820,16 @@ func _on_ui_hitbox_body_exited(body: Node) -> void:
 				popup_ui.hide_popup()
 
 func _on_egg_body_entered(body: Node) -> void:
+	if placement_mode_active:
+		return
 	if body and body.is_in_group("player"):
 		current_player_in_range = body
 		if popup_ui:
 			popup_ui.show_interaction(body, egg.demand_met, egg.is_night)
 
 func _on_egg_body_exited(body: Node) -> void:
+	if placement_mode_active:
+		return
 	if body and body.is_in_group("player"):
 		if current_player_in_range == body:
 			current_player_in_range = null
@@ -719,18 +856,9 @@ func _process(delta: float) -> void:
 	if not ghost_turret:
 		return
 
-	var mouse_pos: Vector2 = placement_camera.get_global_mouse_position() if placement_camera else Vector2.ZERO
+	_update_ghost_turret_position()
 
-	if placing_turret:
-		if placement_stage == 1:
-			ghost_turret.global_position = mouse_pos
-		elif placement_stage == 2:
-			if ghost_turret.has_method("rotate_head_towards"):
-				ghost_turret.rotate_head_towards(mouse_pos)
-	elif placing_watchtower:
-		ghost_turret.global_position = mouse_pos
-
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if ending_sequence_started:
 		return
 	if not ghost_turret:
@@ -739,16 +867,32 @@ func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		if placing_turret:
 			if placement_stage == 1:
+				if _is_point_strictly_inside_nest(_get_placement_mouse_world_position()):
+					return
+				turret_base_locked_position = _clamp_placement_position(_get_placement_mouse_world_position())
+				ghost_turret.global_position = turret_base_locked_position
 				placement_stage = 2
-			elif placement_stage == 2:
+				return
+
+			if placement_stage == 2:
 				ghost_turret.modulate = Color(1, 1, 1, 1)
+				if ghost_turret.has_method("finalize_placement"):
+					ghost_turret.finalize_placement()
+				elif ghost_turret.has_method("disable_preview"):
+					ghost_turret.disable_preview()
 				if ghost_turret.has_method("lock_head_rotation"):
 					ghost_turret.lock_head_rotation()
 				_reset_placement()
+				return
+
 		elif placing_watchtower:
+			if _is_point_strictly_inside_nest(_get_placement_mouse_world_position()):
+				return
 			ghost_turret.modulate = Color(1, 1, 1, 1)
 			if ghost_turret.has_method("finalize_placement"):
 				ghost_turret.finalize_placement()
+			elif ghost_turret.has_method("disable_preview"):
+				ghost_turret.disable_preview()
 			_reset_placement()
 
 func _reset_placement() -> void:
@@ -756,9 +900,30 @@ func _reset_placement() -> void:
 	placing_turret = false
 	placing_watchtower = false
 	placement_stage = 0
+	placement_mode_active = false
+	turret_base_locked_position = Vector2.ZERO
+	_set_player_movement_locked(false)
 
 	if main_camera:
 		main_camera.make_current()
+
+func _set_player_movement_locked(locked: bool) -> void:
+	for node in get_tree().get_nodes_in_group("player"):
+		if not is_instance_valid(node):
+			continue
+
+		if node.has_method("set_movement_locked"):
+			node.call("set_movement_locked", locked)
+		elif node.has_method("set_controls_enabled"):
+			node.call("set_controls_enabled", not locked)
+		elif node.has_method("set_input_enabled"):
+			node.call("set_input_enabled", not locked)
+
+		if node is CharacterBody2D:
+			node.set_physics_process(not locked)
+			node.set_process(not locked)
+			node.set_process_input(not locked)
+			node.set_process_unhandled_input(not locked)
 
 func try_deposit(item: Node) -> bool:
 	if not item:

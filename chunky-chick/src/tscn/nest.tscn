@@ -44,7 +44,7 @@ region = Rect2(1095.0137, 0, 426.07935, 460.67593)
 size = Vector2(18.666683, 435.33334)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eerui"]
-size = Vector2(538.6667, 5.999981)
+size = Vector2(540.6667, 5.999981)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_okcfb"]
 size = Vector2(14, 132)
@@ -146,7 +146,7 @@ shape = SubResource("RectangleShape2D_gmuhx")
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D2" unique_id=719270316]
-position = Vector2(-12, -326.66666)
+position = Vector2(-11, -326.6667)
 shape = SubResource("RectangleShape2D_eerui")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Walls" unique_id=774422928]

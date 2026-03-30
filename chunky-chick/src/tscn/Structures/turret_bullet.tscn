@@ -1,19 +1,62 @@
 [gd_scene format=3 uid="uid://bvxcdq2bfy02s"]
 
 [ext_resource type="Script" uid="uid://c0wpn3yhkf435" path="res://src/scripts/Structures/turret_bullet.gd" id="1_mi2ei"]
+[ext_resource type="Texture2D" uid="uid://b6531vmaqns71" path="res://Assets-Extra/Shit_and_Mud.png" id="2_jsbyd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jsbyd"]
-size = Vector2(20, 21)
+size = Vector2(154, 300)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hi0l2"]
+atlas = ExtResource("2_jsbyd")
+region = Rect2(0, 300, 200, 300)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w0qft"]
+atlas = ExtResource("2_jsbyd")
+region = Rect2(200, 300, 200, 300)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8dvja"]
+atlas = ExtResource("2_jsbyd")
+region = Rect2(400, 300, 200, 300)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2hbhb"]
+atlas = ExtResource("2_jsbyd")
+region = Rect2(600, 300, 200, 300)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o1oge"]
+atlas = ExtResource("2_jsbyd")
+region = Rect2(800, 300, 200, 300)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_27nvr"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hi0l2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w0qft")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8dvja")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2hbhb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o1oge")
+}],
+"loop": true,
+"name": &"default",
+"speed": 9.0
+}]
 
 [node name="Turret-Bullet" type="Area2D" unique_id=329481292]
 script = ExtResource("1_mi2ei")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=576540478]
-position = Vector2(0, 0.5)
+position = Vector2(-6, -3)
 shape = SubResource("RectangleShape2D_jsbyd")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=387351540]
-offset_left = -10.0
-offset_top = -10.0
-offset_right = 10.0
-offset_bottom = 11.0
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1061759394]
+sprite_frames = SubResource("SpriteFrames_27nvr")
+autoplay = "default"
+frame_progress = 0.2422746

@@ -35,7 +35,7 @@ offset_right = 544.0
 offset_bottom = 440.0
 scale = Vector2(0.9618539, 1)
 
-[node name="Active-cooldown" type="ProgressBar" parent="." unique_id=1197306834]
+[node name="Active-cooldown" type="ProgressBar" parent="." unique_id=1012381721]
 layout_mode = 0
 offset_left = 552.0
 offset_top = 32.0

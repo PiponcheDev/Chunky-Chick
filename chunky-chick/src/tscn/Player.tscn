@@ -80,9 +80,8 @@ animations = [{
 "speed": 14.0
 }]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_swfga"]
-radius = 92.666664
-height = 230.66667
+[sub_resource type="CircleShape2D" id="CircleShape2D_swfga"]
+radius = 82.05756
 
 [node name="Player" type="CharacterBody2D" unique_id=1575125507 groups=["player"]]
 top_level = true
@@ -100,7 +99,7 @@ frame_progress = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=452942286]
 position = Vector2(3.3333333, -24)
-shape = SubResource("CapsuleShape2D_swfga")
+shape = SubResource("CircleShape2D_swfga")
 
 [node name="fatness_component" type="Node" parent="." unique_id=1704900345]
 script = ExtResource("3_swfga")

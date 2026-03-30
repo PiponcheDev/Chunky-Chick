@@ -1,14 +1,14 @@
+AnimatedSprite2D
+ProgressBar
+TextureProgressBar
 CollisionShape2D
 StaticBody2D
 Node2D
 TileMapLayer
 TileMap
 Area2D
-AnimatedSprite2D
 Button
 AudioStreamPlayer2D
 AudioStreamPlayer
 Sprite2D
 NavigationRegion2D
-Label
-ProgressBar

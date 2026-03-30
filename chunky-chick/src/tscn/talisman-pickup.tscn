@@ -14,5 +14,6 @@ metadata/_edit_horizontal_guides_ = [-48.0]
 shape = SubResource("CircleShape2D_rf3hm")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1367202803]
-position = Vector2(0, -5)
+position = Vector2(0, -1.9999995)
+scale = Vector2(0.4, 0.4)
 texture = ExtResource("1_aa6mi")
