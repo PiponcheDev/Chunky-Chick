@@ -1,6 +1,15 @@
 [gd_scene format=3 uid="uid://djbhuhkk5k3hi"]
 
 [ext_resource type="Script" uid="uid://dsa8n1vqxns8e" path="res://src/scripts/UI/player_ui.gd" id="1_bepjn"]
+[ext_resource type="Texture2D" uid="uid://cieyi388eeclq" path="res://Assets-Extra/Ability_bar_BG.png" id="2_f5pmd"]
+[ext_resource type="Texture2D" uid="uid://dkuw8bqh06xh8" path="res://Assets-Extra/Ability_bar_cover.png" id="3_v6i8m"]
+[ext_resource type="Texture2D" uid="uid://y7hn6njv7c1e" path="res://Assets-Extra/Ability_bar.png" id="4_y6x3e"]
+[ext_resource type="Texture2D" uid="uid://coenk2kerbkc5" path="res://Assets-Extra/Dash_bar_BG.png" id="5_gnosp"]
+[ext_resource type="Texture2D" uid="uid://obubja5l61dy" path="res://Assets-Extra/Dash_bar_cover.png" id="6_vfihh"]
+[ext_resource type="Texture2D" uid="uid://cp1msca64cnao" path="res://Assets-Extra/Dash_bar.png" id="7_7elgv"]
+[ext_resource type="Texture2D" uid="uid://c7qj7no7yg6f" path="res://Assets-Extra/Fat_bar_BG.png" id="8_fu42p"]
+[ext_resource type="Texture2D" uid="uid://bye1ovfk2bqhw" path="res://Assets-Extra/Fat_bar_cover.png" id="9_t3w0a"]
+[ext_resource type="Texture2D" uid="uid://cdikj63mklejv" path="res://Assets-Extra/Fat_bar.png" id="10_snaty"]
 
 [node name="Player-UI" type="Control" unique_id=1917703129]
 layout_mode = 3
@@ -16,20 +25,6 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_bepjn")
 
-[node name="Fatness-bar" type="ProgressBar" parent="." unique_id=818161336]
-layout_mode = 0
-offset_left = 752.0
-offset_top = 32.0
-offset_right = 1808.0
-offset_bottom = 192.0
-
-[node name="Dash-cooldown" type="ProgressBar" parent="." unique_id=1245878445]
-layout_mode = 0
-offset_left = 752.0
-offset_top = 240.0
-offset_right = 1632.0
-offset_bottom = 392.0
-
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1586422515]
 layout_mode = 0
 offset_left = 32.0
@@ -37,15 +32,6 @@ offset_top = 40.0
 offset_right = 544.0
 offset_bottom = 440.0
 scale = Vector2(0.9618539, 1)
-
-[node name="Active-cooldown" type="ProgressBar" parent="." unique_id=1012381721]
-layout_mode = 0
-offset_left = 552.0
-offset_top = 32.0
-offset_right = 631.16675
-offset_bottom = 432.0
-scale = Vector2(1.9199988, 1)
-fill_mode = 3
 
 [node name="Guide" type="Label" parent="." unique_id=1188179078]
 layout_mode = 0
@@ -57,3 +43,34 @@ theme_override_font_sizes/font_size = 62
 text = "Interact?"
 horizontal_alignment = 1
 vertical_alignment = 1
+
+[node name="Active-cooldown" type="TextureProgressBar" parent="." unique_id=594876775]
+layout_mode = 0
+offset_left = 528.0
+offset_top = -48.0
+offset_right = 728.0
+offset_bottom = 452.0
+fill_mode = 3
+texture_under = ExtResource("2_f5pmd")
+texture_over = ExtResource("3_v6i8m")
+texture_progress = ExtResource("4_y6x3e")
+
+[node name="Dash-cooldown" type="TextureProgressBar" parent="." unique_id=1535347528]
+layout_mode = 0
+offset_left = 744.0
+offset_top = 224.0
+offset_right = 1624.0
+offset_bottom = 424.0
+texture_under = ExtResource("5_gnosp")
+texture_over = ExtResource("6_vfihh")
+texture_progress = ExtResource("7_7elgv")
+
+[node name="Fatness-bar" type="TextureProgressBar" parent="." unique_id=2095699790]
+layout_mode = 0
+offset_left = 744.0
+offset_top = 32.0
+offset_right = 1800.0
+offset_bottom = 232.0
+texture_under = ExtResource("8_fu42p")
+texture_over = ExtResource("9_t3w0a")
+texture_progress = ExtResource("10_snaty")

@@ -16,6 +16,8 @@ var inherited_velocity: Vector2 = Vector2.ZERO
 signal bullet_freed(pos: Vector2)
 
 func _physics_process(delta: float) -> void:
+	if shooter == null:
+		queue_free()
 	var final_velocity: Vector2
 
 	if direction != Vector2.ZERO:

@@ -1,10 +1,10 @@
 extends Control
 
 # Node references
-@onready var fatness_bar: ProgressBar = $"Fatness-bar"
-@onready var dash_bar: ProgressBar = $"Dash-cooldown"
+@onready var fatness_bar: TextureProgressBar = $"Fatness-bar"
+@onready var dash_bar: TextureProgressBar = $"Dash-cooldown"
 @onready var active_showcase: TextureRect = $TextureRect
-@onready var active_cooldown: ProgressBar = $"Active-cooldown"
+@onready var active_cooldown: TextureProgressBar = $"Active-cooldown"
 @onready var guide: Label = $Guide
 
 const DASH_UI_START_DELAY := 0.12
@@ -107,7 +107,7 @@ func _update_active_cooldown_bar() -> void:
 
 	# Only hide the bar if the player does not have an active talisman.
 	active_cooldown.visible = true
-	active_cooldown.max_value = 1.0
+	active_cooldown.max_value = 100.0
 
 	# While the buff is active, the cooldown has not started yet.
 	if player.active_talisman_is_triggered:
@@ -121,6 +121,7 @@ func _update_active_cooldown_bar() -> void:
 
 	var ratio: float = player.active_talisman_cooldown_left / max_cd
 	ratio = clamp(ratio, 0.0, 1.0)
+	ratio = int(ratio * 100)
 
 	active_cooldown.value = ratio
 

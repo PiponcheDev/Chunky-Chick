@@ -9,7 +9,7 @@ const CHASING = 3 #Used when traveling to player during feeding
 const SPEED = 100
 
 var previous_pos: Vector2 = Vector2(0,0)
-var derivative: Vector2 = self.position - previous_pos
+var derivative: Vector2 = Vector2.ZERO
 
 var movementdir: int = DOWN
 
@@ -33,7 +33,7 @@ func _process(delta: float) -> void:
 	if state == ROAMING:
 		progress += SPEED * delta
 	elif state == CHASING:
-		var distance = abs(player.position-self.position)
+		var distance = player.global_position.distance_to(global_position)
 		distance = distance.x + distance.y
 		if distance > feedRadius:
 			self.position = player.position-self.position * 0.2 * delta #Really scuffed but temporary
