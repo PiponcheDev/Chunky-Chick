@@ -1,11 +1,9 @@
 [gd_scene format=3 uid="uid://nbk6ckc1v8qp"]
 
 [ext_resource type="PackedScene" uid="uid://dlkge1c31esjr" path="res://src/tscn/nest.tscn" id="1_fos0i"]
-[ext_resource type="PackedScene" uid="uid://e3t6v4jtmdh6" path="res://src/tscn/items.tscn" id="2_3dxm6"]
 [ext_resource type="PackedScene" uid="uid://knbi01afph2c" path="res://src/tscn/Player.tscn" id="4_trn2v"]
-[ext_resource type="PackedScene" uid="uid://vxnhxnc8fji4" path="res://src/tscn/Food.tscn" id="5_03owx"]
-[ext_resource type="PackedScene" uid="uid://pn32tdtruix8" path="res://src/tscn/Structures/trash_can.tscn" id="6_3dxm6"]
 [ext_resource type="PackedScene" uid="uid://djbhuhkk5k3hi" path="res://src/tscn/UI/player-ui.tscn" id="7_lgr22"]
+[ext_resource type="PackedScene" uid="uid://70wppi13rrso" path="res://Assets/Levels/Level1/level_1.scn" id="8_03owx"]
 [ext_resource type="PackedScene" uid="uid://q6rg8aao0wsr" path="res://src/tscn/enemy/waves.tscn" id="8_trn2v"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_lgr22"]
@@ -16,19 +14,11 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-38022, -24144, 45704, 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 
 [node name="Nest" parent="." unique_id=1833191925 groups=["nest"] instance=ExtResource("1_fos0i")]
+z_index = 1
 position = Vector2(617, 263)
-
-[node name="Item" parent="." unique_id=1133717472 instance=ExtResource("2_3dxm6")]
-position = Vector2(-59, 67)
 
 [node name="TurretContainer" type="Node2D" parent="." unique_id=1063803777]
 position = Vector2(0, 3)
-
-[node name="Food" parent="." unique_id=2090540503 groups=["food"] instance=ExtResource("5_03owx")]
-position = Vector2(-443, 316)
-
-[node name="TrashCan" parent="." unique_id=541807723 instance=ExtResource("6_3dxm6")]
-position = Vector2(-915, 556)
 
 [node name="Player" parent="." unique_id=1575125507 instance=ExtResource("4_trn2v")]
 visibility_layer = 524289
@@ -37,6 +27,8 @@ collision_mask = 3
 
 [node name="Player-UI" parent="Player" unique_id=1917703129 instance=ExtResource("7_lgr22")]
 anchors_preset = 0
+anchor_left = 0.0
+anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = -973.63
@@ -49,8 +41,12 @@ scale = Vector2(0.52000123, 0.5600003)
 metadata/_edit_use_anchors_ = true
 
 [node name="circle" parent="." unique_id=1726487523 instance=ExtResource("8_trn2v")]
+visible = false
 position = Vector2(-128, 192)
 scale = Vector2(0.99999994, 0.99999994)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1908240877]
+visible = false
 navigation_polygon = SubResource("NavigationPolygon_lgr22")
+
+[node name="Level1" parent="." unique_id=118654631 instance=ExtResource("8_03owx")]

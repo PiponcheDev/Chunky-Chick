@@ -6,13 +6,13 @@
 [ext_resource type="PackedScene" uid="uid://cbxj3b6gsa1ql" path="res://src/tscn/UI/upgrade_selec.tscn" id="5_kuljn"]
 [ext_resource type="Texture2D" uid="uid://cusmfv2f7nphm" path="res://Assets-Extra/chick.png" id="6_gmuhx"]
 [ext_resource type="Script" uid="uid://clhwy44dkbsgw" path="res://src/scripts/UI/egg.gd" id="6_hwr44"]
-[ext_resource type="Texture2D" uid="uid://ctpqfhtmy2adw" path="res://Assets/Boxes.png" id="7_gmuhx"]
+[ext_resource type="Texture2D" uid="uid://316raqqvq8jp" path="res://Assets-Extra/nest.png" id="7_gmuhx"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_kuljn"]
 size = Vector2(101.03703, 61.77778)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hwr44"]
-size = Vector2(259.33334, 119)
+size = Vector2(257, 202.83334)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_kuljn"]
 radius = 155.93423
@@ -41,16 +41,20 @@ atlas = ExtResource("6_gmuhx")
 region = Rect2(1095.0137, 0, 426.07935, 460.67593)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gmuhx"]
-size = Vector2(18.666683, 435.33334)
+size = Vector2(20.000029, 471.6667)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_eerui"]
-size = Vector2(538.6667, 5.999981)
+size = Vector2(540.6667, 21.666647)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_okcfb"]
-size = Vector2(14, 132)
+size = Vector2(1416.7168, 132)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_o68ys"]
-size = Vector2(15.999992, 172)
+size = Vector2(10.666744, 264)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_32sph"]
+atlas = ExtResource("7_gmuhx")
+region = Rect2(60, 152, 853, 680)
 
 [node name="Nest" type="Node2D" unique_id=1109014379]
 scale = Vector2(1.5, 1.5)
@@ -66,14 +70,14 @@ collision_layer = 4294967295
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=508363082]
-position = Vector2(-125.62964, -43.481487)
+position = Vector2(-18.074081, 5.925926)
 shape = SubResource("RectangleShape2D_kuljn")
 
 [node name="UI-hitbox" type="Area2D" parent="." unique_id=703305370]
 script = ExtResource("3_7arkk")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="UI-hitbox" unique_id=506137885]
-position = Vector2(4.666667, -216.00002)
+position = Vector2(-143.83334, -181.41667)
 shape = SubResource("RectangleShape2D_hwr44")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=762236213]
@@ -93,7 +97,7 @@ offset_right = 4.0
 offset_bottom = -8.0
 
 [node name="Egg" type="StaticBody2D" parent="." unique_id=279210769]
-position = Vector2(90.66667, 2.3841858e-07)
+position = Vector2(-162.00003, 81.33334)
 scale = Vector2(0.5729167, 0.45312497)
 collision_layer = 3
 
@@ -139,21 +143,25 @@ texture = SubResource("AtlasTexture_vfa27")
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D" unique_id=1409091068]
-position = Vector2(255.33334, -109.66667)
+position = Vector2(-276, -56)
 shape = SubResource("RectangleShape2D_gmuhx")
 
 [node name="StaticBody2D2" type="StaticBody2D" parent="Walls" unique_id=611378486]
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D2" unique_id=719270316]
+<<<<<<< HEAD
 position = Vector2(-12, -326.66666)
+=======
+position = Vector2(-27.333334, -283.5)
+>>>>>>> 15fd145 (Fixed majority of bugs)
 shape = SubResource("RectangleShape2D_eerui")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Walls" unique_id=774422928]
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D3" unique_id=1440151086]
-position = Vector2(-5.3333335, 144.66666)
+position = Vector2(-14.666668, 176.66667)
 shape = SubResource("RectangleShape2D_eerui")
 
 [node name="StaticBody2D4" type="StaticBody2D" parent="Walls" unique_id=837504574]
@@ -161,7 +169,8 @@ position = Vector2(0.6666667, 1.3333334)
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D4" unique_id=1962321447]
-position = Vector2(-273, -266.00006)
+position = Vector2(-291.33337, 15.333313)
+scale = Vector2(0.004256176, 0.107993476)
 shape = SubResource("RectangleShape2D_okcfb")
 
 [node name="StaticBody2D5" type="StaticBody2D" parent="Walls" unique_id=2001177524]
@@ -169,16 +178,14 @@ position = Vector2(-98.66667, -18.666666)
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D5" unique_id=1045792457]
-position = Vector2(-178.6667, 78.66667)
+position = Vector2(348.66672, 64.66667)
 shape = SubResource("RectangleShape2D_o68ys")
 
-[node name="Boxes" type="Sprite2D" parent="." unique_id=734814560]
+[node name="Boxes-floor" type="Sprite2D" parent="." unique_id=734814560]
 show_behind_parent = true
-position = Vector2(-120, -100.666664)
-scale = Vector2(4.152, 3.6133335)
-texture = ExtResource("7_gmuhx")
-hframes = 2
-frame = 1
+position = Vector2(-5.333334, -40.666668)
+scale = Vector2(1.149, 1)
+texture = SubResource("AtlasTexture_32sph")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=955225125]
 volume_db = -6.764
