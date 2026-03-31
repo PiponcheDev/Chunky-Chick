@@ -35,7 +35,7 @@ collision_mask = 3
 
 [node name="Player-UI" parent="Player" unique_id=1917703129 instance=ExtResource("7_lgr22")]
 anchors_preset = -1
-offset_left = -1547.0
+offset_left = -1271.0
 offset_top = -637.0
 offset_right = 4942.7393
 offset_bottom = 2375.4995
