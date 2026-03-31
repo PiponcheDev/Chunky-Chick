@@ -147,6 +147,7 @@ rotates = false
 script = ExtResource("1_486c6")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1703300497]
+visible = false
 texture = ExtResource("1_k02vi")
 
 [node name="DirectionUpdater" type="Timer" parent="." unique_id=992071788]

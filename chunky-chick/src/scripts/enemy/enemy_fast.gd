@@ -7,6 +7,8 @@ enum DashState {
 	DASH_EXEC,
 }
 
+var _ghost_owner_id: int
+
 var state: DashState = DashState.NONE_DASH
 @onready var anim_sprite = $AnimatedSprite2D
 @export var health: int
@@ -48,6 +50,7 @@ var _ghost_active: bool = false
 
 
 func _ready() -> void:
+	_ghost_owner_id = get_instance_id()
 	Goal_Entity = get_tree().get_first_node_in_group("player")
 	if Goal_Entity:
 		Navigation_Agent.target_position = Goal_Entity.global_position
@@ -201,6 +204,8 @@ func _spawn_dash_ghost() -> void:
 
 	var ghost := Sprite2D.new()
 	ghost.texture = tex
+	ghost.add_to_group("dash_ghost")
+	ghost.set_meta("owner_id", _ghost_owner_id)
 
 	ghost.global_position = anim_sprite.global_position
 	ghost.global_rotation = anim_sprite.global_rotation
@@ -218,3 +223,15 @@ func _spawn_dash_ghost() -> void:
 	tw.tween_property(ghost, "modulate:a", 0.0, ghost_lifetime)
 	tw.parallel().tween_property(ghost, "scale", ghost.scale * ghost_scale_mult, ghost_lifetime)
 	tw.tween_callback(Callable(ghost, "queue_free"))
+	
+	
+func _clear_my_ghosts() -> void:
+	if not is_inside_tree():
+		return
+	for g in get_tree().get_nodes_in_group("dash_ghost"):
+		if is_instance_valid(g) and g.get_meta("owner_id", -1) == _ghost_owner_id:
+			g.queue_free()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_PREDELETE:
+		_clear_my_ghosts()

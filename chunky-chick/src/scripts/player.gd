@@ -574,11 +574,7 @@ func get_dash_cooldown_ratio() -> float:
 		return 1.0
 	return 1.0 - (dash_cooldown.time_left / dash_cooldown.wait_time)
 
-<<<<<<< HEAD
-func eat_food(amount: float) -> void:
-	var bonus := 1.0 * fatness_from_food_bonus
-	fatness = min(fatness + (amount * bonus) + amount, fatness_max + fatness_max_bonus)
-=======
+
 func eat_food(amount: float) -> bool:
 	var max_value := fatness_max + fatness_max_bonus
 	if fatness >= max_value:
@@ -587,7 +583,7 @@ func eat_food(amount: float) -> bool:
 	var bonus := 1.0 + fatness_from_food_bonus
 	fatness = min(fatness + (amount * bonus), max_value)
 	return true
->>>>>>> origin/main
+
 
 func take_damage(amount: int) -> void:
 	if is_dead:

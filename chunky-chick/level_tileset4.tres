@@ -1,4 +1,4 @@
-[gd_resource type="TileSet" format=3 uid="uid://d0pinltfin6vq"]
+[gd_resource type="TileSet" format=3 uid="uid://btgmtudadk3w4"]
 
 [ext_resource type="Texture2D" uid="uid://dlvdtslrq8dei" path="res://Assets/tiles/Sidewalk/Bottom_Grass_Sidewalks_1-resized-to-512x512.jpeg" id="1_jftha"]
 [ext_resource type="Texture2D" uid="uid://cnkmp3jot2uyx" path="res://Assets/tiles/Sidewalk/Left_Grass_Sidewalks_2-resized-to-512x512.jpeg" id="2_jawvl"]

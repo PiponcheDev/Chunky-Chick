@@ -569,6 +569,7 @@ func _spawn_weasel() -> void:
 	_register_boss(boss)
 
 func _on_sleep_pressed() -> void:
+	is_night = true
 	if ending_sequence_started or placement_mode_active:
 		return
 	if popup_ui:

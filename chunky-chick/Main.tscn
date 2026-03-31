@@ -34,18 +34,12 @@ position = Vector2(-167.37, 319)
 collision_mask = 3
 
 [node name="Player-UI" parent="Player" unique_id=1917703129 instance=ExtResource("7_lgr22")]
-anchors_preset = 0
-anchor_left = 0.0
-anchor_top = 0.0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = -973.63
-offset_top = -549.00006
-offset_right = 3801.3691
-offset_bottom = 2148.4995
-grow_horizontal = 1
-grow_vertical = 1
-scale = Vector2(0.52000123, 0.5600003)
+anchors_preset = -1
+offset_left = -1547.0
+offset_top = -637.0
+offset_right = 4942.7393
+offset_bottom = 2375.4995
+scale = Vector2(0.75, 0.808)
 metadata/_edit_use_anchors_ = true
 
 [node name="circle" parent="." unique_id=1726487523 instance=ExtResource("8_trn2v")]

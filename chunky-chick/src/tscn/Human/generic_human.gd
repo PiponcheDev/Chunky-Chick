@@ -37,7 +37,6 @@ func _process(delta: float) -> void:
 		progress += SPEED * delta
 	elif state == CHASING:
 		var distance = player.global_position.distance_to(global_position)
-		distance = distance.x + distance.y
 		if distance > feedRadius:
 			self.position = player.position-self.position * 0.2 * delta #Really scuffed but temporary
 		else:

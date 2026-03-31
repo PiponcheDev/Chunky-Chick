@@ -22,6 +22,10 @@ GameLoad="*uid://cko840a3xfgua"
 Resources="*uid://dl677slqw5jr4"
 Egg="*uid://clhwy44dkbsgw"
 
+[display]
+
+window/size/borderless=true
+
 [file_customization]
 
 folder_colors={
