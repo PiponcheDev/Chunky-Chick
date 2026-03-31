@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://c866howesb3g7"]
 
 [ext_resource type="Script" uid="uid://b0tu0i2yxy1si" path="res://src/tscn/Main Menu/main_menu.gd" id="1_853f1"]
-[ext_resource type="StyleBox" uid="uid://b4oruhiydy41t" path="res://Assets/Ui/NinesliceFlat.tres" id="2_b5imc"]
+[ext_resource type="StyleBox" uid="uid://rigjob130ywm" path="res://Assets/Ui/NinesliceButton.tres" id="2_b5imc"]
 [ext_resource type="PackedScene" uid="uid://bqdk0fqhaj6ei" path="res://src/tscn/Main Menu/Credits.tscn" id="3_rgre6"]
 [ext_resource type="StyleBox" uid="uid://rigjob130ywm" path="res://Assets/Ui/NinesliceButton.tres" id="3_rnl3w"]
 [ext_resource type="Texture2D" uid="uid://50oa2eqaginc" path="res://Assets-Extra/image0.png" id="4_b5imc"]
@@ -23,6 +23,7 @@ offset_bottom = 648.0
 theme_override_styles/panel = ExtResource("2_b5imc")
 
 [node name="Start" type="Button" parent="." unique_id=1175555593]
+texture_filter = 1
 layout_mode = 0
 offset_left = 384.0
 offset_top = 272.0
@@ -30,10 +31,11 @@ offset_right = 755.0
 offset_bottom = 363.0
 scale = Vector2(0.7707338, 0.65279734)
 theme_override_font_sizes/font_size = 60
-theme_override_styles/normal = ExtResource("3_rnl3w")
+theme_override_styles/normal = ExtResource("2_b5imc")
 text = "Start"
 
 [node name="Continue" type="Button" parent="." unique_id=224560670]
+texture_filter = 1
 layout_mode = 0
 offset_left = 384.0
 offset_top = 336.0
@@ -41,9 +43,35 @@ offset_right = 755.0
 offset_bottom = 427.0
 scale = Vector2(0.7707338, 0.65279734)
 theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = ExtResource("2_b5imc")
 text = "Continue"
 
+[node name="Settings" type="Button" parent="." unique_id=559956064]
+texture_filter = 1
+layout_mode = 0
+offset_left = 384.0
+offset_top = 400.0
+offset_right = 755.0
+offset_bottom = 491.0
+scale = Vector2(0.7707338, 0.65279776)
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = ExtResource("2_b5imc")
+text = "Settings"
+
+[node name="Credits" type="Button" parent="." unique_id=1600177283]
+texture_filter = 1
+layout_mode = 0
+offset_left = 383.99997
+offset_top = 528.0
+offset_right = 755.0
+offset_bottom = 619.0
+scale = Vector2(0.7707338, 0.65279776)
+theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = ExtResource("2_b5imc")
+text = "Credits"
+
 [node name="Quit" type="Button" parent="." unique_id=813780662]
+texture_filter = 1
 layout_mode = 0
 offset_left = 384.0
 offset_top = 463.99997
@@ -51,6 +79,7 @@ offset_right = 755.0
 offset_bottom = 555.0
 scale = Vector2(0.7707338, 0.65279776)
 theme_override_font_sizes/font_size = 60
+theme_override_styles/normal = ExtResource("2_b5imc")
 text = "Quit"
 
 [node name="Credits_scene" parent="." unique_id=727112080 instance=ExtResource("3_rgre6")]

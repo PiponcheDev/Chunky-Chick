@@ -2,14 +2,22 @@
 
 [ext_resource type="PackedScene" uid="uid://dlkge1c31esjr" path="res://src/tscn/nest.tscn" id="1_fos0i"]
 [ext_resource type="PackedScene" uid="uid://knbi01afph2c" path="res://src/tscn/Player.tscn" id="4_trn2v"]
+[ext_resource type="Shader" uid="uid://bgef1nyhqqsh6" path="res://Assets/Night.gdshader" id="6_3dxm6"]
 [ext_resource type="PackedScene" uid="uid://djbhuhkk5k3hi" path="res://src/tscn/UI/player-ui.tscn" id="7_lgr22"]
 [ext_resource type="PackedScene" uid="uid://70wppi13rrso" path="res://Assets/Levels/Level1/level_1.scn" id="8_03owx"]
 [ext_resource type="PackedScene" uid="uid://q6rg8aao0wsr" path="res://src/tscn/enemy/waves.tscn" id="8_trn2v"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_lgr22"]
-vertices = PackedVector2Array(14910.25, 9221.906, -14766.07, 8966.078, -14901.922, -10054.047, 15421.719, -10213.9375)
+vertices = PackedVector2Array(45693.492, -23358.094, 42977.47, 31631.07, -42571.15, 32309.906, -38012.773, -24133.906)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
-outlines = Array[PackedVector2Array]([PackedVector2Array(-14912, -10064, 15432, -10224, 14920, 9232, -14776, 8976)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-38022, -24144, 45704, -23368, 42987, 31641, -42582, 32320)])
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lgr22"]
+shader = ExtResource("6_3dxm6")
+shader_parameter/night_tint = Vector3(0.2, 0.4, 1)
+shader_parameter/tint_intensity = 0.5
+shader_parameter/darkness = 0.6
+shader_parameter/vignette_strength = 0.4
 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 
@@ -17,35 +25,46 @@ outlines = Array[PackedVector2Array]([PackedVector2Array(-14912, -10064, 15432, 
 z_index = 1
 position = Vector2(617, 263)
 
+[node name="TurretContainer" type="Node2D" parent="." unique_id=1063803777]
+position = Vector2(0, 3)
+
 [node name="Player" parent="." unique_id=1575125507 instance=ExtResource("4_trn2v")]
 visibility_layer = 524289
 position = Vector2(-167.37, 319)
 collision_mask = 3
 
 [node name="Player-UI" parent="Player" unique_id=1917703129 instance=ExtResource("7_lgr22")]
-z_index = 1000
 anchors_preset = 0
 anchor_left = 0.0
 anchor_top = 0.0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = -1608.63
-offset_top = -655.0
-offset_right = 3166.3691
-offset_bottom = 2042.4995
+offset_left = -973.63
+offset_top = -549.00006
+offset_right = 3801.3691
+offset_bottom = 2148.4995
 grow_horizontal = 1
 grow_vertical = 1
-scale = Vector2(0.8, 0.862)
+scale = Vector2(0.52000123, 0.5600003)
 metadata/_edit_use_anchors_ = true
 
-[node name="TurretContainer" type="Node2D" parent="." unique_id=1063803777]
-position = Vector2(0, 3)
-
 [node name="circle" parent="." unique_id=1726487523 instance=ExtResource("8_trn2v")]
+visible = false
 position = Vector2(-128, 192)
 scale = Vector2(0.99999994, 0.99999994)
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1908240877]
+visible = false
 navigation_polygon = SubResource("NavigationPolygon_lgr22")
 
 [node name="Level1" parent="." unique_id=118654631 instance=ExtResource("8_03owx")]
+
+[node name="NightOverlayLayer" type="CanvasLayer" parent="." unique_id=2067329374]
+
+[node name="ColorRect" type="ColorRect" parent="NightOverlayLayer" unique_id=1312994502]
+visible = false
+material = SubResource("ShaderMaterial_lgr22")
+offset_left = -14984.0
+offset_top = -10456.0
+offset_right = 15144.0
+offset_bottom = 8920.0

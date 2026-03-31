@@ -1,48 +1,38 @@
 extends Area2D
 
-const SPEED := 800.0
-var MAX_RANGE := 400.0
-
-@onready var anim_player: AnimatedSprite2D = $AnimatedSprite2D
-
-var direction: Vector2 = Vector2.RIGHT
-var start_pos: Vector2
-var distance_traveled: float = 0.0
-var max_range_multiplier: float = 1.0
-var damage: int = 0
+@export var speed := 400.0
+@export var max_range := 400.0
+@export var damage := 10
+var direction := Vector2.RIGHT
 var shooter: Node2D
-
-var inherited_velocity: Vector2 = Vector2.ZERO
+var start_pos: Vector2
+var distance_traveled := 0.0
+var inherited_velocity := Vector2.ZERO
+var max_range_multiplier := 1.0
 
 signal bullet_freed(pos: Vector2)
 
-func _ready() -> void:
+func _ready():
 	start_pos = global_position
-	if direction != Vector2.ZERO:
-		anim_player.rotation = direction.angle() + deg_to_rad(90)
+	rotation = direction.angle()
+	connect("body_entered", Callable(self, "_on_body_entered"))
 
-func _physics_process(delta: float) -> void:
-	var final_velocity: Vector2
-
-	if direction != Vector2.ZERO:
-		anim_player.rotation = direction.angle() + deg_to_rad(90)
-
-	if inherited_velocity == Vector2.ZERO:
-		final_velocity = direction * SPEED
-	else:
-		final_velocity = direction * SPEED + inherited_velocity
+func _physics_process(delta):
+	var final_velocity = direction * speed
+	if inherited_velocity != Vector2.ZERO:
+		final_velocity += inherited_velocity
 
 	global_position += final_velocity * delta
-	distance_traveled = global_position.distance_to(start_pos)
 
-	if distance_traveled > MAX_RANGE * max_range_multiplier:
+	distance_traveled = global_position.distance_to(start_pos)
+	if distance_traveled > max_range * max_range_multiplier:
 		queue_free()
 
-func _notification(what: int) -> void:
+func _notification(what):
 	if what == NOTIFICATION_PREDELETE:
 		bullet_freed.emit(global_position)
 
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(body: Node) -> void:
 	if body == shooter:
 		return
 	if shooter == null:
@@ -53,5 +43,5 @@ func _on_body_entered(body: Node2D) -> void:
 	if body.has_method("take_damage"):
 		body.take_damage(damage)
 		if body.has_method("get_current_health"):
-			print(body, "\nfatness: ", body.get_current_health())
+			print(body, " current health: ", body.get_current_health())
 		queue_free()

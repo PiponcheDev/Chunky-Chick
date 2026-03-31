@@ -25,8 +25,11 @@ var feedRadius = 100 #How far away it can feed you, unrelated to the area2D
 @onready var player = $"../../"
 @onready var abandon_feeding_timer: Timer = $AbandonFeeding
 
+var animations = ["Bald", "Long hair1", "Long hair2", "Short hair"]
+
 func _ready() -> void:
 	self.rotation = 0
+	$AnimatedSprite2D.play(animations.pick_random())
 
 func _process(delta: float) -> void:
 	derivative = self.position - previous_pos
@@ -48,15 +51,22 @@ func _process(delta: float) -> void:
 	if abs(derivative.x) > abs(derivative.y):
 		if derivative.x > 0:
 			movementdir = RIGHT
+			self.rotation = 180
 		else:
 			movementdir = LEFT
+			self.rotation = 0
 	else:
 		if derivative.y > 0:
 			movementdir = DOWN
+			self.rotation = -90
 		else:
 			movementdir = UP
+			self.rotation = 90
+
 	#Once the animation is gathered from the artists this can be used to decide which one to use at any given moment
 	#If the Human is moonwalking too much decrease the time of the direction updater
+	
+	
 	
 	if Input.is_action_just_pressed("DebugButton"):
 		if randi_range(0,feedProbability) == 0:

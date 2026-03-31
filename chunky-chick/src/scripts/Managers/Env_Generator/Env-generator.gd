@@ -59,34 +59,62 @@ func _spawn_logic(objects: Array[PackedScene], zones: Array[CollisionShape2D], c
 	if objects.is_empty() or zones.is_empty():
 		return
 	
-	print("Spawning ", count, " ", debug_name)
+	# --- DEBUG SECTION ---
+	var nest = get_tree().get_first_node_in_group("nest")
+	var nest_pos = Vector2.INF
 	
-	# Reset clumping for the new category
+	if nest:
+		nest_pos = nest.global_position
+		print("DEBUG: Nest found at ", nest_pos, ". Spawning ", debug_name, "...")
+	else:
+		printerr("DEBUG ERROR: No node found in group 'nest'! Avoidance logic will not work.")
+	# ----------------------
+
 	currentClumpWeight = 0 
-	
+
 	for i in range(count):
-		var spawnPos = getSpawnposInClump(zones, clump_limit)
+		var spawnPos = getSpawnposInClump(zones, clump_limit, nest_pos)
 		var new_obj = objects.pick_random().instantiate()
 		add_child(new_obj)
 		new_obj.global_position = spawnPos
 
-func getSpawnposInClump(Spawn_Zones: Array[CollisionShape2D], clump_limit: int):
-	# If we are below the specific clump limit for this item type, stay near center
-	if currentClumpWeight < clump_limit and currentClumpWeight > 0:
-		currentClumpWeight += 1
-		return currentClumpPos + _get_random_offset(clumpDensity)
-	else:
-		# Start a brand new clump (or a single item)
-		var zone = Spawn_Zones.pick_random()
-		var size = _get_shape_size(zone)
+func getSpawnposInClump(Spawn_Zones: Array[CollisionShape2D], clump_limit: int, avoid_pos: Vector2) -> Vector2:
+	var MAX_ATTEMPTS = 20
+	var safe_radius = 150.0 # Increased to 150 just to be sure
+	
+	for attempt in range(MAX_ATTEMPTS):
+		var potential_pos : Vector2
 		
-		currentClumpPos = zone.global_position + Vector2(
-			randf_range(-size.x/2, size.x/2),
-			randf_range(-size.y/2, size.y/2)
-		)
-		
-		currentClumpWeight = 1
-		return currentClumpPos
+		# Decide where to TRY to place the item
+		if currentClumpWeight < clump_limit and currentClumpWeight > 0:
+			potential_pos = currentClumpPos + _get_random_offset(clumpDensity)
+		else:
+			var zone = Spawn_Zones.pick_random()
+			var size = _get_shape_size(zone)
+			potential_pos = zone.global_position + Vector2(
+				randf_range(-size.x/2, size.x/2),
+				randf_range(-size.y/2, size.y/2)
+			)
+
+		# VALIDATION: Is this spot far enough from the nest?
+		# If avoid_pos is INF (nest not found), it skips the check
+		if avoid_pos == Vector2.INF or potential_pos.distance_to(avoid_pos) > safe_radius:
+			# SUCCESS: Update clumping data and return the position
+			if currentClumpWeight < clump_limit and currentClumpWeight > 0:
+				currentClumpWeight += 1
+			else:
+				currentClumpPos = potential_pos
+				currentClumpWeight = 1
+			return potential_pos
+		else:
+			# FAILURE: We hit the nest area. 
+			# Reset clumping weight so the NEXT attempt picks a brand new zone
+			currentClumpWeight = 0
+			
+	# If we exhausted all attempts, just return the last potential_pos 
+	# (prevents infinite loops if the map is too small)
+	return currentClumpPos
+
 
 func _get_shape_size(zone: CollisionShape2D) -> Vector2:
 	if zone.shape is RectangleShape2D: return zone.shape.size

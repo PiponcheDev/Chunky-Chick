@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b6531vmaqns71" path="res://Assets-Extra/Shit_and_Mud.png" id="2_jsbyd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jsbyd"]
-size = Vector2(154, 300)
+size = Vector2(158, 303)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_hi0l2"]
 atlas = ExtResource("2_jsbyd")
@@ -46,17 +46,17 @@ animations = [{
 }],
 "loop": true,
 "name": &"default",
-"speed": 9.0
+"speed": 10.0
 }]
 
 [node name="Turret-Bullet" type="Area2D" unique_id=329481292]
 script = ExtResource("1_mi2ei")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=576540478]
-position = Vector2(-6, -3)
+position = Vector2(-9, -5.5)
 shape = SubResource("RectangleShape2D_jsbyd")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1061759394]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=2032274148]
 sprite_frames = SubResource("SpriteFrames_27nvr")
 autoplay = "default"
-frame_progress = 0.2422746
+frame_progress = 0.29655084

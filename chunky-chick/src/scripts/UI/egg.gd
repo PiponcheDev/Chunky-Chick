@@ -13,7 +13,7 @@ signal demand_completed
 ]
 
 var day: int = 1
-var demand: float = 1.0
+var demand: float = 15.0
 var current_progress: float = 0.0
 var egg_stage: int = 1
 var demand_met: bool = false
@@ -55,7 +55,7 @@ func _initialize_from_save():
 
 func _update_demand():
 	if day <= 5:
-		demand = 1.0
+		demand = demand * 1.15 + 2
 	else:
 		demand = 80 * pow(1.12, day - 5)
 

@@ -2,9 +2,145 @@
 
 [ext_resource type="Script" uid="uid://cwne4pl5e3x36" path="res://src/tscn/Human/generic_human.gd" id="1_486c6"]
 [ext_resource type="Texture2D" uid="uid://cp70q5rerqku2" path="res://Assets-Extra/icon.svg" id="1_k02vi"]
+[ext_resource type="Texture2D" uid="uid://cskjitbb2pqcy" path="res://Assets/humanoid_entities.png" id="3_p5ymq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_486c6"]
 radius = 214.08409
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yiv3i"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(100, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0aqea"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(200, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uchl2"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(300, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_b4sic"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(400, 100, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7fwse"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(100, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k46sf"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(200, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_yrcht"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(300, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nv87s"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(400, 200, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7e87a"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(100, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_bn3mp"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(200, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l2rte"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(300, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_x5dq1"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(400, 400, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d7blk"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(100, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2dheq"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(200, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qogf4"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(300, 300, 100, 100)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_7qj1b"]
+atlas = ExtResource("3_p5ymq")
+region = Rect2(400, 300, 100, 100)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_qp3jd"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yiv3i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0aqea")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uchl2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_b4sic")
+}],
+"loop": true,
+"name": &"Bald",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7fwse")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k46sf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_yrcht")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nv87s")
+}],
+"loop": true,
+"name": &"Long hair1",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7e87a")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_bn3mp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l2rte")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_x5dq1")
+}],
+"loop": true,
+"name": &"Long hair2",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_d7blk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2dheq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qogf4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_7qj1b")
+}],
+"loop": true,
+"name": &"Short hair",
+"speed": 5.0
+}]
 
 [node name="Generic human" type="PathFollow2D" unique_id=1786981081]
 rotates = false
@@ -25,6 +161,11 @@ one_shot = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D" unique_id=1628670590]
 shape = SubResource("CircleShape2D_486c6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=1559336525]
+rotation = 0.015707964
+sprite_frames = SubResource("SpriteFrames_qp3jd")
+animation = &"Long hair1"
 
 [connection signal="timeout" from="DirectionUpdater" to="." method="_on_direction_updater_timeout"]
 [connection signal="timeout" from="AbandonFeeding" to="." method="_on_abandon_feeding_timeout"]
