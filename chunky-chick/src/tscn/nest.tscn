@@ -150,11 +150,7 @@ shape = SubResource("RectangleShape2D_gmuhx")
 collision_layer = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/StaticBody2D2" unique_id=719270316]
-<<<<<<< HEAD
-position = Vector2(-12, -326.66666)
-=======
 position = Vector2(-27.333334, -283.5)
->>>>>>> 15fd145 (Fixed majority of bugs)
 shape = SubResource("RectangleShape2D_eerui")
 
 [node name="StaticBody2D3" type="StaticBody2D" parent="Walls" unique_id=774422928]
@@ -181,7 +177,7 @@ collision_layer = 3
 position = Vector2(348.66672, 64.66667)
 shape = SubResource("RectangleShape2D_o68ys")
 
-[node name="Boxes-floor" type="Sprite2D" parent="." unique_id=734814560]
+[node name="Boxes" type="Sprite2D" parent="." unique_id=734814560]
 show_behind_parent = true
 position = Vector2(-5.333334, -40.666668)
 scale = Vector2(1.149, 1)

@@ -31,11 +31,7 @@ offset_right = 755.0
 offset_bottom = 363.0
 scale = Vector2(0.7707338, 0.65279734)
 theme_override_font_sizes/font_size = 60
-<<<<<<< HEAD
 theme_override_styles/normal = ExtResource("2_b5imc")
-=======
-theme_override_styles/normal = ExtResource("3_rnl3w")
->>>>>>> 15fd145 (Fixed majority of bugs)
 text = "Start"
 
 [node name="Continue" type="Button" parent="." unique_id=224560670]
@@ -50,7 +46,6 @@ theme_override_font_sizes/font_size = 60
 theme_override_styles/normal = ExtResource("2_b5imc")
 text = "Continue"
 
-<<<<<<< HEAD
 [node name="Settings" type="Button" parent="." unique_id=559956064]
 texture_filter = 1
 layout_mode = 0
@@ -75,8 +70,6 @@ theme_override_font_sizes/font_size = 60
 theme_override_styles/normal = ExtResource("2_b5imc")
 text = "Credits"
 
-=======
->>>>>>> 15fd145 (Fixed majority of bugs)
 [node name="Quit" type="Button" parent="." unique_id=813780662]
 texture_filter = 1
 layout_mode = 0
