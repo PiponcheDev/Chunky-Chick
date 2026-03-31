@@ -1,7 +1,7 @@
+AnimatedSprite2D
 Panel
 NinePatchRect
 Sprite2D
-AnimatedSprite2D
 Camera2D
 Path2D
 Node2D

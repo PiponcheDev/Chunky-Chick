@@ -4,11 +4,13 @@ extends CharacterBody2D
 @onready var main_camera: Camera2D = $Camera2D
 @onready var dash_cooldown: Timer = $"dash-cooldown"
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
+@onready var hitbox: CollisionShape2D = $CollisionShape2D
 
 signal carried_item_changed(is_carrying: bool)
 signal active_talisman_changed(new_talisman)
 signal active_talisman_activated(talisman)
 signal active_talisman_deactivated(talisman)
+signal talisman_collected(talisman)
 
 const AUDIO_SHOOT: AudioStream = preload("res://Assets/Audio/player/fart7.ogg")
 const AUDIO_STEP: AudioStream = preload("res://Assets/Audio/player/step.ogg")
@@ -260,7 +262,11 @@ func _handle_stationary():
 func _update_rotation(dir: Vector2):
 	angle_degrees = rad_to_deg(dir.angle())
 	snapped_angle = round(angle_degrees / 45) * 45 + 90
+	
 	sprite.rotation_degrees = snapped_angle
+	
+	if hitbox:
+		hitbox.rotation_degrees = snapped_angle
 
 func _start_dash():
 	if is_dashing or not dash_cooldown.is_stopped():
@@ -388,6 +394,9 @@ func collect_talisman(data: TalismanData, from_load := false):
 
 	items.append(data)
 	_update_cooldown_multiplier()
+
+	if not from_load:
+		emit_signal("talisman_collected", data)
 
 	print("Collected talisman:", data.talisman_name)
 
@@ -535,9 +544,14 @@ func get_dash_cooldown_ratio() -> float:
 		return 1.0
 	return 1.0 - (dash_cooldown.time_left / dash_cooldown.wait_time)
 
-func eat_food(amount: float) -> void:
+func eat_food(amount: float) -> bool:
+	var max_value := fatness_max + fatness_max_bonus
+	if fatness >= max_value:
+		return false
+
 	var bonus := 1.0 + fatness_from_food_bonus
-	fatness = min(fatness + amount * bonus, fatness_max + fatness_max_bonus)
+	fatness = min(fatness + (amount * bonus), max_value)
+	return true
 
 func take_damage(amount: int) -> void:
 	if is_dead:
@@ -579,9 +593,8 @@ func _start_death_sequence() -> void:
 	call_deferred("_run_death_sequence")
 
 func _run_death_sequence() -> void:
-	
 	GameLoad.destroy_save_file()
-	
+
 	if fade_rect == null:
 		return
 
