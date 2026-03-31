@@ -166,7 +166,6 @@ shape = SubResource("CircleShape2D_486c6")
 rotation = 0.015707964
 sprite_frames = SubResource("SpriteFrames_qp3jd")
 animation = &"Long hair1"
-frame_progress = 0.53294915
 
 [connection signal="timeout" from="DirectionUpdater" to="." method="_on_direction_updater_timeout"]
 [connection signal="timeout" from="AbandonFeeding" to="." method="_on_abandon_feeding_timeout"]
