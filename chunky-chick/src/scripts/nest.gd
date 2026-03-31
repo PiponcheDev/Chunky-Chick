@@ -103,6 +103,8 @@ var raid_has_spawned_enemies: bool = false
 var ending_sequence_started: bool = false
 var current_player_in_range: Node = null
 
+signal start_raid
+
 func _ready() -> void:
 	set_process_input(true)
 	pc.add_to_group("placement_camera")
@@ -548,6 +550,7 @@ func _start_raid_night() -> void:
 	raid_active = true
 	raid_has_spawned_enemies = false
 	current_boss = null
+	start_raid.emit()
 	_sync_music()
 
 func _spawn_weasel() -> void:
@@ -844,8 +847,8 @@ func _process(delta: float) -> void:
 	if ending_sequence_started:
 		return
 
-	if Input.is_action_just_pressed("wave"):
-		_start_raid_theme()
+
+		
 
 	if raid_active:
 		if _are_raid_enemies_alive():

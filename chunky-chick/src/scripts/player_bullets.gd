@@ -20,7 +20,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 	var final_velocity: Vector2
 
-	if direction != Vector2.ZERO:
+	if direction != Vector2.ZERO and anim_player:
 		anim_player.rotation = direction.angle() + rad_to_deg(90)
 
 	if inherited_velocity == Vector2.ZERO:

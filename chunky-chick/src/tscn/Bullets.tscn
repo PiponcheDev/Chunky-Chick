@@ -7,7 +7,7 @@
 size = Vector2(2, 2)
 
 [node name="PlayerBullet" type="Area2D" unique_id=1875089559]
-scale = Vector2(10, 10)
+scale = Vector2(20, 20)
 collision_mask = 2
 script = ExtResource("1_5146j")
 
