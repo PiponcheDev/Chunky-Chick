@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://dlkge1c31esjr" path="res://src/tscn/nest.tscn" id="1_fos0i"]
 [ext_resource type="PackedScene" uid="uid://knbi01afph2c" path="res://src/tscn/Player.tscn" id="4_trn2v"]
+[ext_resource type="Shader" uid="uid://bgef1nyhqqsh6" path="res://Assets/Night.gdshader" id="6_3dxm6"]
 [ext_resource type="PackedScene" uid="uid://djbhuhkk5k3hi" path="res://src/tscn/UI/player-ui.tscn" id="7_lgr22"]
 [ext_resource type="PackedScene" uid="uid://70wppi13rrso" path="res://Assets/Levels/Level1/level_1.scn" id="8_03owx"]
 [ext_resource type="PackedScene" uid="uid://q6rg8aao0wsr" path="res://src/tscn/enemy/waves.tscn" id="8_trn2v"]
@@ -10,6 +11,13 @@
 vertices = PackedVector2Array(45693.492, -23358.094, 42977.47, 31631.07, -42571.15, 32309.906, -38012.773, -24133.906)
 polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3)])
 outlines = Array[PackedVector2Array]([PackedVector2Array(-38022, -24144, 45704, -23368, 42987, 31641, -42582, 32320)])
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_lgr22"]
+shader = ExtResource("6_3dxm6")
+shader_parameter/night_tint = Vector3(0.2, 0.4, 1)
+shader_parameter/tint_intensity = 0.5
+shader_parameter/darkness = 0.6
+shader_parameter/vignette_strength = 0.4
 
 [node name="Node2D" type="Node2D" unique_id=581660910]
 
@@ -50,3 +58,13 @@ visible = false
 navigation_polygon = SubResource("NavigationPolygon_lgr22")
 
 [node name="Level1" parent="." unique_id=118654631 instance=ExtResource("8_03owx")]
+
+[node name="NightOverlayLayer" type="CanvasLayer" parent="." unique_id=2067329374]
+
+[node name="ColorRect" type="ColorRect" parent="NightOverlayLayer" unique_id=1312994502]
+visible = false
+material = SubResource("ShaderMaterial_lgr22")
+offset_left = -14984.0
+offset_top = -10456.0
+offset_right = 15144.0
+offset_bottom = 8920.0

@@ -1,5 +1,6 @@
 extends Node2D
 
+
 const ENDING_CAMERA_MOVE_TIME: float = 4.0
 const ENDING_HOLD_TIME: float = 2.5
 const ENDING_FADE_TIME: float = 1.5
@@ -43,6 +44,7 @@ var deposit_count: int = 0
 @onready var ui_hitbox_area: Area2D = $"UI-hitbox"
 @onready var egg: Area2D = $Egg/InteractionArea
 @onready var music_player: AudioStreamPlayer = $AudioStreamPlayer
+@onready var night_shader := $"../NightOverlayLayer/ColorRect"
 
 var main_camera: Camera2D
 var placement_camera: Camera2D
@@ -165,6 +167,9 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if ending_sequence_started:
 		return
+	
+	if is_night == true:
+		night_shader.visible = true
 
 	_try_deposit_items_in_zone()
 

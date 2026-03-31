@@ -63,6 +63,6 @@ shape = SubResource("RectangleShape2D_swyuf")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=435128586]
 sprite_frames = SubResource("SpriteFrames_1usr6")
 autoplay = "default"
-frame_progress = 0.28924146
+frame_progress = 0.5321879
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

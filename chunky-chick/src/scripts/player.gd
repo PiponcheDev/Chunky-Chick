@@ -31,6 +31,7 @@ const HIT_FLASH_DURATION := 0.10
 const DEATH_FADE_TIME := 1.5
 const DEATH_FADE_LAYER := 10
 
+var compass_arrow: Polygon2D
 var is_invulnerable: bool = false
 var invuln_timer: float = 0.0
 var _default_sprite_modulate: Color = Color.WHITE
@@ -95,6 +96,7 @@ func _ready():
 	rng.randomize()
 	sprite.animation_finished.connect(_on_animation_finished)
 	_default_sprite_modulate = sprite.modulate
+	_setup_compass_arrow()
 
 	_create_fade_layer()
 
@@ -147,6 +149,20 @@ func capture_into_run_data(run: RunData) -> void:
 		"fatness_max": fatness_max
 	}
 
+func _setup_compass_arrow():
+	compass_arrow = Polygon2D.new()
+	compass_arrow.polygon = PackedVector2Array([
+		Vector2(25, 0),   
+		Vector2(-10, -10), 
+		Vector2(-10, 10)   
+	])
+	
+	compass_arrow.color = Color.YELLOW
+	
+	compass_arrow.position = Vector2(0, -110) 
+	
+	add_child(compass_arrow)
+
 func apply_run_data(run: RunData) -> void:
 	if run == null:
 		return
@@ -188,7 +204,7 @@ func _reset_persisted_stats() -> void:
 func _physics_process(delta: float) -> void:
 	if is_dead:
 		return
-
+	_update_compass_logic()
 	_update_hit_reaction(delta)
 
 	if Input.is_action_just_pressed("dash"):
@@ -224,6 +240,20 @@ func _physics_process(delta: float) -> void:
 			active_talisman_cooldown_left = 0.0
 
 	_update_sprite_speed_scale()
+
+func _update_compass_logic():
+	if not compass_arrow: return
+	
+	var nest_node = get_tree().get_first_node_in_group("nest")
+	
+	if nest_node and is_instance_valid(nest_node):
+		compass_arrow.visible = true
+		
+		var target_pos = nest_node.global_position
+		
+		compass_arrow.global_rotation = global_position.angle_to_point(target_pos)
+	else:
+		compass_arrow.visible = false
 
 func _handle_normal_state():
 	if direction != Vector2.ZERO:
